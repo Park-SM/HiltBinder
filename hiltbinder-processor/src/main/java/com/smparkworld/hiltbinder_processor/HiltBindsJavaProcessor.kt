@@ -21,7 +21,7 @@ internal class HiltBindsJavaProcessor : AbstractProcessor() {
         val count = AnnotationManager.detectElementsAnnotatedWithAndPerform(environment) { element, annotation ->
 
             if (!checkSupportedType(element)) {
-                processingEnv.error("@HiltBinds Annotation can only use for class.")
+                processingEnv.error("@HiltBinds Annotation can only use for class and interface.")
                 return@detectElementsAnnotatedWithAndPerform
             }
 
@@ -32,7 +32,7 @@ internal class HiltBindsJavaProcessor : AbstractProcessor() {
     }
 
     private fun checkSupportedType(element: Element): Boolean =
-        element.kind == ElementKind.CLASS || element.kind == ElementKind.INTERFACE
+        ProcessorConfig.checkSupportedElementType(element.kind)
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> =
         ProcessorConfig.getSupportedAnnotationTypeNames()
