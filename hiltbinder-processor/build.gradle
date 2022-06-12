@@ -1,0 +1,23 @@
+plugins {
+    id 'java-library'
+    id 'kotlin'
+    id 'kotlin-kapt'
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+
+    implementation project(':hiltbinder')
+
+    implementation 'com.squareup:javapoet:1.13.0'
+
+    implementation 'com.google.auto.service:auto-service:1.0-rc6'
+    kapt 'com.google.auto.service:auto-service:1.0-rc6'
+
+    implementation "com.google.dagger:hilt-core:$hiltVersion"
+    kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
+}
