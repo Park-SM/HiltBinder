@@ -6,7 +6,7 @@ import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import kotlin.reflect.KClass
 
-object ProcessorConfig {
+internal object ProcessorConfig {
 
     private val JAVA_VERSION = SourceVersion.latest()
 

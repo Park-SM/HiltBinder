@@ -4,7 +4,7 @@ import com.smparkworld.hiltbinder_processor.extension.log
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
 
-object ModuleGeneratorDispatcher {
+internal object ModuleGeneratorDispatcher {
 
     private val hiltBindsGenerator: ModuleGenerator = ModuleGeneratorFactory.createHiltBindsModuleGenerator()
 

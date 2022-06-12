@@ -4,7 +4,7 @@ import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
 import kotlin.reflect.KClass
 
-interface ModuleGenerator {
+internal interface ModuleGenerator {
 
     fun generate(env: ProcessingEnvironment, element: Element, annotation: Annotation)
 

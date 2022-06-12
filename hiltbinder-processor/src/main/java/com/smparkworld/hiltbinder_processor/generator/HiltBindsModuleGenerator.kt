@@ -19,7 +19,7 @@ import javax.lang.model.element.Element
 import javax.lang.model.element.Modifier
 import kotlin.reflect.KClass
 
-class HiltBindsModuleGenerator : ModuleGenerator {
+internal class HiltBindsModuleGenerator : ModuleGenerator {
 
     // TODO: Improved readability..
     override fun generate(env: ProcessingEnvironment, element: Element, annotation: Annotation) {

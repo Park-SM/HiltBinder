@@ -8,7 +8,7 @@ import javax.lang.model.type.TypeMirror
 import javax.lang.model.element.AnnotationMirror
 import javax.lang.model.element.AnnotationValue
 
-object AnnotationManager {
+internal object AnnotationManager {
 
     fun detectElementsAnnotatedWithAndPerform(
         roundEnv: RoundEnvironment,
