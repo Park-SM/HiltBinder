@@ -7,8 +7,10 @@ import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
 import javax.tools.Diagnostic
 
+private const val TAG = "HiltBinds"
+
 internal fun ProcessingEnvironment.log(message: String) =
-    messager.printMessage(Diagnostic.Kind.NOTE, message)
+    messager.printMessage(Diagnostic.Kind.NOTE, "$TAG: $message")
 
 internal fun ProcessingEnvironment.error(message: String) =
     messager.printMessage(Diagnostic.Kind.ERROR, message)

@@ -6,8 +6,6 @@ import javax.lang.model.element.Element
 
 internal object ModuleGeneratorDispatcher {
 
-    private const val TAG = "HiltBinds processing"
-
     private val moduleGenerators: Set<ModuleGenerator> =
         ModuleGeneratorFactory.createModuleGenerators()
 
@@ -15,7 +13,7 @@ internal object ModuleGeneratorDispatcher {
 
         var isGenerated = false
 
-        env.log("$TAG: ${element.simpleName}")
+        env.log("processing ${element.simpleName} class")
         moduleGenerators.forEach { generator ->
             if (generator.getSupportedAnnotationTypes().contains(annotation.annotationClass)) {
                 generator.generate(env, element, annotation)
@@ -23,7 +21,7 @@ internal object ModuleGeneratorDispatcher {
             }
         }
         if (!isGenerated) {
-            env.log("$TAG: ${element.simpleName} class not supported.")
+            env.log("${element.simpleName} class not supported.")
         }
     }
 }

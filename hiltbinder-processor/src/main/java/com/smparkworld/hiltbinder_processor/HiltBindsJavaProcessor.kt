@@ -5,6 +5,7 @@ import com.smparkworld.hiltbinder_processor.core.config.ProcessorConfig
 import com.smparkworld.hiltbinder_processor.extension.error
 import com.smparkworld.hiltbinder_processor.core.generator.ModuleGeneratorDispatcher
 import com.smparkworld.hiltbinder_processor.core.manager.AnnotationManager
+import com.smparkworld.hiltbinder_processor.core.manager.PerformanceManager
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Processor
 import javax.annotation.processing.RoundEnvironment
@@ -17,7 +18,9 @@ internal class HiltBindsJavaProcessor : AbstractProcessor() {
 
     override fun process(ignored: MutableSet<out TypeElement>?, environment: RoundEnvironment): Boolean {
 
-        val count = AnnotationManager.detectElementsAnnotatedWithAndPerform(environment) { element, annotation ->
+        PerformanceManager.startProcessing()
+
+        val processedCount = AnnotationManager.detectElementsAnnotatedWithAndPerform(environment) { element, annotation ->
 
             if (!checkSupportedType(element)) {
                 processingEnv.error("@HiltBinds Annotation can only use for class and interface.")
@@ -27,7 +30,11 @@ internal class HiltBindsJavaProcessor : AbstractProcessor() {
             ModuleGeneratorDispatcher.dispatchGenerator(processingEnv, element, annotation)
         }
 
-        return count > 0
+        if (processedCount > 0) {
+            PerformanceManager.stopProcessing()
+            PerformanceManager.reportPerformance(processingEnv)
+        }
+        return processedCount > 0
     }
 
     private fun checkSupportedType(element: Element): Boolean =
