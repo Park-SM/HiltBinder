@@ -1,4 +1,4 @@
-package com.smparkworld.hiltbinder_processor.generator
+package com.smparkworld.hiltbinder_processor.core.generator
 
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
@@ -8,5 +8,5 @@ internal interface ModuleGenerator {
 
     fun generate(env: ProcessingEnvironment, element: Element, annotation: Annotation)
 
-    fun getSupportedAnnotation(): Set<KClass<out Annotation>>
+    fun getSupportedAnnotationTypes(): Set<KClass<out Annotation>>
 }

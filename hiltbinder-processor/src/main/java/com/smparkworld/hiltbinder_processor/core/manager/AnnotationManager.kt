@@ -1,6 +1,6 @@
-package com.smparkworld.hiltbinder_processor.manager
+package com.smparkworld.hiltbinder_processor.core.manager
 
-import com.smparkworld.hiltbinder_processor.config.ProcessorConfig
+import com.smparkworld.hiltbinder_processor.core.config.ProcessorConfig
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.type.TypeMirror
@@ -25,14 +25,14 @@ internal object AnnotationManager {
         return elementCount
     }
 
-    fun getAnnotationMirror(element: Element, clazz: Class<*>): AnnotationMirror? {
+    private fun getAnnotationMirror(element: Element, clazz: Class<*>): AnnotationMirror? {
         for (mirror in element.annotationMirrors) {
             if (mirror.annotationType.toString() == clazz.name) return mirror
         }
         return null
     }
 
-    fun getAnnotationValue(annotationMirror: AnnotationMirror, key: String): AnnotationValue? {
+    private fun getAnnotationValue(annotationMirror: AnnotationMirror, key: String): AnnotationValue? {
         for ((k, v) in annotationMirror.elementValues) {
             if (k.simpleName.toString() == key) return v
         }

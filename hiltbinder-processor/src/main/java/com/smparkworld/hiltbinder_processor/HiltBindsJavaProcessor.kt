@@ -1,16 +1,15 @@
 package com.smparkworld.hiltbinder_processor
 
 import com.google.auto.service.AutoService
-import com.smparkworld.hiltbinder_processor.config.ProcessorConfig
+import com.smparkworld.hiltbinder_processor.core.config.ProcessorConfig
 import com.smparkworld.hiltbinder_processor.extension.error
-import com.smparkworld.hiltbinder_processor.generator.ModuleGeneratorDispatcher
-import com.smparkworld.hiltbinder_processor.manager.AnnotationManager
+import com.smparkworld.hiltbinder_processor.core.generator.ModuleGeneratorDispatcher
+import com.smparkworld.hiltbinder_processor.core.manager.AnnotationManager
 import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Processor
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
 import javax.lang.model.element.TypeElement
 
 @AutoService(Processor::class)

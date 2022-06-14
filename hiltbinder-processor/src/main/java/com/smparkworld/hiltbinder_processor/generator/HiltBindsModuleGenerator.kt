@@ -1,11 +1,15 @@
 package com.smparkworld.hiltbinder_processor.generator
 
+import com.google.auto.service.AutoService
 import com.smparkworld.hiltbinder.HiltBinds
+import com.smparkworld.hiltbinder_processor.core.generator.ModuleGenerator
 import com.smparkworld.hiltbinder_processor.extension.error
 import com.smparkworld.hiltbinder_processor.extension.getClassName
 import com.smparkworld.hiltbinder_processor.extension.getPackageName
 import com.smparkworld.hiltbinder_processor.extension.getSuperClassName
-import com.smparkworld.hiltbinder_processor.manager.AnnotationManager
+import com.smparkworld.hiltbinder_processor.extension.getSuperInterfaceElement
+import com.smparkworld.hiltbinder_processor.core.manager.AnnotationManager
+import com.smparkworld.hiltbinder_processor.extension.isNestedClass
 import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
@@ -17,8 +21,10 @@ import dagger.hilt.components.SingletonComponent
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.Modifier
+import javax.lang.model.element.TypeElement
 import kotlin.reflect.KClass
 
+@AutoService(ModuleGenerator::class)
 internal class HiltBindsModuleGenerator : ModuleGenerator {
 
     // TODO: Improved readability..
@@ -67,7 +73,11 @@ internal class HiltBindsModuleGenerator : ModuleGenerator {
             .addMethod(spec)
             .build()
 
-        val javaFile = JavaFile.builder(env.getPackageName(element), moduleClazz)
+        val javaFile = JavaFile.builder(env.getPackageName(element), moduleClazz).apply {
+                if (from == null && to == null) {
+                    addImportIfNestedClass(env, env.getSuperInterfaceElement(element))
+                }
+            }
             .build()
 
         env.filer.createSourceFile("${env.getPackageName(element)}.${moduleFileName}")
@@ -75,9 +85,19 @@ internal class HiltBindsModuleGenerator : ModuleGenerator {
             .use { writer -> writer.write(javaFile.toString()) }
     }
 
-    override fun getSupportedAnnotation(): Set<KClass<out Annotation>> = setOf(
+    override fun getSupportedAnnotationTypes(): Set<KClass<out Annotation>> = setOf(
         HiltBinds::class,
     )
+
+    private fun JavaFile.Builder.addImportIfNestedClass(
+        env: ProcessingEnvironment,
+        element: Element
+    ): JavaFile.Builder {
+        if (isNestedClass(element)) {
+            addStaticImport(env.getClassName((element as TypeElement).enclosingElement), element.simpleName.toString())
+        }
+        return this
+    }
 
     companion object {
         private const val PARAMETER_NAME = "target"

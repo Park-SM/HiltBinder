@@ -1,18 +1,13 @@
-package com.smparkworld.hiltbinder_processor.config
+package com.smparkworld.hiltbinder_processor.core.config
 
-import com.smparkworld.hiltbinder.HiltBinds
+import com.smparkworld.hiltbinder_processor.core.generator.ModuleGeneratorFactory
 import javax.lang.model.SourceVersion
-import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import kotlin.reflect.KClass
 
 internal object ProcessorConfig {
 
     private val JAVA_VERSION = SourceVersion.latest()
-
-    private val ANNOTATION_TYPES = mutableListOf<KClass<out Annotation>>(
-        HiltBinds::class,
-    )
 
     private val ELEMENT_TYPES = mutableListOf(
         ElementKind.CLASS, ElementKind.INTERFACE
@@ -21,11 +16,11 @@ internal object ProcessorConfig {
     fun checkSupportedElementType(elementType: ElementKind): Boolean =
         ELEMENT_TYPES.find { it == elementType } != null
 
-    fun getSupportedAnnotationTypes(): MutableList<KClass<out Annotation>> =
-        ANNOTATION_TYPES
+    fun getSupportedAnnotationTypes(): Set<KClass<out Annotation>> =
+        ModuleGeneratorFactory.getSupportedAnnotationTypes()
 
     fun getSupportedAnnotationTypeNames(): MutableSet<String> =
-        ANNOTATION_TYPES.map { it.java.name }.toMutableSet()
+        getSupportedAnnotationTypes().map { it.java.name }.toMutableSet()
 
     fun getSupportedJavaVersion(): SourceVersion =
         JAVA_VERSION
