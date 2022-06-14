@@ -27,7 +27,7 @@ import kotlin.reflect.KClass
 @AutoService(ModuleGenerator::class)
 internal class HiltBindsModuleGenerator : ModuleGenerator {
 
-    // TODO: Improved readability..
+    // TODO: Need to improve readability
     override fun generate(env: ProcessingEnvironment, element: Element, annotation: Annotation) {
         val to = AnnotationManager.getValueFromAnnotation<HiltBinds>(element, "to")?.let {
             env.typeUtils.asElement(it)

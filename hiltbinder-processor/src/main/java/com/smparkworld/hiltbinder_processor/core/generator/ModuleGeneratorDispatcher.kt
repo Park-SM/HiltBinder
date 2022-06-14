@@ -9,7 +9,7 @@ internal object ModuleGeneratorDispatcher {
     private const val TAG = "HiltBinds processing"
 
     private val moduleGenerators: Set<ModuleGenerator> =
-        ModuleGeneratorFactory.createModuleGenerator()
+        ModuleGeneratorFactory.createModuleGenerators()
 
     fun dispatchGenerator(env: ProcessingEnvironment, element: Element, annotation: Annotation) {
 

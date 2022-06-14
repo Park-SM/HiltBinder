@@ -5,7 +5,7 @@ import kotlin.reflect.KClass
 
 internal object ModuleGeneratorFactory {
 
-    fun createModuleGenerator(): Set<ModuleGenerator> {
+    fun createModuleGenerators(): Set<ModuleGenerator> {
         val generators = mutableSetOf<ModuleGenerator>()
 
         val iterator = ServiceLoader.load(
@@ -22,7 +22,7 @@ internal object ModuleGeneratorFactory {
     fun getSupportedAnnotationTypes(): Set<KClass<out Annotation>> {
         val types = mutableSetOf<KClass<out Annotation>>()
 
-        createModuleGenerator().forEach { generator ->
+        createModuleGenerators().forEach { generator ->
             types.addAll(generator.getSupportedAnnotationTypes())
         }
         return types
