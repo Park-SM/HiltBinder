@@ -1,7 +1,7 @@
 # HiltBinder
-An annotation processor example that automatically creates Hilt's `@Binds` functions and modules.
+An annotation processor example that automatically creates Hilt's `@Binds` functions and modules.<br><br>
 
-## How to use
+## # Description
 No longer need abstract module classes. Just add `@HiltBinds` and the Binds module will be created automatically.
 ```kotlin
 interface TestUseCase {
@@ -30,7 +30,7 @@ abstract class TestUseCaseImpl_BindsModule {
 
 ```
 <br><br>
-## Options
+## # Options
 - `to`: The return type of the Binds abstract function.
 ```kotlin
 interface TestUseCase {
@@ -75,7 +75,7 @@ class TestUseCaseImpl @Inject constructor(
 interface SomethingClass   
 ```
 <br><br>
-## Supported
+## # Supported
 It also supports nested class as below code.
 ```kotlin
 interface TestContract {
