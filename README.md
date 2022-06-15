@@ -72,7 +72,7 @@ class TestUseCaseImpl @Inject constructor(
     to = TestUseCase::class,
     from = TestUseCaseImpl::class
 )
-interface SomethingClass   
+interface SomethingClass    // throws an exception.
 ```
 <br><br>
 ## # Supported
