@@ -20,12 +20,7 @@ internal class HiltBindsJavaProcessor : AbstractProcessor() {
 
         PerformanceManager.startProcessing()
 
-        val processedCount = AnnotationManager.detectElementsAnnotatedWithAndPerform(environment) { element, annotation ->
-
-            if (!checkSupportedType(element)) {
-                processingEnv.error("HiltBinds processor can only be used with classes and interfaces.")
-                return@detectElementsAnnotatedWithAndPerform
-            }
+        val processedCount = AnnotationManager.getElementsAnnotatedWith(processingEnv, environment) { element, annotation ->
 
             ModuleGeneratorDispatcher.dispatchGenerator(processingEnv, element, annotation)
         }

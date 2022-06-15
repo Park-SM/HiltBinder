@@ -1,6 +1,8 @@
 package com.smparkworld.hiltbinder_processor.core.manager
 
 import com.smparkworld.hiltbinder_processor.core.config.ProcessorConfig
+import com.smparkworld.hiltbinder_processor.extension.error
+import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.type.TypeMirror
@@ -10,16 +12,23 @@ import javax.lang.model.element.AnnotationValue
 
 internal object AnnotationManager {
 
-    fun detectElementsAnnotatedWithAndPerform(
+    fun getElementsAnnotatedWith(
+        env: ProcessingEnvironment,
         roundEnv: RoundEnvironment,
         perform: (Element, Annotation) -> Unit
     ) : Int {
         var elementCount = 0
+
         ProcessorConfig.getSupportedAnnotationTypes().forEach { annotationType ->
 
             roundEnv.getElementsAnnotatedWith(annotationType.java).forEach { element ->
-                perform.invoke(element, element.getAnnotation(annotationType.java))
-                elementCount++
+
+                if (ProcessorConfig.checkSupportedElementType(element.kind)) {
+                    perform.invoke(element, element.getAnnotation(annotationType.java))
+                    elementCount++
+                } else {
+                    env.error("HiltBinds processor can only be used with classes and interfaces.")
+                }
             }
         }
         return elementCount
