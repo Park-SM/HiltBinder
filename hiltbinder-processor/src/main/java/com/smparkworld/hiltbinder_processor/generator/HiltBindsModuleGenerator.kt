@@ -3,13 +3,8 @@ package com.smparkworld.hiltbinder_processor.generator
 import com.google.auto.service.AutoService
 import com.smparkworld.hiltbinder.HiltBinds
 import com.smparkworld.hiltbinder_processor.core.generator.ModuleGenerator
-import com.smparkworld.hiltbinder_processor.extension.error
-import com.smparkworld.hiltbinder_processor.extension.getClassName
-import com.smparkworld.hiltbinder_processor.extension.getPackageName
-import com.smparkworld.hiltbinder_processor.extension.getSuperClassName
-import com.smparkworld.hiltbinder_processor.extension.getSuperInterfaceElement
 import com.smparkworld.hiltbinder_processor.core.manager.AnnotationManager
-import com.smparkworld.hiltbinder_processor.extension.isNestedClass
+import com.smparkworld.hiltbinder_processor.extension.*
 import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
@@ -27,39 +22,16 @@ import kotlin.reflect.KClass
 @AutoService(ModuleGenerator::class)
 internal class HiltBindsModuleGenerator : ModuleGenerator {
 
-    // TODO: Need to improve readability
     override fun generate(env: ProcessingEnvironment, element: Element, annotation: Annotation) {
-        val to = AnnotationManager.getValueFromAnnotation<HiltBinds>(element, "to")?.let {
-            env.typeUtils.asElement(it)
-        }
-        val from = AnnotationManager.getValueFromAnnotation<HiltBinds>(element, "from")?.let {
-            env.typeUtils.asElement(it)
-        }
-
-        val (fromClazz, toClazz) = when {
-            (from != null && to == null) -> {
-                (env.getClassName(from) to env.getClassName(element))
-            }
-            (from == null && to != null) -> {
-                (env.getClassName(element) to env.getClassName(to))
-            }
-            (from == null && to == null) -> {
-                (env.getClassName(element) to env.getSuperClassName(element))
-            }
-            else -> {
-                val errorMessage = "`to` and `from` cannot be signed together."
-                env.error(errorMessage)
-                throw IllegalStateException(errorMessage)
-            }
-        }
+        val (elementFrom, elementTo) = getParameters(env, element)
 
         val moduleFileName = "${element.simpleName}${MODULE_POSTFIX}"
 
         val spec = MethodSpec.methodBuilder("${FUN_PREFIX}${element.simpleName}")
             .addAnnotation(Binds::class.java)
             .addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)
-            .addParameter(fromClazz, PARAMETER_NAME)
-            .returns(toClazz)
+            .addParameter(env.getClassName(elementFrom), PARAMETER_NAME)
+            .returns(env.getClassName(elementTo))
             .build()
 
         val installInAnnotation = AnnotationSpec.builder(InstallIn::class.java)
@@ -73,11 +45,9 @@ internal class HiltBindsModuleGenerator : ModuleGenerator {
             .addMethod(spec)
             .build()
 
-        val javaFile = JavaFile.builder(env.getPackageName(element), moduleClazz).apply {
-                if (from == null && to == null) {
-                    addImportIfNestedClass(env, env.getSuperInterfaceElement(element))
-                }
-            }
+        val javaFile = JavaFile.builder(env.getPackageName(element), moduleClazz)
+            .addImportIfNestedClass(env, elementTo)
+            .addImportIfNestedClass(env, elementFrom)
             .build()
 
         env.filer.createSourceFile("${env.getPackageName(element)}.${moduleFileName}")
@@ -97,6 +67,31 @@ internal class HiltBindsModuleGenerator : ModuleGenerator {
             addStaticImport(env.getClassName((element as TypeElement).enclosingElement), element.simpleName.toString())
         }
         return this
+    }
+
+    private fun getParameters(env: ProcessingEnvironment, element: Element): Pair<Element, Element> {
+        val paramTo = AnnotationManager.getValueFromAnnotation<HiltBinds>(element, "to")?.let {
+            env.typeUtils.asElement(it)
+        }
+        val paramFrom = AnnotationManager.getValueFromAnnotation<HiltBinds>(element, "from")?.let {
+            env.typeUtils.asElement(it)
+        }
+        return when {
+            (paramFrom != null && paramTo == null) -> {
+                (paramFrom to element)
+            }
+            (paramFrom == null && paramTo != null) -> {
+                (element to paramTo)
+            }
+            (paramFrom == null && paramTo == null) -> {
+                (element to env.getSuperInterfaceElement(element))
+            }
+            else -> {
+                val errorMessage = "`to` and `from` cannot be signed together."
+                env.error(errorMessage)
+                throw IllegalStateException(errorMessage)
+            }
+        }
     }
 
     companion object {

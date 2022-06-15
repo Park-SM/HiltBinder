@@ -23,7 +23,7 @@ internal class HiltBindsJavaProcessor : AbstractProcessor() {
         val processedCount = AnnotationManager.detectElementsAnnotatedWithAndPerform(environment) { element, annotation ->
 
             if (!checkSupportedType(element)) {
-                processingEnv.error("@HiltBinds Annotation can only use for class and interface.")
+                processingEnv.error("HiltBinds processor can only be used with classes and interfaces.")
                 return@detectElementsAnnotatedWithAndPerform
             }
 
@@ -32,7 +32,7 @@ internal class HiltBindsJavaProcessor : AbstractProcessor() {
 
         if (processedCount > 0) {
             PerformanceManager.stopProcessing()
-            PerformanceManager.reportPerformance(processingEnv)
+            PerformanceManager.reportPerformance(processingEnv, processedCount)
         }
         return processedCount > 0
     }

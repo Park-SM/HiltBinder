@@ -4,7 +4,7 @@ import com.smparkworld.hiltbinder_processor.extension.log
 import java.lang.StringBuilder
 import javax.annotation.processing.ProcessingEnvironment
 
-object PerformanceManager {
+internal object PerformanceManager {
 
     private var startedAt: Long? = null
     private var completedAt: Long? = null
@@ -18,7 +18,7 @@ object PerformanceManager {
         completedAt = System.currentTimeMillis()
     }
 
-    fun reportPerformance(env: ProcessingEnvironment) {
+    fun reportPerformance(env: ProcessingEnvironment, count: Int) {
 
         val startedAtInternal = startedAt
         val completedAtInternal = completedAt
@@ -26,7 +26,7 @@ object PerformanceManager {
         if (startedAtInternal != null && completedAtInternal != null) {
             val message = getReportMessage(completedAtInternal - startedAtInternal)
             if (message.isBlank().not()) {
-                env.log("total processing time: $message")
+                env.log("HiltBinds: processed $count classes, total processing time: $message")
             }
         }
     }
