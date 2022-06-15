@@ -4,11 +4,10 @@ import com.smparkworld.hiltbinder_processor.core.config.ProcessorConfig
 import com.smparkworld.hiltbinder_processor.extension.error
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
-import javax.lang.model.element.Element
-import javax.lang.model.type.TypeMirror
-
 import javax.lang.model.element.AnnotationMirror
 import javax.lang.model.element.AnnotationValue
+import javax.lang.model.element.Element
+import javax.lang.model.type.TypeMirror
 
 internal object AnnotationManager {
 

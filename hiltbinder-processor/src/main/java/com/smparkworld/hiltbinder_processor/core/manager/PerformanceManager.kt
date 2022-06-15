@@ -1,7 +1,6 @@
 package com.smparkworld.hiltbinder_processor.core.manager
 
 import com.smparkworld.hiltbinder_processor.extension.log
-import java.lang.StringBuilder
 import javax.annotation.processing.ProcessingEnvironment
 
 internal object PerformanceManager {

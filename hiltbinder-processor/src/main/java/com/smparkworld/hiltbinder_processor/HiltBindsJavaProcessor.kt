@@ -2,7 +2,6 @@ package com.smparkworld.hiltbinder_processor
 
 import com.google.auto.service.AutoService
 import com.smparkworld.hiltbinder_processor.core.config.ProcessorConfig
-import com.smparkworld.hiltbinder_processor.extension.error
 import com.smparkworld.hiltbinder_processor.core.generator.ModuleGeneratorDispatcher
 import com.smparkworld.hiltbinder_processor.core.manager.AnnotationManager
 import com.smparkworld.hiltbinder_processor.core.manager.PerformanceManager
@@ -10,7 +9,6 @@ import javax.annotation.processing.AbstractProcessor
 import javax.annotation.processing.Processor
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
-import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 
 @AutoService(Processor::class)
@@ -31,9 +29,6 @@ internal class HiltBindsJavaProcessor : AbstractProcessor() {
         }
         return processedCount > 0
     }
-
-    private fun checkSupportedType(element: Element): Boolean =
-        ProcessorConfig.checkSupportedElementType(element.kind)
 
     override fun getSupportedAnnotationTypes(): MutableSet<String> =
         ProcessorConfig.getSupportedAnnotationTypeNames()
