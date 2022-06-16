@@ -21,7 +21,7 @@ pipeline {
 
         stage("Assemble") {
             steps {
-                sh "./gradlew assemble${env.BUILD_VARIANT} --stacktrace"
+                sh "./gradlew clean assemble${env.BUILD_VARIANT} --stacktrace"
                 archiveArtifacts artifacts: "**/*.apk, **/mapping.txt", fingerprint: true
             }
         }
