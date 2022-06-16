@@ -64,6 +64,29 @@ class TestUseCaseImpl @Inject constructor(
     }
 }
 ```
+
+- `qualifier`: The Qualifier annotation to be applied to the return type.
+```kotlin
+@HiltBinds(qualifier = TestUseCaseQualifier1::class)
+class TestUseCaseImpl1 @Inject constructor(
+    private val testString: String
+) : TestUseCase {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is $testString in UseCase1.")
+    }
+}
+
+@HiltBinds(qualifier = TestUseCaseQualifier2::class)
+class TestUseCaseImpl2 @Inject constructor(
+    private val testString: String
+) : TestUseCase {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is $testString in UseCase2.")
+    }
+}
+```
 <br><br>
 *CAUTION HERE* ✋<br>
 > parameter `to` and `from` must not be signed together. Either `to` or `from` must be used. If they are signed at the same time, throws an exception. Because dependency injection can be attempted from other unrelated classes as in the code below.
@@ -93,4 +116,21 @@ class TestClassImpl @Inject constructor(
         Log.d("Test!!", "TestString is $testString")
     }
 }
+```
+<br><br>
+## # License
+```
+Copyright 2022 ParkSM
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 ```
