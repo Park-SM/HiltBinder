@@ -21,6 +21,3 @@ internal fun ProcessingEnvironment.getSuperInterfaceElement(element: Element): E
 
 internal fun ProcessingEnvironment.getPackageName(element: Element): String =
     elementUtils.getPackageOf(element).toString()
-
-internal fun isNestedClass(element: Element): Boolean =
-    (element as TypeElement).enclosingElement.kind != ElementKind.PACKAGE

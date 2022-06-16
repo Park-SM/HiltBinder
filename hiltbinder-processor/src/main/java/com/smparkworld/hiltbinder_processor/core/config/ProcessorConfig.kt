@@ -1,6 +1,6 @@
 package com.smparkworld.hiltbinder_processor.core.config
 
-import com.smparkworld.hiltbinder_processor.core.generator.ModuleGeneratorFactory
+import com.smparkworld.hiltbinder_processor.core.ModuleGeneratorFactory
 import javax.lang.model.SourceVersion
 import javax.lang.model.element.ElementKind
 import kotlin.reflect.KClass
