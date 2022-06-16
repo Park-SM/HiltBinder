@@ -9,13 +9,6 @@ internal object ProcessorConfig {
 
     private val JAVA_VERSION = SourceVersion.latest()
 
-    private val ELEMENT_TYPES = mutableListOf(
-        ElementKind.CLASS, ElementKind.INTERFACE
-    )
-
-    fun checkSupportedElementType(elementType: ElementKind): Boolean =
-        ELEMENT_TYPES.find { it == elementType } != null
-
     fun getSupportedAnnotationTypes(): Set<KClass<out Annotation>> =
         ModuleGeneratorFactory.getSupportedAnnotationTypes()
 

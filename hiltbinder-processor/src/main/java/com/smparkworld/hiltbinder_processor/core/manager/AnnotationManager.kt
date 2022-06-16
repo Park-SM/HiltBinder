@@ -12,7 +12,6 @@ import javax.lang.model.type.TypeMirror
 internal object AnnotationManager {
 
     fun getElementsAnnotatedWith(
-        env: ProcessingEnvironment,
         roundEnv: RoundEnvironment,
         perform: (Element, Annotation) -> Unit
     ) : Int {
@@ -22,12 +21,8 @@ internal object AnnotationManager {
 
             roundEnv.getElementsAnnotatedWith(annotationType.java).forEach { element ->
 
-                if (ProcessorConfig.checkSupportedElementType(element.kind)) {
-                    perform.invoke(element, element.getAnnotation(annotationType.java))
-                    elementCount++
-                } else {
-                    env.error("HiltBinds processor can only be used with classes and interfaces.")
-                }
+                perform.invoke(element, element.getAnnotation(annotationType.java))
+                elementCount++
             }
         }
         return elementCount
