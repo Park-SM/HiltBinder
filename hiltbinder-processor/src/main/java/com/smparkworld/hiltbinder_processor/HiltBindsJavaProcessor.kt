@@ -18,7 +18,7 @@ internal class HiltBindsJavaProcessor : AbstractProcessor() {
 
         PerformanceManager.startProcessing()
 
-        val processedCount = AnnotationManager.getElementsAnnotatedWith(processingEnv, environment) { element, annotation ->
+        val processedCount = AnnotationManager.getElementsAnnotatedWith(environment) { element, annotation ->
 
             ModuleGeneratorDispatcher.dispatchGenerator(processingEnv, element, annotation)
         }

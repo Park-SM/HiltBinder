@@ -1,6 +1,7 @@
 package com.smparkworld.hiltbinder_processor.core
 
 import com.smparkworld.hiltbinder_processor.core.base.ModuleGenerator
+import com.smparkworld.hiltbinder_processor.extension.error
 import com.smparkworld.hiltbinder_processor.extension.log
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
@@ -16,7 +17,7 @@ internal object ModuleGeneratorDispatcher {
         var isGenerated = false
 
         moduleGenerators.forEach { generator ->
-            if (isAppropriateGenerator(generator, element, annotation)) {
+            if (!isGenerated && isAppropriateGenerator(generator, element, annotation)) {
                 generator.generate(env, element, annotation)
                 isGenerated = true
             }
@@ -25,7 +26,7 @@ internal object ModuleGeneratorDispatcher {
         if (isGenerated) {
             env.log("$TAG ${element.simpleName}")
         } else {
-            env.log("$TAG ${element.simpleName} class not supported.")
+            env.error("$TAG ${element.simpleName} annotated with ${annotation.javaClass.name} are not supported.")
         }
     }
 

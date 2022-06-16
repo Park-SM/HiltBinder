@@ -6,6 +6,8 @@ import kotlin.reflect.KClass
 
 internal object ModuleGeneratorFactory {
 
+    private var cachedAnnotationTypes: Set<KClass<out Annotation>>? = null
+
     fun createModuleGenerators(): Set<ModuleGenerator> {
         val generators = mutableSetOf<ModuleGenerator>()
 
@@ -21,11 +23,12 @@ internal object ModuleGeneratorFactory {
     }
 
     fun getSupportedAnnotationTypes(): Set<KClass<out Annotation>> {
-        return mutableSetOf<KClass<out Annotation>>().also { types ->
+        return cachedAnnotationTypes ?: mutableSetOf<KClass<out Annotation>>().also { types ->
 
             createModuleGenerators().forEach { generator ->
                 types.add(generator.getSupportedAnnotationType())
             }
+            cachedAnnotationTypes = types
         }
     }
 }

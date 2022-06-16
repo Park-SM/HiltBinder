@@ -31,7 +31,7 @@ internal class HiltBindsModuleGenerator : ModuleGenerator {
     override fun getSupportedAnnotationType(): KClass<out Annotation> = HiltBinds::class
 
     override fun getSupportedElementTypes(): List<ElementKind> = listOf(
-        ElementKind.CLASS
+        ElementKind.CLASS, ElementKind.INTERFACE
     )
 
     override fun generate(env: ProcessingEnvironment, element: Element, annotation: Annotation) {
