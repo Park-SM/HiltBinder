@@ -1,0 +1,29 @@
+pipeline {
+    agent any
+
+    tools {
+        jdk("JAVA8")
+    }
+
+    environment {
+
+        BUILD_VARIANT = "Debug"
+    }
+
+    stages {
+
+        stage("Unit Test") {
+            steps {
+                sh "./gradlew test${env.BUILD_VARIANT}UnitTest --stacktrace"
+                junit "**/TEST-*.xml"
+            }
+        }
+
+        stage("Assemble") {
+            steps {
+                sh "./gradlew assemble${env.BUILD_VARIANT} --stacktrace"
+                archiveArtifacts artifacts: "**/*.apk, **/mapping.txt", fingerprint: true
+            }
+        }
+    }
+}
