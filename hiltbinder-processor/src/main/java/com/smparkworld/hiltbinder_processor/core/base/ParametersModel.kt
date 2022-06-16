@@ -1,0 +1,3 @@
+package com.smparkworld.hiltbinder_processor.core.base
+
+interface ParametersModel

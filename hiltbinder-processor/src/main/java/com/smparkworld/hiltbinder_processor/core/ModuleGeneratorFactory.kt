@@ -1,5 +1,6 @@
-package com.smparkworld.hiltbinder_processor.core.generator
+package com.smparkworld.hiltbinder_processor.core
 
+import com.smparkworld.hiltbinder_processor.core.base.ModuleGenerator
 import java.util.*
 import kotlin.reflect.KClass
 
@@ -20,11 +21,11 @@ internal object ModuleGeneratorFactory {
     }
 
     fun getSupportedAnnotationTypes(): Set<KClass<out Annotation>> {
-        val types = mutableSetOf<KClass<out Annotation>>()
+        return mutableSetOf<KClass<out Annotation>>().also { types ->
 
-        createModuleGenerators().forEach { generator ->
-            types.addAll(generator.getSupportedAnnotationTypes())
+            createModuleGenerators().forEach { generator ->
+                types.add(generator.getSupportedAnnotationType())
+            }
         }
-        return types
     }
 }
