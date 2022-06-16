@@ -1,5 +1,5 @@
 # HiltBinder
-An annotation processor example that automatically creates Hilt's `@Binds` functions and modules.<br><br>
+An annotation processor example that automatically creates [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)'s `@Binds` functions and modules.<br><br>
 
 ## # Description
 No longer need abstract module classes. Just add `@HiltBinds` and the Binds module will be created automatically.
