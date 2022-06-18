@@ -42,10 +42,10 @@ internal object AnnotationManager {
         return null
     }
 
-    inline fun <reified T : Annotation> getValueFromAnnotation(element: Element, key: String): TypeMirror? {
+    inline fun <reified T : Annotation> getValueFromAnnotation(env: ProcessingEnvironment, element: Element, key: String): Element? {
         val mirror = getAnnotationMirror(element, T::class.java) ?: return null
         return getAnnotationValue(mirror, key)?.let {
-            it.value as TypeMirror
+            env.typeUtils.asElement(it.value as TypeMirror)
         }
     }
 }

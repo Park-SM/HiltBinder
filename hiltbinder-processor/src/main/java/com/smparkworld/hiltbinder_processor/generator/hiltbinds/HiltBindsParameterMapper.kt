@@ -13,18 +13,12 @@ import javax.lang.model.element.ElementKind
 class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> {
 
     override fun toParamsModel(env: ProcessingEnvironment, element: Element): HiltBindsParamsModel {
-        val paramTo = AnnotationManager.getValueFromAnnotation<HiltBinds>(element, PARAM_TO)?.let {
-            env.typeUtils.asElement(it)
+        val paramTo = AnnotationManager.getValueFromAnnotation<HiltBinds>(env, element, PARAM_TO)
+        val paramFrom = AnnotationManager.getValueFromAnnotation<HiltBinds>(env, element, PARAM_FROM)
+        val paramQualifier = AnnotationManager.getValueFromAnnotation<HiltBinds>(env, element, PARAM_QUALIFIER)?.takeIf {
+            it.kind == ElementKind.ANNOTATION_TYPE
         }
-        val paramFrom = AnnotationManager.getValueFromAnnotation<HiltBinds>(element, PARAM_FROM)?.let {
-            env.typeUtils.asElement(it)
-        }
-        val paramQualifier = AnnotationManager.getValueFromAnnotation<HiltBinds>(element, PARAM_QUALIFIER)?.let {
-            env.typeUtils.asElement(it).takeIf { element -> element.kind == ElementKind.ANNOTATION_TYPE }
-        }
-        val paramComponent = AnnotationManager.getValueFromAnnotation<HiltBinds>(element, PARAM_COMPONENT)?.let {
-            env.typeUtils.asElement(it)
-        }
+        val paramComponent = AnnotationManager.getValueFromAnnotation<HiltBinds>(env, element, PARAM_COMPONENT)
         return when {
             (paramFrom != null && paramTo == null) -> {
                 HiltBindsParamsModel(
