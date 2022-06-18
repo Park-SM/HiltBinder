@@ -22,26 +22,32 @@ class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> {
         val paramQualifier = AnnotationManager.getValueFromAnnotation<HiltBinds>(element, PARAM_QUALIFIER)?.let {
             env.typeUtils.asElement(it).takeIf { element -> element.kind == ElementKind.ANNOTATION_TYPE }
         }
+        val paramComponent = AnnotationManager.getValueFromAnnotation<HiltBinds>(element, PARAM_COMPONENT)?.let {
+            env.typeUtils.asElement(it)
+        }
         return when {
             (paramFrom != null && paramTo == null) -> {
                 HiltBindsParamsModel(
                     element,
                     paramFrom,
-                    paramQualifier
+                    paramQualifier,
+                    paramComponent
                 )
             }
             (paramFrom == null && paramTo != null) -> {
                 HiltBindsParamsModel(
                     paramTo,
                     element,
-                    paramQualifier
+                    paramQualifier,
+                    paramComponent
                 )
             }
             (paramFrom == null && paramTo == null) -> {
                 HiltBindsParamsModel(
                     env.getSuperInterfaceElement(element),
                     element,
-                    paramQualifier
+                    paramQualifier,
+                    paramComponent
                 )
             }
             else -> {
@@ -56,5 +62,6 @@ class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> {
         private const val PARAM_TO = "to"
         private const val PARAM_FROM = "from"
         private const val PARAM_QUALIFIER = "qualifier"
+        private const val PARAM_COMPONENT = "component"
     }
 }
