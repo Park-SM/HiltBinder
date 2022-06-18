@@ -48,7 +48,9 @@ internal class HiltBindsModuleGenerator : ModuleGenerator {
             .build()
 
         val installInAnnotation = AnnotationSpec.builder(InstallIn::class.java)
-            .addMember("value","\$T.class", SingletonComponent::class.java)
+            .addMember(
+                "value","\$T.class", params.componentElement ?: SingletonComponent::class.java
+            )
             .build()
 
         val moduleClazz = TypeSpec.classBuilder(moduleFileName)
