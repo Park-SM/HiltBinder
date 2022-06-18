@@ -19,6 +19,7 @@ class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> {
             it.kind == ElementKind.ANNOTATION_TYPE
         }
         val paramComponent = AnnotationManager.getValueFromAnnotation<HiltBinds>(env, element, PARAM_COMPONENT)
+
         return when {
             (paramFrom != null && paramTo == null) -> {
                 HiltBindsParamsModel(
