@@ -87,6 +87,23 @@ class TestUseCaseImpl2 @Inject constructor(
     }
 }
 ```
+
+- `component`: Specifies in which component the class to be returned will be installed.
+```kotlin
+interface TestUseCase {
+    fun printTestString()
+}
+
+@HiltBinds(component = ActivityComponent::class)
+class TestUseCaseImpl @Inject constructor(
+    private val testString: String
+) : TestUseCase {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is $testString in UseCase.")
+    }
+}
+```
 <br><br>
 ### *CAUTION HERE* ✋<br>
 > parameter `to` and `from` must not be signed together. Either `to` or `from` must be used. If they are signed at the same time, throws an exception. Because dependency injection can be attempted from other unrelated classes as in the code below.
