@@ -3,6 +3,14 @@ plugins {
     id 'kotlin'
 }
 
+ext {
+    PUBLISH_GROUP_ID = 'com.smparkworld.hiltbinder'
+    PUBLISH_VERSION = '1.0.0'
+    PUBLISH_ARTIFACT_ID = 'hiltbinder'
+}
+
+apply from: "${rootDir}/scripts/publish-module.gradle"
+
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8

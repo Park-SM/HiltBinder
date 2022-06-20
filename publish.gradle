@@ -1,0 +1,14 @@
+ext {
+    PUBLISH_DESCRIPTION = 'An annotation processor library that automatically creates Hilt\'s `@Binds` functions and modules.'
+    PUBLISH_URL = 'https://github.com/Park-SM/HiltBinds'
+    PUBLISH_LICENSE_NAME = 'Apache License 2.0'
+    PUBLISH_LICENSE_URL = 'https://github.com/Park-SM/HiltBinder/blob/develop/LICENSE'
+
+    PUBLISH_DEVELOPER_ID = 'ParkSM'
+    PUBLISH_DEVELOPER_NAME = 'SangMin Park'
+    PUBLISH_DEVELOPER_EMAIL = 'park97.sm@gmail.com'
+
+    PUBLISH_SCM_CONNECTION = 'scm:git:github.com/Park-SM/HiltBinder.git'
+    PUBLISH_SCM_DEVELOPER_CONNECTION = 'scm:git:ssh://github.com:Park-SM/HiltBinder.git'
+    PUBLISH_SCM_URL = 'https://github.com/Park-SM/HiltBinder/tree/main'
+}
