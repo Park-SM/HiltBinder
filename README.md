@@ -127,7 +127,7 @@ class TestUseCaseImpl @Inject constructor(
 }
 ```
 <br><br>
-### *CAUTION HERE* ✋<br>
+#### *CAUTION HERE* ✋<br>
 > parameter `to` and `from` must not be signed together. Either `to` or `from` must be used. If they are signed at the same time, throws an exception. Because dependency injection can be attempted from other unrelated classes as in the code below.
 ```kotlin
 @HiltBinds(
