@@ -17,9 +17,9 @@ repositories {
 // build.gradle(:app)
 dependencies {
 
-    def hiltBindsVersion = "1.0.1"
-    implementation "com.smparkworld.hiltbinder:hiltbinder:$hiltBindsVersion"
-    kapt "com.smparkworld.hiltbinder:hiltbinder-processor:$hiltBindsVersion"
+    def hiltBinderVersion = "1.0.1"
+    implementation "com.smparkworld.hiltbinder:hiltbinder:$hiltBinderVersion"
+    kapt "com.smparkworld.hiltbinder:hiltbinder-processor:$hiltBinderVersion"
 }
 ```
 <br><br>
