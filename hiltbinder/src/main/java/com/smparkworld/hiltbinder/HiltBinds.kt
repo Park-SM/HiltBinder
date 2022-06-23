@@ -3,7 +3,7 @@ package com.smparkworld.hiltbinder
 import kotlin.reflect.KClass
 
 /***
- * CAUTION.
+ * `@HiltBinds` is used for classes that want to `@Binds`.
  * parameter `to` and `from` must not be signed together. Either `to` or `from`
  * must be used. If they are signed at the same time, throws an exception.
  *

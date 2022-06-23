@@ -14,8 +14,14 @@ task androidSourcesJar(type: Jar) {
     }
 }
 
+task androidJavadocJar(type: Jar) {
+    archiveClassifier.set('javadoc')
+    from "$buildDir/dokka/javadoc"
+}
+
 artifacts {
     archives androidSourcesJar
+    archives androidJavadocJar
 }
 
 group = PUBLISH_GROUP_ID
@@ -37,6 +43,7 @@ afterEvaluate {
                 }
 
                 artifact androidSourcesJar
+                artifact androidJavadocJar
 
                 pom {
                     name = PUBLISH_ARTIFACT_ID
