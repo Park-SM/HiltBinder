@@ -1,7 +1,29 @@
+![Generic badge](https://img.shields.io/badge/Platform-Android-green.svg)&nbsp;&nbsp;
+![Generic badge](https://img.shields.io/badge/Repository-MavenCentral-blue.svg)&nbsp;&nbsp;
+![Generic badge](https://img.shields.io/badge/Version-v1.0.1-red.svg)&nbsp;
+
 # HiltBinder
 An annotation processor example that automatically creates [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)'s `@Binds` functions and modules.<br><br>
 
-## # Description
+## How to use
+Add dependency like below code.
+```groovy
+// build.gradle(:project)
+repositories {
+    google()
+    mavenCentral()
+}
+
+// build.gradle(:app)
+dependencies {
+
+    def hiltBindsVersion = "1.0.1"
+    implementation "com.smparkworld.hiltbinder:hiltbinder:$hiltBindsVersion"
+    kapt "com.smparkworld.hiltbinder:hiltbinder-processor:$hiltBindsVersion"
+}
+```
+<br><br>
+## # Basics
 No longer need abstract module classes. Just add `@HiltBinds` and the Binds module will be created automatically.
 ```kotlin
 interface TestUseCase {
