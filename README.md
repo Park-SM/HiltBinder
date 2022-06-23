@@ -5,7 +5,7 @@
 # HiltBinder
 An annotation processor example that automatically creates [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)'s `@Binds` functions and modules.<br><br>
 
-## How to use
+## # How to use
 Add dependency like below code.
 ```groovy
 // build.gradle(:project)
