@@ -111,5 +111,5 @@ internal object AnnotationManager {
         return params
     }
 
-    private const val ERROR_MSG_SUFFIX_KEY_DUPLICATION = "There must be only one comment that corresponds to a special suffix."
+    private const val ERROR_MSG_SUFFIX_KEY_DUPLICATION = "There must be only one annotation with `Key` suffix."
 }
