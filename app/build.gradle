@@ -43,6 +43,10 @@ dependencies {
     implementation 'com.google.android.material:material:1.6.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
 
+    def autoValueVersion = "1.9"
+    implementation "com.google.auto.value:auto-value:$autoValueVersion"
+    implementation "com.google.auto.value:auto-value-annotations:$autoValueVersion"
+
     implementation "com.google.dagger:hilt-android:$hiltVersion"
     kapt "com.google.dagger:hilt-android-compiler:$hiltVersion"
 
