@@ -4,5 +4,5 @@ import com.squareup.javapoet.ClassName
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
 
-fun Element.asClassName(env: ProcessingEnvironment): ClassName =
+internal fun Element.asClassName(env: ProcessingEnvironment): ClassName =
     env.getClassName(this)

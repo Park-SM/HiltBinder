@@ -10,15 +10,15 @@ import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 
-class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> {
+internal class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> {
 
     override fun toParamsModel(env: ProcessingEnvironment, element: Element): HiltBindsParamsModel {
-        val paramTo = AnnotationManager.getValueFromAnnotation<HiltBinds>(env, element, PARAM_TO)
-        val paramFrom = AnnotationManager.getValueFromAnnotation<HiltBinds>(env, element, PARAM_FROM)
-        val paramQualifier = AnnotationManager.getValueFromAnnotation<HiltBinds>(env, element, PARAM_QUALIFIER)?.takeIf {
+        val paramTo = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_TO)
+        val paramFrom = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_FROM)
+        val paramQualifier = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_QUALIFIER)?.takeIf {
             it.kind == ElementKind.ANNOTATION_TYPE
         }
-        val paramComponent = AnnotationManager.getValueFromAnnotation<HiltBinds>(env, element, PARAM_COMPONENT)
+        val paramComponent = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_COMPONENT)
 
         return when {
             (paramFrom != null && paramTo == null) -> {
@@ -46,14 +46,15 @@ class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> {
                 )
             }
             else -> {
-                val errorMessage = "`to` and `from` cannot be signed together."
-                env.error(errorMessage)
-                throw IllegalStateException(errorMessage)
+                env.error(ERROR_MSG_SIGNED_TOGETHER)
+                throw IllegalStateException(ERROR_MSG_SIGNED_TOGETHER)
             }
         }
     }
 
     companion object {
+        private const val ERROR_MSG_SIGNED_TOGETHER = "`to` and `from` cannot be signed together."
+
         private const val PARAM_TO = "to"
         private const val PARAM_FROM = "from"
         private const val PARAM_QUALIFIER = "qualifier"
