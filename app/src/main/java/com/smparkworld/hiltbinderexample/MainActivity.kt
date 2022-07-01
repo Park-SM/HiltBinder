@@ -17,6 +17,7 @@ import com.smparkworld.hiltbinderexample.sample.intomap.hiltdefault.classkey.Map
 import com.smparkworld.hiltbinderexample.sample.intomap.hiltdefault.intkey.MapIntKeySampleModel
 import com.smparkworld.hiltbinderexample.sample.intomap.hiltdefault.longkey.MapLongKeySampleModel
 import com.smparkworld.hiltbinderexample.sample.intomap.hiltdefault.stringkey.MapStringKeySampleModel
+import com.smparkworld.hiltbinderexample.sample.intoset.SetSampleModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import javax.inject.Provider
@@ -42,6 +43,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var qualifierSampleModel2: QualifierSampleModel
 
     @Inject
+    lateinit var sampleSet: @JvmSuppressWildcards Set<SetSampleModel>
+
+    @Inject
     lateinit var intKeySampleMap: @JvmSuppressWildcards Map<Int, Provider<MapIntKeySampleModel>>
 
     @Inject
@@ -59,7 +63,6 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var complexKeySampleMap: @JvmSuppressWildcards Map<SampleMapComplexKey, Provider<MapComplexKeySampleModel>>
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -69,6 +72,10 @@ class MainActivity : AppCompatActivity() {
         componentSampleModel.printTestString()
         qualifierSampleModel1.printTestString()
         qualifierSampleModel2.printTestString()
+
+        sampleSet.forEach {
+            it.printTestString()
+        }
 
         for ((k, v) in intKeySampleMap) {
             Log.d("Test!!", "key: $k")
