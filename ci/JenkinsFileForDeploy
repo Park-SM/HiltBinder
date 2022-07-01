@@ -11,6 +11,11 @@ pipeline {
 
     environment {
         BUILD_VARIANT = "Release"
+
+        signing_keyId = credentials("hiltbinder-signing-key-id")
+        signing_password = credentials("hiltbinder-signing-password")
+        signing_secretKeyRingFile = credentials("hiltbinder-gpg")
+        sonatypeStagingProfileId = credentials("hiltbinder-sonatype-profile-id")
     }
 
     stages {
@@ -18,39 +23,14 @@ pipeline {
             steps {
                 script {
                     withCredentials([
-                        string(
-                            credentialsId: "hiltbinder-signing-key-id", variable: "KEY_ID"
-                        ),
-                        string(
-                            credentialsId: "hiltbinder-signing-password", variable: "SIGNING_PWD"
-                        ),
-                        file(
-                            credentialsId: "hiltbinder-gpg", variable: "PGP_PATH"
-                        ),
                         usernamePassword(
                             credentialsId: "ossrh-account", usernameVariable: 'USR', passwordVariable: 'PWD'
-                        ),
-                        string(
-                            credentialsId: "hiltbinder-sonatype-profile-id", variable: "PROFILE_ID"
-                        ),
+                        )
                     ]) {
-                        env.signing_keyId = "${KEY_ID}"
-                        env.signing_password = "${SIGNING_PWD}"
-                        env.signing_secretKeyRingFile = "${PGP_PATH}"
                         env.ossrhUsername = "${USR}"
                         env.ossrhPassword = "${PWD}"
-                        env.sonatypeStagingProfileId = "${PROFILE_ID}"
                     }
                 }
-            }
-        }
-
-        stage("Get version") {
-            steps {
-
-                env.VERSION_NAME = getVersionNameFromTag(env.TAG_NAME)
-
-                echo "VERSION_NAME: ${env.VERSION_NAME}"
             }
         }
 
@@ -86,8 +66,4 @@ pipeline {
             }
         }
     }
-}
-
-def getVersionNameFromTag(String name) {
-    return (name =~ /release\/(\d+\.\d+\.\d)/)[0][1]
 }
