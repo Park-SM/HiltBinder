@@ -7,8 +7,7 @@ import kotlin.reflect.KClass
  * parameter `to` and `from` must not be signed together. Either `to` or `from`
  * must be used. If they are signed at the same time, throws an exception.
  *
- * And you need to apply the annotation which is the key of
- * the map with suffix `Key` (eg. SampleKey).
+ * And you need to apply the Key annotation with `@MapKey` applied.
  *
  * Also, you can use `@ClassKey`, `@StringKey`, `@LongKey`, `@IntKey` provided by Hilt.
  *
