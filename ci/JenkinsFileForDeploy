@@ -1,0 +1,93 @@
+pipeline {
+    agent any
+
+    options {
+        skipStagesAfterUnstable()
+    }
+
+    tools {
+        jdk('JAVA11')
+    }
+
+    environment {
+        BUILD_VARIANT = "Release"
+    }
+
+    stages {
+        stage("Environment") {
+            steps {
+                script {
+                    withCredentials([
+                        string(
+                            credentialsId: "hiltbinder-signing-key-id", variable: "KEY_ID"
+                        ),
+                        string(
+                            credentialsId: "hiltbinder-signing-password", variable: "SIGNING_PWD"
+                        ),
+                        file(
+                            credentialsId: "hiltbinder-gpg", variable: "PGP_PATH"
+                        ),
+                        usernamePassword(
+                            credentialsId: "ossrh-account", usernameVariable: 'USR', passwordVariable: 'PWD'
+                        ),
+                        string(
+                            credentialsId: "hiltbinder-sonatype-profile-id", variable: "PROFILE_ID"
+                        ),
+                    ]) {
+                        env.signing_keyId = "${KEY_ID}"
+                        env.signing_password = "${SIGNING_PWD}"
+                        env.signing_secretKeyRingFile = "${PGP_PATH}"
+                        env.ossrhUsername = "${USR}"
+                        env.ossrhPassword = "${PWD}"
+                        env.sonatypeStagingProfileId = "${PROFILE_ID}"
+                    }
+                }
+            }
+        }
+
+        stage("Get version") {
+            steps {
+
+                env.VERSION_NAME = getVersionNameFromTag(env.TAG_NAME)
+
+                echo "VERSION_NAME: ${env.VERSION_NAME}"
+            }
+        }
+
+        stage("Assemble") {
+            when {
+                tag pattern: /release\/(\d+\.\d+\.\d)/, comparator: "REGEXP"
+            }
+            steps {
+
+                sh "./gradlew clean assemble${env.BUILD_VARIANT} --stacktrace"
+            }
+        }
+
+        stage("Generate Javadocs") {
+            when {
+                tag pattern: /release\/(\d+\.\d+\.\d)/, comparator: "REGEXP"
+            }
+            steps {
+
+                sh "./gradlew hiltbinder:dokkaJavadoc --stacktrace"
+                sh "./gradlew hiltbinder-processor:dokkaJavadoc --stacktrace"
+            }
+        }
+
+        stage("Deploy to Sonatype repository") {
+            when {
+                tag pattern: /release\/(\d+\.\d+\.\d)/, comparator: "REGEXP"
+            }
+            steps {
+
+                sh "./gradlew hiltbinder:publishReleasePublicationToSonatypeRepository --stacktrace"
+                sh "./gradlew hiltbinder-processor:publishReleasePublicationToSonatypeRepository --stacktrace"
+            }
+        }
+    }
+}
+
+def getVersionNameFromTag(String name) {
+    return (name =~ /release\/(\d+\.\d+\.\d)/)[0][1]
+}
