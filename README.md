@@ -7,6 +7,7 @@ An annotation processor example that automatically creates [Hilt](https://develo
 - [How to use](https://github.com/Park-SM/HiltBinder#-how-to-use)
 - [Basic usage](https://github.com/Park-SM/HiltBinder#-basic-usage)
 - [Options](https://github.com/Park-SM/HiltBinder#-options)
+- [Caution](https://github.com/Park-SM/HiltBinder#caution-here-)
 - [Multibinding](https://github.com/Park-SM/HiltBinder#-multibinding)
   - [Set Multibinding - basics](https://github.com/Park-SM/HiltBinder#set-multibinding---basics)
   - [Map Multibinding - basics](https://github.com/Park-SM/HiltBinder#map-multibinding---basics)
