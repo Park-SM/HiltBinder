@@ -3,7 +3,17 @@
 ![Generic badge](https://img.shields.io/badge/Version-v1.1.0-red.svg)&nbsp;
 
 # HiltBinder
-An annotation processor example that automatically creates [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)'s `@Binds` functions and modules.<br><br>
+An annotation processor example that automatically creates [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)'s `@Binds` functions and modules
+- [How to use](https://github.com/Park-SM/HiltBinder#-how-to-use)
+- [Basic usage](https://github.com/Park-SM/HiltBinder#-basics)
+- [Options](https://github.com/Park-SM/HiltBinder#-options)
+- [Multibinding](https://github.com/Park-SM/HiltBinder#-multibinding)
+  - [Set Multibinding - basics](https://github.com/Park-SM/HiltBinder#set-multibinding---basic)
+  - [Map Multibinding - basics](https://github.com/Park-SM/HiltBinder#map-multibinding---basic)
+  - [Map Multibinding - custom key](https://github.com/Park-SM/HiltBinder#map-multibinding---custom-key)
+  - [Map Multibinding - complex custom key](https://github.com/Park-SM/HiltBinder#map-multibinding---complex-custom-key)
+- [License](https://github.com/Park-SM/HiltBinder#-license)
+<br><br>
 
 ## # How to use
 Add dependency like below code.
@@ -23,7 +33,7 @@ dependencies {
 }
 ```
 <br><br>
-## # Basics
+## # Basic usage
 No longer need abstract module classes. Just add `@HiltBinds` and the Binds module will be created automatically.
 ```kotlin
 interface TestUseCase {
@@ -138,7 +148,7 @@ interface SomethingClass    // throws an exception.
 ```
 <br><br>
 ## # MultiBinding
-### *Set Multibinding - basic*<br>
+### *Set Multibinding - basics*<br>
 > You must use `@HiltSetBinds` to apply Set Multibinding.
 ```kotlin
 interface SetSampleModel {
@@ -165,7 +175,7 @@ class SetSampleModelImpl2 @Inject constructor(
     }
 }
 
-// This is the code to get multiple bindings.
+// This is the code to get Set Multibinding.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -182,8 +192,8 @@ class MainActivity : AppCompatActivity() {
 }
 ```
 
-### *Map Multibinding - basic*<br>
-> You must use `@HiltMapBinds` to apply Map Multibinding. And you need to add a Key annotation with hilt's `@MapKey` applied, as in the code below. You can use the `@ClassKey`, `@StringKey`, `@IntKey`, `@LongKey` provided by hilt.
+### *Map Multibinding - basics*<br>
+> You must use `@HiltMapBinds` to apply Map Multibinding. And you must to add a Key annotation with hilt's `@MapKey` applied, as in the code below. You can use the `@ClassKey`, `@StringKey`, `@IntKey`, `@LongKey` provided by hilt.
 ```kotlin
 interface MapStringKeySampleModel {
     fun printTestString()
@@ -211,7 +221,7 @@ class MapStringKeySampleModelImpl2 @Inject constructor(
     }
 }
 
-// This is the code to get multiple bindings.
+// This is the code to get Map Multibinding.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -267,7 +277,7 @@ class MapCustomKeySampleModelImpl2 @Inject constructor(
     }
 }
 
-// This is the code to get multiple bindings.
+// This is the code to get Map Multibinding.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -286,7 +296,7 @@ class MainActivity : AppCompatActivity() {
 ```
   
 ### *Map Multibinding - complex custom key*<br>
-> When applying Map Multibinding, you can set the parameter of Key annotation to multiple Complex Keys as shown in the code below.
+> You can use key annotations with multiple parameters as in the code below. Complex custom keys require dependencies from the auto-value and auto-value annotation libraries. For more information, see [References](https://dagger.dev/dev-guide/multibindings).
 ```kotlin
 /***
  * Complex key require the following dependencies:
@@ -318,7 +328,6 @@ interface MapComplexKeySampleModel {
     key4 = [1, 2, 3],
     key5 = SampleType.SAMPLE1
 )
-
 class MapComplexKeySampleModelImpl1 @Inject constructor(
     private val testString: String
 ) : MapComplexKeySampleModel {
@@ -345,7 +354,7 @@ class MapComplexKeySampleModelImpl2 @Inject constructor(
     }
 }
 
-// This is the code to get multiple bindings.
+// This is the code to get Map Multibinding.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
