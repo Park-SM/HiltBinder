@@ -1,6 +1,7 @@
-![Generic badge](https://img.shields.io/badge/Platform-Android-green.svg)&nbsp;&nbsp;
-![Generic badge](https://img.shields.io/badge/Repository-MavenCentral-blue.svg)&nbsp;&nbsp;
+![Generic badge](https://img.shields.io/badge/Platform-Android-green.svg)&nbsp;
+![Generic badge](https://img.shields.io/badge/Repository-MavenCentral-blue.svg)&nbsp;
 ![Generic badge](https://img.shields.io/badge/Version-v1.1.0-red.svg)&nbsp;
+![Generic badge](https://img.shields.io/badge/License-Apache2.0-3DB7CC.svg)&nbsp;
 
 # HiltBinder
 An annotation processor example that automatically creates [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)'s `@Binds` functions and modules
