@@ -273,7 +273,7 @@ class MapCustomKeySampleModelImpl1 @Inject constructor(
 ) : MapCustomKeySampleModel {
 
     override fun printTestString() {
-        Log.d("Test!!", "TestString is `$testString` in MapSampleModelImpl1 class.")
+        Log.d("Test!!", "TestString is `$testString` in MapCustomKeySampleModelImpl1 class.")
     }
 }
 
@@ -284,7 +284,7 @@ class MapCustomKeySampleModelImpl2 @Inject constructor(
 ) : MapCustomKeySampleModel {
 
     override fun printTestString() {
-        Log.d("Test!!", "TestString is `$testString` in MapSampleModelImpl2 class.")
+        Log.d("Test!!", "TestString is `$testString` in MapCustomKeySampleModelImpl2 class.")
     }
 }
 
@@ -307,7 +307,7 @@ class MainActivity : AppCompatActivity() {
 ```
   
 ### *Map Multibinding - complex custom key*<br>
-> You can use key annotations with multiple parameters as in the code below. Complex custom keys require dependencies from the auto-value and auto-value annotation libraries. For more information, see [References](https://dagger.dev/dev-guide/multibindings).
+> You can use key annotations with multiple parameters as in the code below. Complex custom keys require dependencies from the auto-value and auto-value-annotation libraries. For more information, see [References](https://dagger.dev/dev-guide/multibindings).
 ```kotlin
 /***
  * Complex key require the following dependencies:
