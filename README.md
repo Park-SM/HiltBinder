@@ -251,7 +251,7 @@ class MainActivity : AppCompatActivity() {
 ```
   
 ### *Map Multibinding - custom key*<br>
-> And you can define and use map key annotations.
+> And you can define and use map key annotations. In addition to enum classes, you can define other types.
 ```kotlin
 enum class SampleType {
     SAMPLE1, SAMPLE2, DEFAULT
@@ -260,7 +260,7 @@ enum class SampleType {
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 @MapKey
-annotation class SampleMapCustomKey(val key: SampleType) // In addition to enum classes, you can define other types.
+annotation class SampleMapCustomKey(val key: SampleType)
 
 interface MapCustomKeySampleModel {
     fun printTestString()
