@@ -14,9 +14,10 @@ An annotation processor example that automatically creates [Hilt](https://develo
   - [Map Multibinding - basics](https://github.com/Park-SM/HiltBinder#map-multibinding---basics)
   - [Map Multibinding - custom key](https://github.com/Park-SM/HiltBinder#map-multibinding---custom-key)
   - [Map Multibinding - complex custom key](https://github.com/Park-SM/HiltBinder#map-multibinding---complex-custom-key)
+- [Performance]()
 - [License](https://github.com/Park-SM/HiltBinder#-license)
-<br><br>
 
+<br><br>
 ## # How to use
 Add dependency like below code.
 ```groovy
@@ -61,8 +62,8 @@ abstract class TestUseCaseImpl_BindsModule {
     @Binds
     public abstract TestUseCase bindTestUseCaseImpl(TestUseCaseImpl target);
 }
-
 ```
+
 <br><br>
 ## # Options
 - `to`: The return type of the Binds abstract function.
@@ -395,6 +396,12 @@ class TestClassImpl @Inject constructor(
     }
 }
 ```
+
+<br><br>
+## # Performance
+You can monitor the elapsed time during annotation processing.<br><br>
+<img width="1121" src="https://user-images.githubusercontent.com/47319426/177004803-1e068a5b-f485-44a8-ad79-2609b9e21b86.png">
+
 <br><br>
 ## # License
 ```
