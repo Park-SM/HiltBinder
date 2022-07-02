@@ -66,7 +66,8 @@ abstract class TestUseCaseImpl_BindsModule {
 
 <br><br>
 ## # Options
-- `to`: The return type of the Binds abstract function.
+#### *`to`*<br>
+> The return type of the Binds abstract function.
 ```kotlin
 interface TestUseCase {
     fun printTestString()
@@ -83,7 +84,8 @@ class TestUseCaseImpl @Inject constructor(
 }
 ```
 
-- `from`: The argument type of the Binds abstract function. However, from an architectural point of view, this is not recommended.
+#### *`from`*<br>
+> The argument type of the Binds abstract function. However, from an architectural point of view, this is not recommended.
 ```kotlin
 @HiltBinds(from = TestUseCaseImpl::class)
 interface TestUseCase {
@@ -100,7 +102,8 @@ class TestUseCaseImpl @Inject constructor(
 }
 ```
 
-- `qualifier`: The Qualifier annotation to be applied to the return type.
+#### *`qualifier`*
+> The Qualifier annotation to be applied to the return type.
 ```kotlin
 @HiltBinds(qualifier = TestUseCaseQualifier1::class)
 class TestUseCaseImpl1 @Inject constructor(
@@ -123,7 +126,8 @@ class TestUseCaseImpl2 @Inject constructor(
 }
 ```
 
-- `component`: Specifies in which component the class to be returned will be installed.
+#### *`component`*
+> Specifies in which component the class to be returned will be installed.
 ```kotlin
 interface TestUseCase {
     fun printTestString()
