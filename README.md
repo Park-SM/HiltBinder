@@ -260,7 +260,7 @@ enum class SampleType {
 @Target(AnnotationTarget.FUNCTION, AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.RUNTIME)
 @MapKey
-annotation class SampleMapCustomKey(val key: SampleType)
+annotation class SampleMapCustomKey(val key: SampleType) // You can define enum classes and other types.
 
 interface MapCustomKeySampleModel {
     fun printTestString()
