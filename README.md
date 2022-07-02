@@ -1,6 +1,6 @@
 ![Generic badge](https://img.shields.io/badge/Platform-Android-green.svg)&nbsp;&nbsp;
 ![Generic badge](https://img.shields.io/badge/Repository-MavenCentral-blue.svg)&nbsp;&nbsp;
-![Generic badge](https://img.shields.io/badge/Version-v1.0.1-red.svg)&nbsp;
+![Generic badge](https://img.shields.io/badge/Version-v1.1.0-red.svg)&nbsp;
 
 # HiltBinder
 An annotation processor example that automatically creates [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)'s `@Binds` functions and modules.<br><br>
@@ -17,7 +17,7 @@ repositories {
 // build.gradle(:app)
 dependencies {
 
-    def hiltBinderVersion = "1.0.1"
+    def hiltBinderVersion = "1.1.0"
     implementation "com.smparkworld.hiltbinder:hiltbinder:$hiltBinderVersion"
     kapt "com.smparkworld.hiltbinder:hiltbinder-processor:$hiltBinderVersion"
 }
@@ -137,7 +137,235 @@ class TestUseCaseImpl @Inject constructor(
 interface SomethingClass    // throws an exception.
 ```
 <br><br>
+## # MultiBinding
+### *Set Multibinding - basic*<br>
+> You must use `@HiltSetBinds` to apply Set Multibinding.
+```kotlin
+interface SetSampleModel {
+    fun printTestString()
+}
+
+@HiltSetBinds
+class SetSampleModelImpl1 @Inject constructor(
+    private val testString: String
+) : SetSampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in SetSampleModelImpl1 class.")
+    }
+}
+
+@HiltSetBinds
+class SetSampleModelImpl2 @Inject constructor(
+    private val testString: String
+) : SetSampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in SetSampleModelImpl2 class.")
+    }
+}
+
+// This is the code to get multiple bindings.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var sampleSet: @JvmSuppressWildcards Set<SetSampleModel>
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        sampleSet.forEach {
+            it.printTestString()
+        }
+    }
+}
+```
+
+### *Map Multibinding - basic*<br>
+> You must use `@HiltMapBinds` to apply Map Multibinding. And you need to add a Key annotation with hilt's `@MapKey` applied, as in the code below. You can use the `@ClassKey`, `@StringKey`, `@IntKey`, `@LongKey` provided by hilt.
+```kotlin
+interface MapStringKeySampleModel {
+    fun printTestString()
+}
+
+@HiltMapBinds
+@StringKey("model1")
+class MapStringKeySampleModelImpl1 @Inject constructor(
+    private val testString: String
+) : MapStringKeySampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in MapStringKeySampleModelImpl1 class.")
+    }
+}
+
+@HiltMapBinds
+@StringKey("model2")
+class MapStringKeySampleModelImpl2 @Inject constructor(
+    private val testString: String
+) : MapStringKeySampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in MapStringKeySampleModelImpl2 class.")
+    }
+}
+
+// This is the code to get multiple bindings.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var stringKeySampleMap: @JvmSuppressWildcards Map<String, Provider<MapStringKeySampleModel>>
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        for ((k, v) in stringKeySampleMap) {
+            Log.d("Test!!", "key: $k")
+            v.get().printTestString()
+        }
+    }
+}
+```
+  
+### *Map Multibinding - custom key*<br>
+> And you can define and use map key annotations.
+```kotlin
+enum class SampleType {
+    SAMPLE1, SAMPLE2, DEFAULT
+}
+
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+@MapKey
+annotation class SampleMapCustomKey(val key: SampleType)
+
+interface MapCustomKeySampleModel {
+    fun printTestString()
+}
+
+@HiltMapBinds
+@SampleMapCustomKey(SampleType.SAMPLE1)
+class MapCustomKeySampleModelImpl1 @Inject constructor(
+    private val testString: String
+) : MapCustomKeySampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in MapSampleModelImpl1 class.")
+    }
+}
+
+@HiltMapBinds
+@SampleMapCustomKey(SampleType.SAMPLE2)
+class MapCustomKeySampleModelImpl2 @Inject constructor(
+    private val testString: String
+) : MapCustomKeySampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in MapSampleModelImpl2 class.")
+    }
+}
+
+// This is the code to get multiple bindings.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var customKeySampleMap: @JvmSuppressWildcards Map<SampleType, Provider<MapCustomKeySampleModel>>
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        for ((k, v) in customKeySampleMap) {
+            Log.d("Test!!", "key: $k")
+            v.get().printTestString()
+        }
+    }
+}
+```
+  
+### *Map Multibinding - complex custom key*<br>
+> When applying Map Multibinding, you can set the parameter of Key annotation to multiple Complex Keys as shown in the code below.
+```kotlin
+/***
+ * Complex key require the following dependencies:
+ *
+ *   def autoValueVersion = "1.9"
+ *   implementation "com.google.auto.value:auto-value:$autoValueVersion"
+ *   implementation "com.google.auto.value:auto-value-annotations:$autoValueVersion"
+ */
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+@MapKey(unwrapValue = false)
+annotation class SampleMapComplexKey(
+    val key1: String,
+    val key2: KClass<*>,
+    val key3: Array<String>,
+    val key4: IntArray,
+    val key5: SampleType
+)
+
+interface MapComplexKeySampleModel {
+    fun printTestString()
+}
+
+@HiltMapBinds
+@SampleMapComplexKey(
+    key1 = "sample1",
+    key2 = MapComplexKeySampleModelImpl1::class,
+    key3 = ["s1", "s2", "s3"],
+    key4 = [1, 2, 3],
+    key5 = SampleType.SAMPLE1
+)
+
+class MapComplexKeySampleModelImpl1 @Inject constructor(
+    private val testString: String
+) : MapComplexKeySampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in MapComplexKeySampleModelImpl1 class.");
+    }
+}
+
+@HiltMapBinds
+@SampleMapComplexKey(
+    key1 = "sample2",
+    key2 = MapComplexKeySampleModelImpl2::class,
+    key3 = ["s4", "s5", "s6"],
+    key4 = [4, 5, 6],
+    key5 = SampleType.SAMPLE2
+)
+class MapComplexKeySampleModelImpl2 @Inject constructor(
+    private val testString: String
+) : MapComplexKeySampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in MapComplexKeySampleModelImpl2 class.");
+    }
+}
+
+// This is the code to get multiple bindings.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var complexKeySampleMap: @JvmSuppressWildcards Map<SampleMapComplexKey, Provider<MapComplexKeySampleModel>>
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        for ((k, v) in complexKeySampleMap) {
+            Log.d("Test!!", "key: $k")
+            v.get().printTestString()
+        }
+    }
+}
+```
+
+<br><br>
 ## # Supported
+
 It also supports nested class as below code.
 ```kotlin
 interface TestContract {
