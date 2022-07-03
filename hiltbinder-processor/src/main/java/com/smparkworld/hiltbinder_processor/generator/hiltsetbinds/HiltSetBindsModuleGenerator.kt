@@ -19,6 +19,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoSet
 import javax.annotation.processing.ProcessingEnvironment
+import javax.inject.Named
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.Modifier
@@ -40,10 +41,17 @@ internal class HiltSetBindsModuleGenerator : ModuleGenerator {
 
         val moduleFileName = "${element.simpleName}$MODULE_SUFFIX"
 
+        val namedAnnotation = params.namedValue?.let { named ->
+            AnnotationSpec.builder(Named::class.java)
+                .addMember("value", "\$S", named)
+                .build()
+        }
+
         val spec = MethodSpec.methodBuilder("$FUN_PREFIX${element.simpleName}")
             .addAnnotation(Binds::class.java)
             .addAnnotation(IntoSet::class.java)
             .addAnnotationIfNotNull(env, params.qualifier)
+            .addAnnotationIfNotNull(namedAnnotation)
             .addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)
             .addParameter(params.from.asClassName(env), PARAMETER_NAME)
             .returns(params.to.asClassName(env))

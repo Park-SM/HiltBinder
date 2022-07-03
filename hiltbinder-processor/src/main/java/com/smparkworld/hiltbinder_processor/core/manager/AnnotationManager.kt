@@ -50,13 +50,14 @@ internal object AnnotationManager {
         }
     }
 
-    fun getAnnotationValueBySuffix(
+    fun getAnnotationValueByParentAnnotation(
         env: ProcessingEnvironment,
         element: Element,
         parent: KClass<out Annotation>,
-        key: String
+        key: String,
+        vararg ignores: KClass<out Annotation>
     ): Element? {
-        return getAnnotationMirrorByParentAnnotation(env, element, parent)?.let { mirror ->
+        return getAnnotationMirrorByParentAnnotation(env, element, parent, *ignores)?.let { mirror ->
             getAnnotationValue(mirror, key)?.let {
                 env.typeUtils.asElement(it.value as TypeMirror)
             }
@@ -66,9 +67,10 @@ internal object AnnotationManager {
     fun getAnnotationValuesByParentAnnotation(
         env: ProcessingEnvironment,
         element: Element,
-        parent: KClass<out Annotation>
+        parent: KClass<out Annotation>,
+        vararg ignores: KClass<out Annotation>
     ): Map<String, Any>? {
-        return getAnnotationMirrorByParentAnnotation(env, element, parent)?.let { mirror ->
+        return getAnnotationMirrorByParentAnnotation(env, element, parent, *ignores)?.let { mirror ->
             getAnnotationValues(env, mirror)
         }
     }
@@ -76,12 +78,14 @@ internal object AnnotationManager {
     fun getAnnotationByParentAnnotation(
         env: ProcessingEnvironment,
         element: Element,
-        parent: KClass<out Annotation>
+        parent: KClass<out Annotation>,
+        vararg ignores: KClass<out Annotation>
     ): Element? {
         return getAnnotationMirrorByParentAnnotation(
             env,
             element,
-            parent
+            parent,
+            *ignores
         )?.annotationType?.asElement()
     }
 
@@ -95,14 +99,20 @@ internal object AnnotationManager {
     private fun getAnnotationMirrorByParentAnnotation(
         env: ProcessingEnvironment,
         element: Element,
-        parent: KClass<out Annotation>
+        parent: KClass<out Annotation>,
+        vararg ignores: KClass<out Annotation>
     ): AnnotationMirror? {
         var count = 0
         var result: AnnotationMirror? = null
+        val ignoreQualifiedNames = ignores.map { it.qualifiedName }
 
         env.elementUtils.getAllAnnotationMirrors(element).forEach { mirror ->
-            mirror.annotationType.asElement().annotationMirrors.forEach { parentMirror ->
-                if (parentMirror.annotationType.toString() == parent.qualifiedName) {
+            val childAnnotationType = mirror.annotationType
+            childAnnotationType.asElement().annotationMirrors.forEach { parentMirror ->
+
+                val isNotIgnored = !ignoreQualifiedNames.contains(childAnnotationType.toString())
+                val isParentMatched = parentMirror.annotationType.toString() == parent.qualifiedName
+                if (isParentMatched && isNotIgnored) {
                     result = mirror
                     count++
                 }

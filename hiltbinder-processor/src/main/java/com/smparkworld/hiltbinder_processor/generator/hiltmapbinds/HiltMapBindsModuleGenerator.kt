@@ -19,6 +19,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.multibindings.IntoMap
 import javax.annotation.processing.ProcessingEnvironment
+import javax.inject.Named
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import javax.lang.model.element.Modifier
@@ -39,6 +40,12 @@ internal class HiltMapBindsModuleGenerator : ModuleGenerator {
         val params = parameterMapper.toParamsModel(env, element)
 
         val moduleFileName = "${element.simpleName}$MODULE_SUFFIX"
+
+        val namedAnnotation = params.namedValue?.let { named ->
+            AnnotationSpec.builder(Named::class.java)
+                .addMember("value", "\$S", named)
+                .build()
+        }
 
         val mapKeyAnnotation = AnnotationSpec.builder(params.mapKey.asClassName(env)).apply {
                 for ((key, value) in params.mapKeyParams) {
@@ -81,6 +88,7 @@ internal class HiltMapBindsModuleGenerator : ModuleGenerator {
             .addAnnotation(IntoMap::class.java)
             .addAnnotation(mapKeyAnnotation)
             .addAnnotationIfNotNull(env, params.qualifier)
+            .addAnnotationIfNotNull(namedAnnotation)
             .addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)
             .addParameter(params.from.asClassName(env), PARAMETER_NAME)
             .returns(params.to.asClassName(env))
