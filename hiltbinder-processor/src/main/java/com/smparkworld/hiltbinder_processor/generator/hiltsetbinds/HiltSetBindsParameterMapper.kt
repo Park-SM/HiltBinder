@@ -7,9 +7,9 @@ import com.smparkworld.hiltbinder_processor.extension.error
 import com.smparkworld.hiltbinder_processor.extension.getSuperInterfaceElement
 import com.smparkworld.hiltbinder_processor.model.HiltSetBindsParamsModel
 import javax.annotation.processing.ProcessingEnvironment
+import javax.inject.Named
 import javax.inject.Qualifier
 import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
 
 internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsModel> {
 
@@ -17,7 +17,8 @@ internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsM
         val paramTo = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_TO)
         val paramFrom = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_FROM)
         val paramComponent = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_COMPONENT)
-        val qualifier = AnnotationManager.getAnnotationByParentAnnotation(env, element, Qualifier::class)
+        val qualifier = AnnotationManager.getAnnotationByParentAnnotation(env, element, Qualifier::class, Named::class)
+        val namedValue = AnnotationManager.getAnnotationValues<Named>(env, element)?.get(NAMED_PARAM) as? String
 
         return when {
             (paramFrom != null && paramTo == null) -> {
@@ -25,7 +26,8 @@ internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsM
                     element,
                     paramFrom,
                     paramComponent,
-                    qualifier
+                    qualifier,
+                    namedValue
                 )
             }
             (paramFrom == null && paramTo != null) -> {
@@ -33,7 +35,8 @@ internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsM
                     paramTo,
                     element,
                     paramComponent,
-                    qualifier
+                    qualifier,
+                    namedValue
                 )
             }
             (paramFrom == null && paramTo == null) -> {
@@ -41,7 +44,8 @@ internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsM
                     env.getSuperInterfaceElement(element),
                     element,
                     paramComponent,
-                    qualifier
+                    qualifier,
+                    namedValue
                 )
             }
             else -> {
@@ -57,5 +61,7 @@ internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsM
         private const val PARAM_TO = "to"
         private const val PARAM_FROM = "from"
         private const val PARAM_COMPONENT = "component"
+
+        private const val NAMED_PARAM = "value"
     }
 }

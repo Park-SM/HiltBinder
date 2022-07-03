@@ -8,7 +8,7 @@ import javax.lang.model.element.Element
 
 internal object ModuleGeneratorDispatcher {
 
-    private const val TAG = "HiltBinds: processing:"
+    private const val TAG = "HiltBinder: processing:"
 
     private val moduleGenerators: Set<ModuleGenerator> = ModuleGeneratorFactory.createModuleGenerators()
 

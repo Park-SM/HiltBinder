@@ -25,7 +25,7 @@ internal object PerformanceManager {
         if (startedAtInternal != null && completedAtInternal != null) {
             val message = getReportMessage(completedAtInternal - startedAtInternal)
             if (message.isBlank().not()) {
-                env.log("HiltBinds: processed $count classes, total processing time: $message")
+                env.log("HiltBinder: processed $count classes, total processing time: $message")
             }
         }
     }
