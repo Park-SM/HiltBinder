@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.smparkworld.hiltbinderexample.sample.basic.component.ComponentSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.from.FromSampleModel
+import com.smparkworld.hiltbinderexample.sample.basic.named.NamedSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.qualifier.QualifierSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.qualifier.SampleQualifier1
 import com.smparkworld.hiltbinderexample.sample.basic.qualifier.SampleQualifier2
@@ -20,6 +21,7 @@ import com.smparkworld.hiltbinderexample.sample.intomap.hiltdefault.stringkey.Ma
 import com.smparkworld.hiltbinderexample.sample.intoset.SetSampleModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Provider
 
 @AndroidEntryPoint
@@ -41,6 +43,14 @@ class MainActivity : AppCompatActivity() {
     @Inject
     @SampleQualifier2
     lateinit var qualifierSampleModel2: QualifierSampleModel
+
+    @Inject
+    @Named("model1")
+    lateinit var namedSampleModel1: NamedSampleModel
+
+    @Inject
+    @Named("model2")
+    lateinit var namedSampleModel2: NamedSampleModel
 
     @Inject
     lateinit var sampleSet: @JvmSuppressWildcards Set<SetSampleModel>
@@ -72,6 +82,8 @@ class MainActivity : AppCompatActivity() {
         componentSampleModel.printTestString()
         qualifierSampleModel1.printTestString()
         qualifierSampleModel2.printTestString()
+        namedSampleModel1.printTestString()
+        namedSampleModel2.printTestString()
 
         sampleSet.forEach {
             it.printTestString()
