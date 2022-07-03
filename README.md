@@ -10,8 +10,8 @@ An annotation processor example that automatically creates [Hilt](https://develo
 - [Options](https://github.com/Park-SM/HiltBinder#-options)
   - [to option](https://github.com/Park-SM/HiltBinder#to)
   - [from option](https://github.com/Park-SM/HiltBinder#from)
+  - [component option](https://github.com/Park-SM/HiltBinder#component)  
   - [qualifier option](https://github.com/Park-SM/HiltBinder#qualifier)
-  - [component option](https://github.com/Park-SM/HiltBinder#component)
 - [Caution](https://github.com/Park-SM/HiltBinder#caution-here-)
 - [Multibinding](https://github.com/Park-SM/HiltBinder#-multibinding)
   - [Set Multibinding - basics](https://github.com/Park-SM/HiltBinder#set-multibinding---basics)
@@ -70,90 +70,135 @@ abstract class TestUseCaseImpl_BindsModule {
 
 <br><br>
 ## # Options
-#### *`to`*<br>
+#### *to*<br>
 > The return type of the Binds abstract function.
 ```kotlin
-interface TestUseCase {
+interface ToSampleModel {
     fun printTestString()
 }
 
-@HiltBinds(to = TestUseCase::class)
-class TestUseCaseImpl @Inject constructor(
+@HiltBinds(to = ToSampleModel::class)
+class ToSampleModelImpl @Inject constructor(
     private val testString: String
-) : BaseUseCase(), TestUseCase {
+) : ToSampleModel {
 
     override fun printTestString() {
-        Log.d("Test!!", "TestString is $testString in UseCase.")
+        Log.d("Test!!", "TestString is `$testString` in ToSampleModelImpl class.")
     }
 }
 ```
 
-#### *`from`*<br>
+#### *from*<br>
 > The argument type of the Binds abstract function. However, from an architectural point of view, this is not recommended.
 ```kotlin
-@HiltBinds(from = TestUseCaseImpl::class)
-interface TestUseCase {
+@HiltBinds(from = FromSampleModelImpl::class)
+interface FromSampleModel {
     fun printTestString()
 }
 
-class TestUseCaseImpl @Inject constructor(
+class FromSampleModelImpl @Inject constructor(
     private val testString: String
-) : BaseUseCase(), TestUseCase {
+) : FromSampleModel {
 
     override fun printTestString() {
-        Log.d("Test!!", "TestString is $testString in UseCase.")
+        Log.d("Test!!", "TestString is `$testString` in FromSampleModelImpl class.")
     }
 }
 ```
 
-#### *`qualifier`*
-> The Qualifier annotation to be applied to the return type.
-```kotlin
-@HiltBinds(qualifier = TestUseCaseQualifier1::class)
-class TestUseCaseImpl1 @Inject constructor(
-    private val testString: String
-) : TestUseCase {
-
-    override fun printTestString() {
-        Log.d("Test!!", "TestString is $testString in UseCase1.")
-    }
-}
-
-@HiltBinds(qualifier = TestUseCaseQualifier2::class)
-class TestUseCaseImpl2 @Inject constructor(
-    private val testString: String
-) : TestUseCase {
-
-    override fun printTestString() {
-        Log.d("Test!!", "TestString is $testString in UseCase2.")
-    }
-}
-```
-
-#### *`component`*
+#### *component*<br>
 > Specifies in which component the class to be returned will be installed.
 ```kotlin
-interface TestUseCase {
+interface ComponentSampleModel {
     fun printTestString()
 }
 
-@HiltBinds(component = ActivityComponent::class)
-class TestUseCaseImpl @Inject constructor(
+@HiltBinds(component = ActivityRetainedComponent::class)
+class ComponentSampleModelImpl @Inject constructor(
     private val testString: String
-) : TestUseCase {
+) : ComponentSampleModel {
 
     override fun printTestString() {
-        Log.d("Test!!", "TestString is $testString in UseCase.")
+        Log.d("Test!!", "TestString is `$testString` in ComponentSampleModelImpl class.")
     }
 }
 ```
+
+#### *qualifier*<br>
+> The Qualifier annotation to be applied to the return type.
+```kotlin
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class SampleQualifier1
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class SampleQualifier2
+
+interface QualifierSampleModel {
+    fun printTestString()
+}
+
+@HiltBinds
+@SampleQualifier1
+class QualifierSampleModelImpl1 @Inject constructor(
+    private val testString: String
+) : QualifierSampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in QualifierSampleModelImpl1 class.")
+    }
+}
+
+@HiltBinds
+@SampleQualifier2
+class QualifierSampleModelImpl2 @Inject constructor(
+    private val testString: String
+) : QualifierSampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in QualifierSampleModelImpl2 class.")
+    }
+}
+```
+
+#### *named*<br>
+> The Qualifier annotation to be applied to the return type.
+```kotlin
+interface NamedSampleModel {
+    fun printTestString()
+}
+
+@HiltBinds
+@Named("model1")
+class NamedSampleModelImpl1 @Inject constructor(
+   private val testString: String
+) : NamedSampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in NamedSampleModelImpl1 class.")
+    }
+}
+
+@HiltBinds
+@Named("model2")
+class NamedSampleModelImpl2 @Inject constructor(
+   private val testString: String
+) : NamedSampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in NamedSampleModelImpl2 class.")
+    }
+}
+```
+
 <br><br>
 #### *CAUTION HERE* ✋<br>
 > parameter `to` and `from` must not be signed together. Either `to` or `from` must be used. If they are signed at the same time, throws an exception. Because dependency injection can be attempted from other unrelated classes as in the code below.
 ```kotlin
 @HiltBinds(
-    to = TestUseCase::class,
-    from = TestUseCaseImpl::class
+    to = SampleModel::class,
+    from = SampleModelImpl::class
 )
 interface SomethingClass    // throws an exception.
 ```
@@ -203,8 +248,116 @@ class MainActivity : AppCompatActivity() {
 }
 ```
 
+### *Set Multibinding - qualifier*<br>
+> If you want to configure multiple `Set Multibinding` of the same type, you can use @Qualifier(`javax.inject.Qualifier`) annotations like this:
+```kotlin
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class SampleSetQualifierA
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class SampleSetQualifierB
+
+interface QualifiedSetSampleModel {
+    fun printTestString()
+}
+
+@HiltSetBinds
+@SampleSetQualifierA
+class QualifiedSetSampleModelImpl1 @Inject constructor(
+    private val testString: String
+) : QualifiedSetSampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in QualifiedSetSampleModelImpl1 class.")
+    }
+}
+
+@HiltSetBinds
+@SampleSetQualifierB
+class QualifiedSetSampleModelImpl2 @Inject constructor(
+    private val testString: String
+) : QualifiedSetSampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in QualifiedSetSampleModelImpl2 class.")
+    }
+}
+
+// This is the code to get Set Multibinding - qualifier.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+    @Inject
+    @SampleSetQualifierA
+    lateinit var sampleQualifiedSetA: @JvmSuppressWildcards Set<QualifiedSetSampleModel>
+
+    @Inject
+    @SampleSetQualifierB
+    lateinit var sampleQualifiedSetB: @JvmSuppressWildcards Set<QualifiedSetSampleModel>
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        sampleQualifiedSetA.forEach { it.printTestString() }
+        sampleQualifiedSetB.forEach { it.printTestString() }
+    }
+}
+```
+
+### *Set Multibinding - named*<br>
+> If you want to configure multiple `Set Multibinding` of the same type, you can use @Named(`javax.inject.Named`) annotations like this:
+```kotlin
+interface NamedSetSampleModel {
+    fun printTestString()
+}
+
+@HiltSetBinds
+@Named("sampleNamedSetA")
+class NamedSetSampleModelImpl1 @Inject constructor(
+    private val testString: String
+) : NamedSetSampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in NamedSetSampleModelImpl1 class.")
+    }
+}
+
+@HiltSetBinds
+@Named("sampleNamedSetB")
+class NamedSetSampleModelImpl2 @Inject constructor(
+    private val testString: String
+) : NamedSetSampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in NamedSetSampleModelImpl2 class.")
+    }
+}
+
+// This is the code to get Set Multibinding - named.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+    @Inject
+    @Named("sampleNamedSetA")
+    lateinit var sampleNamedSetA: @JvmSuppressWildcards Set<NamedSetSampleModel>
+
+    @Inject
+    @Named("sampleNamedSetB")
+    lateinit var sampleNamedSetB: @JvmSuppressWildcards Set<NamedSetSampleModel>
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        
+        sampleNamedSetA.forEach { it.printTestString() }
+        sampleNamedSetB.forEach { it.printTestString() }
+    }
+}
+```
+
 ### *Map Multibinding - basics*<br>
-> You must use `@HiltMapBinds` to apply Map Multibinding. And you must to add a Key annotation with hilt's `@MapKey` applied, as in the code below. You can use the `@ClassKey`, `@StringKey`, `@IntKey`, `@LongKey` provided by hilt.
+> You must use `@HiltMapBinds` to apply `Map Multibinding`. And you must to add a Key annotation with hilt's `@MapKey` applied, as in the code below. You can use the `@ClassKey`, `@StringKey`, `@IntKey`, `@LongKey` provided by hilt.
 ```kotlin
 interface MapStringKeySampleModel {
     fun printTestString()
@@ -307,7 +460,7 @@ class MainActivity : AppCompatActivity() {
 ```
   
 ### *Map Multibinding - complex custom key*<br>
-> You can use key annotations with multiple parameters as in the code below. Complex custom keys require dependencies from the auto-value and auto-value-annotation libraries. For more information, see [References](https://dagger.dev/dev-guide/multibindings).
+> You can use key annotations with multiple parameters as in the code below. Complex custom keys require dependencies from the `auto-value` and `auto-value-annotation` libraries. For more information, see [References](https://dagger.dev/dev-guide/multibindings).
 ```kotlin
 /***
  * Complex key require the following dependencies:
@@ -376,6 +529,146 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         
         for ((k, v) in complexKeySampleMap) {
+            Log.d("Test!!", "key: $k")
+            v.get().printTestString()
+        }
+    }
+}
+```
+
+### *Map Multibinding - qualifier*<br>
+> If you want to configure multiple `Map Multibinding` of the same type, you can use @Qualifier(`javax.inject.Qualifier`) annotations like this:
+```kotlin
+enum class SampleKey {
+    KEY1, KEY2, KEY3, KEY4, DEFAULT
+}
+
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+@MapKey
+annotation class QualifiedSampleMapCustomKey(val key: SampleKey)
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class SampleMapQualifierA
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+annotation class SampleMapQualifierB
+
+interface QualifiedMapCustomKeySampleModel {
+    fun printTestString()
+}
+
+@HiltMapBinds
+@QualifiedSampleMapCustomKey(SampleKey.KEY1)
+@SampleMapQualifierA
+class QualifiedMapCustomKeySampleModelImpl1 @Inject constructor(
+    private val testString: String
+) : QualifiedMapCustomKeySampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in QualifiedMapCustomKeySampleModelImpl1 class.")
+    }
+}
+
+@HiltMapBinds
+@QualifiedSampleMapCustomKey(SampleKey.KEY2)
+@SampleMapQualifierB
+class QualifiedMapCustomKeySampleModelImpl2 @Inject constructor(
+    private val testString: String
+) : QualifiedMapCustomKeySampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in QualifiedMapCustomKeySampleModelImpl2 class.")
+    }
+}
+
+// This is the code to get Map Multibinding - qualifier.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+    @Inject
+    @SampleMapQualifierA
+    lateinit var qualifiedCustomKeySampleMapA: @JvmSuppressWildcards Map<SampleKey, Provider<QualifiedMapCustomKeySampleModel>>
+
+    @Inject
+    @SampleMapQualifierB
+    lateinit var qualifiedCustomKeySampleMapB: @JvmSuppressWildcards Map<SampleKey, Provider<QualifiedMapCustomKeySampleModel>>
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        for ((k, v) in qualifiedCustomKeySampleMapA) {
+            Log.d("Test!!", "key: $k")
+            v.get().printTestString()
+        }
+
+        for ((k, v) in qualifiedCustomKeySampleMapB) {
+            Log.d("Test!!", "key: $k")
+            v.get().printTestString()
+        }
+    }
+}
+```
+
+### *Map Multibinding - named*<br>
+> If you want to configure multiple `Map Multibinding` of the same type, you can use @Named(`javax.inject.Named`) annotations like this:
+```kotlin
+@Target(AnnotationTarget.FUNCTION, AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+@MapKey
+annotation class NamedSampleMapCustomKey(val key: SampleKey)
+
+interface NamedMapCustomKeySampleModel {
+    fun printTestString()
+}
+
+@HiltMapBinds
+@NamedSampleMapCustomKey(SampleKey.KEY1)
+@Named("sampleNamedMapA")
+class NamedMapCustomKeySampleModelImpl1 @Inject constructor(
+    private val testString: String
+) : NamedMapCustomKeySampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in NamedMapCustomKeySampleModelImpl1 class.")
+    }
+}
+
+@HiltMapBinds
+@NamedSampleMapCustomKey(SampleKey.KEY2)
+@Named("sampleNamedMapB")
+class NamedMapCustomKeySampleModelImpl2 @Inject constructor(
+    private val testString: String
+) : NamedMapCustomKeySampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in NamedMapCustomKeySampleModelImpl2 class.")
+    }
+}
+
+// This is the code to get Map Multibinding - named.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+    @Inject
+    @Named("sampleNamedMapA")
+    lateinit var namedCustomKeySampleMapA: @JvmSuppressWildcards Map<SampleKey, Provider<NamedMapCustomKeySampleModel>>
+
+    @Inject
+    @Named("sampleNamedMapB")
+    lateinit var namedCustomKeySampleMapB: @JvmSuppressWildcards Map<SampleKey, Provider<NamedMapCustomKeySampleModel>>
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        for ((k, v) in namedCustomKeySampleMapA) {
+            Log.d("Test!!", "key: $k")
+            v.get().printTestString()
+        }
+
+        for ((k, v) in namedCustomKeySampleMapB) {
             Log.d("Test!!", "key: $k")
             v.get().printTestString()
         }
