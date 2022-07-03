@@ -9,6 +9,7 @@ import com.smparkworld.hiltbinder_processor.extension.log
 import com.smparkworld.hiltbinder_processor.model.HiltMapBindsParamsModel
 import dagger.MapKey
 import javax.annotation.processing.ProcessingEnvironment
+import javax.inject.Qualifier
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 
@@ -17,18 +18,17 @@ internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsM
     override fun toParamsModel(env: ProcessingEnvironment, element: Element): HiltMapBindsParamsModel {
         val paramTo = AnnotationManager.getAnnotationValue<HiltMapBinds>(env, element, PARAM_TO)
         val paramFrom = AnnotationManager.getAnnotationValue<HiltMapBinds>(env, element, PARAM_FROM)
-        val paramQualifier = AnnotationManager.getAnnotationValue<HiltMapBinds>(env, element, PARAM_QUALIFIER)?.takeIf {
-            it.kind == ElementKind.ANNOTATION_TYPE
-        }
         val paramComponent = AnnotationManager.getAnnotationValue<HiltMapBinds>(env, element, PARAM_COMPONENT)
-        val keyElement = AnnotationManager.getAnnotationByParentAnnotation(env, element, MapKey::class)
-        val keyElementParams = AnnotationManager.getAnnotationValuesByParentAnnotation(env, element, MapKey::class)
 
-        if (keyElement == null || keyElementParams == null) {
+        val qualifier = AnnotationManager.getAnnotationByParentAnnotation(env, element, Qualifier::class)
+        val mapKey = AnnotationManager.getAnnotationByParentAnnotation(env, element, MapKey::class)
+        val mapKeyParams = AnnotationManager.getAnnotationValuesByParentAnnotation(env, element, MapKey::class)
+
+        if (mapKey == null || mapKeyParams == null) {
             env.error(ERROR_MSG_NOT_FOUND_KEY)
             throw IllegalStateException(ERROR_MSG_NOT_FOUND_KEY)
         }
-        if (keyElementParams.isEmpty()) {
+        if (mapKeyParams.isEmpty()) {
             env.error(ERROR_MSG_PARAMS_EMPTY)
             throw IllegalArgumentException(ERROR_MSG_PARAMS_EMPTY)
         }
@@ -38,30 +38,30 @@ internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsM
                 HiltMapBindsParamsModel(
                     element,
                     paramFrom,
-                    paramQualifier,
                     paramComponent,
-                    keyElement,
-                    keyElementParams
+                    qualifier,
+                    mapKey,
+                    mapKeyParams
                 )
             }
             (paramFrom == null && paramTo != null) -> {
                 HiltMapBindsParamsModel(
                     paramTo,
                     element,
-                    paramQualifier,
                     paramComponent,
-                    keyElement,
-                    keyElementParams
+                    qualifier,
+                    mapKey,
+                    mapKeyParams
                 )
             }
             (paramFrom == null && paramTo == null) -> {
                 HiltMapBindsParamsModel(
                     env.getSuperInterfaceElement(element),
                     element,
-                    paramQualifier,
                     paramComponent,
-                    keyElement,
-                    keyElementParams
+                    qualifier,
+                    mapKey,
+                    mapKeyParams
                 )
             }
             else -> {
@@ -78,7 +78,6 @@ internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsM
 
         private const val PARAM_TO = "to"
         private const val PARAM_FROM = "from"
-        private const val PARAM_QUALIFIER = "qualifier"
         private const val PARAM_COMPONENT = "component"
     }
 }

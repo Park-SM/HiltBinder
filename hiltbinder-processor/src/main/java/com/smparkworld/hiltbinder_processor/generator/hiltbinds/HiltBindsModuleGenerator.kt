@@ -41,15 +41,15 @@ internal class HiltBindsModuleGenerator : ModuleGenerator {
 
         val spec = MethodSpec.methodBuilder("$FUN_PREFIX${element.simpleName}")
             .addAnnotation(Binds::class.java)
-            .addAnnotationIfNotNull(env, params.qualifierElement)
+            .addAnnotationIfNotNull(env, params.qualifier)
             .addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)
-            .addParameter(params.fromElement.asClassName(env), PARAMETER_NAME)
-            .returns(params.toElement.asClassName(env))
+            .addParameter(params.from.asClassName(env), PARAMETER_NAME)
+            .returns(params.to.asClassName(env))
             .build()
 
         val installInAnnotation = AnnotationSpec.builder(InstallIn::class.java)
             .addMember(
-                "value","\$T.class", params.componentElement ?: SingletonComponent::class.java
+                "value","\$T.class", params.component ?: SingletonComponent::class.java
             )
             .build()
 
@@ -61,8 +61,8 @@ internal class HiltBindsModuleGenerator : ModuleGenerator {
             .build()
 
         val javaFile = JavaFile.builder(env.getPackageName(element), moduleClazz)
-            .addImportIfNestedClass(env, params.toElement)
-            .addImportIfNestedClass(env, params.fromElement)
+            .addImportIfNestedClass(env, params.to)
+            .addImportIfNestedClass(env, params.from)
             .build()
 
         env.filer.createSourceFile("${env.getPackageName(element)}.${moduleFileName}")

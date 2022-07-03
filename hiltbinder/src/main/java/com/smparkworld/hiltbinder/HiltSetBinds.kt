@@ -11,7 +11,6 @@ import kotlin.reflect.KClass
  *
  * @param to The return type of the Binds abstract function.
  * @param from The argument type of the Binds abstract function.
- * @param qualifier The Qualifier annotation to be applied to the return type.
  * @param component Specifies in which component the class to be returned will be installed.
  */
 @Target(AnnotationTarget.CLASS)
@@ -19,6 +18,5 @@ import kotlin.reflect.KClass
 annotation class HiltSetBinds(
     val to: KClass<*> = Nothing::class,
     val from: KClass<*> = Nothing::class,
-    val qualifier: KClass<*> = Nothing::class,
     val component: KClass<*> = Nothing::class
 )

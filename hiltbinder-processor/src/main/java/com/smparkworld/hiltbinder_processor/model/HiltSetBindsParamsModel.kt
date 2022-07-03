@@ -4,8 +4,8 @@ import com.smparkworld.hiltbinder_processor.core.base.ParametersModel
 import javax.lang.model.element.Element
 
 internal data class HiltSetBindsParamsModel(
-    val toElement: Element,
-    val fromElement: Element,
-    val qualifierElement: Element? = null,
-    val componentElement: Element? = null
+    val to: Element,
+    val from: Element,
+    val component: Element? = null,
+    val qualifier: Element? = null
 ) : ParametersModel
