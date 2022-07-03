@@ -706,7 +706,8 @@ class TestClassImpl @Inject constructor(
 <br><br>
 ## # Performance monitoring
 You can monitor the elapsed time during annotation processing in the `Build` > `Build Output` tab of Android Studio.<br><br>
-<img width="1121" src="https://user-images.githubusercontent.com/47319426/177004803-1e068a5b-f485-44a8-ad79-2609b9e21b86.png">
+<img width="1125" src="https://user-images.githubusercontent.com/47319426/177049395-11156685-5707-4c15-a898-2f8cc086faf0.png">
+
 
 <br><br>
 ## # License
