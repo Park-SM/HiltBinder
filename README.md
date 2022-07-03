@@ -23,7 +23,7 @@ An annotation processor example that automatically creates [Hilt](https://develo
 
 <br><br>
 ## # How to use
-Add dependency like below code.
+Can be used in android project with hilt applied. And add dependency like below code.
 ```groovy
 // build.gradle(:project)
 repositories {
