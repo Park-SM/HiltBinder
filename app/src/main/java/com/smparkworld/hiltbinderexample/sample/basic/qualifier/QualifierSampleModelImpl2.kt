@@ -4,7 +4,8 @@ import android.util.Log
 import com.smparkworld.hiltbinder.HiltBinds
 import javax.inject.Inject
 
-@HiltBinds(qualifier = SampleQualifier2::class)
+@HiltBinds
+@SampleQualifier2
 class QualifierSampleModelImpl2 @Inject constructor(
     private val testString: String
 ) : QualifierSampleModel {

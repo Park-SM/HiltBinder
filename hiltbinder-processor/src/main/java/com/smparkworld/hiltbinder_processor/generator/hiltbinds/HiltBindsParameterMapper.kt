@@ -7,42 +7,40 @@ import com.smparkworld.hiltbinder_processor.extension.error
 import com.smparkworld.hiltbinder_processor.extension.getSuperInterfaceElement
 import com.smparkworld.hiltbinder_processor.model.HiltBindsParamsModel
 import javax.annotation.processing.ProcessingEnvironment
+import javax.inject.Qualifier
 import javax.lang.model.element.Element
-import javax.lang.model.element.ElementKind
 
 internal class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> {
 
     override fun toParamsModel(env: ProcessingEnvironment, element: Element): HiltBindsParamsModel {
         val paramTo = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_TO)
         val paramFrom = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_FROM)
-        val paramQualifier = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_QUALIFIER)?.takeIf {
-            it.kind == ElementKind.ANNOTATION_TYPE
-        }
         val paramComponent = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_COMPONENT)
+        val qualifier = AnnotationManager.getAnnotationByParentAnnotation(env, element, Qualifier::class)
 
         return when {
             (paramFrom != null && paramTo == null) -> {
                 HiltBindsParamsModel(
                     element,
                     paramFrom,
-                    paramQualifier,
-                    paramComponent
+                    paramComponent,
+                    qualifier
                 )
             }
             (paramFrom == null && paramTo != null) -> {
                 HiltBindsParamsModel(
                     paramTo,
                     element,
-                    paramQualifier,
-                    paramComponent
+                    paramComponent,
+                    qualifier
                 )
             }
             (paramFrom == null && paramTo == null) -> {
                 HiltBindsParamsModel(
                     env.getSuperInterfaceElement(element),
                     element,
-                    paramQualifier,
-                    paramComponent
+                    paramComponent,
+                    qualifier
                 )
             }
             else -> {
@@ -57,7 +55,6 @@ internal class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> 
 
         private const val PARAM_TO = "to"
         private const val PARAM_FROM = "from"
-        private const val PARAM_QUALIFIER = "qualifier"
         private const val PARAM_COMPONENT = "component"
     }
 }
