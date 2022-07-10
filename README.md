@@ -81,6 +81,10 @@ abstract class TestUseCaseImpl_BindsModule {
 #### *to*<br>
 > The return type of the Binds abstract function.
 ```kotlin
+interface OtherSpec {
+  ...
+}
+
 interface ToSampleModel {
     fun printTestString()
 }
@@ -88,7 +92,7 @@ interface ToSampleModel {
 @HiltBinds(to = ToSampleModel::class)
 class ToSampleModelImpl @Inject constructor(
     private val testString: String
-) : ToSampleModel {
+) : OtherSpec, ToSampleModel {
 
     override fun printTestString() {
         Log.d("Test!!", "TestString is `$testString` in ToSampleModelImpl class.")
