@@ -132,7 +132,7 @@ class ComponentSampleModelImpl @Inject constructor(
 ```
 
 #### *scope*<br>
-> To specify ranges separately, apply scope annotations as in the following code snippet. The reason this can work is that applying a scope to the implementing class works to keep the singleton in scope via the `DoubleCheck` class within the Hilt.
+> To specify ranges separately, apply scope annotations as in the following code snippet. The reason this can work is that applying a scope to the implementing class works to keep the singleton in scope via the `dagger.internal.DoubleCheck` class within the Hilt.
 ```kotlin
 interface ComponentSampleModel {
     fun printTestString()
