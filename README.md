@@ -11,6 +11,7 @@ An annotation processor example that automatically creates [Hilt](https://develo
   - [to property](https://github.com/Park-SM/HiltBinder#to)
   - [from property](https://github.com/Park-SM/HiltBinder#from)
   - [component property](https://github.com/Park-SM/HiltBinder#component)  
+  - [scope](https://github.com/Park-SM/HiltBinder#scope)
   - [qualifier](https://github.com/Park-SM/HiltBinder#qualifier)
   - [named](https://github.com/Park-SM/HiltBinder#named)
 - [Caution](https://github.com/Park-SM/HiltBinder#caution-here-)
@@ -127,6 +128,35 @@ class ComponentSampleModelImpl @Inject constructor(
     override fun printTestString() {
         Log.d("Test!!", "TestString is `$testString` in ComponentSampleModelImpl class.")
     }
+}
+```
+
+#### *scope*<br>
+> To specify ranges separately, apply scope annotations as in the following code snippet. The reason this can work is that applying a scope to the implementing class works to keep the singleton in scope via the `DoubleCheck` class within the Hilt.
+```kotlin
+interface ComponentSampleModel {
+    fun printTestString()
+}
+
+@HiltBinds(component = ActivityRetainedComponent::class)
+@ActivityRetainedScope
+class ComponentSampleModelImpl @Inject constructor(
+    private val testString: String
+) : ComponentSampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in ComponentSampleModelImpl class.")
+    }
+}
+
+or
+
+@HiltBinds
+@Singleton
+class SomethingSampleModelImpl @Inject constructor(
+    private val testString: String
+) : SomethingSampleModel {
+  ...
 }
 ```
 
