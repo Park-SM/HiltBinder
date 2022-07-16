@@ -6,7 +6,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @HiltSetBinds
-@Named("sampleNamedSet2")
+@Named("sampleNamedSetB")
 class NamedSetSampleModelImpl3 @Inject constructor(
     private val testString: String
 ) : NamedSetSampleModel {

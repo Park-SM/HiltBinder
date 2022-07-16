@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 @HiltMapBinds
 @QualifiedSampleMapCustomKey(SampleKey.KEY4)
-@SampleMapQualifier2
+@SampleMapQualifierB
 class QualifiedMapCustomKeySampleModelImpl4 @Inject constructor(
     private val testString: String
 ) : QualifiedMapCustomKeySampleModel {

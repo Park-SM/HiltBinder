@@ -8,7 +8,7 @@ import javax.inject.Named
 
 @HiltMapBinds
 @NamedSampleMapCustomKey(SampleKey.KEY1)
-@Named("sampleNamedMap1")
+@Named("sampleNamedMapA")
 class NamedMapCustomKeySampleModelImpl1 @Inject constructor(
     private val testString: String
 ) : NamedMapCustomKeySampleModel {

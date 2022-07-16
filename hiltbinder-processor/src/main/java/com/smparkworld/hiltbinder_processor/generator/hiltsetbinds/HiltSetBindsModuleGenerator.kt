@@ -12,6 +12,7 @@ import com.smparkworld.hiltbinder_processor.model.HiltSetBindsParamsModel
 import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
+import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeSpec
 import dagger.Binds
 import dagger.Module
@@ -47,6 +48,15 @@ internal class HiltSetBindsModuleGenerator : ModuleGenerator {
                 .build()
         }
 
+        val specReturns = if (params.toGenerics.isNullOrEmpty()) {
+            params.to.asClassName(env)
+        } else {
+            ParameterizedTypeName.get(
+                params.to.asClassName(env),
+                *params.toGenerics.map { it.asClassName(env) }.toTypedArray()
+            )
+        }
+
         val spec = MethodSpec.methodBuilder("$FUN_PREFIX${element.simpleName}")
             .addAnnotation(Binds::class.java)
             .addAnnotation(IntoSet::class.java)
@@ -54,7 +64,7 @@ internal class HiltSetBindsModuleGenerator : ModuleGenerator {
             .addAnnotationIfNotNull(namedAnnotation)
             .addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)
             .addParameter(params.from.asClassName(env), PARAMETER_NAME)
-            .returns(params.to.asClassName(env))
+            .returns(specReturns)
             .build()
 
         val installInAnnotation = AnnotationSpec.builder(InstallIn::class.java)

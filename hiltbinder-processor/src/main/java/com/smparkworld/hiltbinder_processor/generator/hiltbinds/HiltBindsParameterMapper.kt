@@ -4,6 +4,7 @@ import com.smparkworld.hiltbinder.HiltBinds
 import com.smparkworld.hiltbinder_processor.core.base.ParameterMapper
 import com.smparkworld.hiltbinder_processor.core.manager.AnnotationManager
 import com.smparkworld.hiltbinder_processor.extension.error
+import com.smparkworld.hiltbinder_processor.extension.getGenericTypes
 import com.smparkworld.hiltbinder_processor.extension.getSuperInterfaceElement
 import com.smparkworld.hiltbinder_processor.model.HiltBindsParamsModel
 import javax.annotation.processing.ProcessingEnvironment
@@ -27,7 +28,8 @@ internal class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> 
                     paramFrom,
                     paramComponent,
                     qualifier,
-                    namedValue
+                    namedValue,
+                    null
                 )
             }
             (paramFrom == null && paramTo != null) -> {
@@ -36,7 +38,8 @@ internal class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> 
                     element,
                     paramComponent,
                     qualifier,
-                    namedValue
+                    namedValue,
+                    null
                 )
             }
             (paramFrom == null && paramTo == null) -> {
@@ -45,7 +48,8 @@ internal class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> 
                     element,
                     paramComponent,
                     qualifier,
-                    namedValue
+                    namedValue,
+                    element.getGenericTypes(env)
                 )
             }
             else -> {

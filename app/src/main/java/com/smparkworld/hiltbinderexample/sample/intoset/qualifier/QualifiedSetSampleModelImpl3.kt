@@ -5,7 +5,7 @@ import com.smparkworld.hiltbinder.HiltSetBinds
 import javax.inject.Inject
 
 @HiltSetBinds
-@SampleSetQualifier2
+@SampleSetQualifierB
 class QualifiedSetSampleModelImpl3 @Inject constructor(
     private val testString: String
 ) : QualifiedSetSampleModel {

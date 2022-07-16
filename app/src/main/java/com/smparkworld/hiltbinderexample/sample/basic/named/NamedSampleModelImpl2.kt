@@ -6,7 +6,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 @HiltBinds
-@Named("model2")
+@Named("modelB")
 class NamedSampleModelImpl2 @Inject constructor(
    private val testString: String
 ) : NamedSampleModel {

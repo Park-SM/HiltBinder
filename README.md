@@ -25,7 +25,12 @@ If you think this library is useful, please press `Star` button at upside : )
   - [Map Multibinding - complex custom key](https://github.com/Park-SM/HiltBinder#map-multibinding---complex-custom-key)
   - [Map Multibinding - qualifier](https://github.com/Park-SM/HiltBinder#map-multibinding---qualifier)
   - [Map Multibinding - named](https://github.com/Park-SM/HiltBinder#map-multibinding---named)
-- [More Sample Code](https://github.com/Park-SM/HiltBinder/tree/develop/app/src/main/java/com/smparkworld/hiltbinderexample)  
+- [Supported](https://github.com/Park-SM/HiltBinder#-supported)
+  - [Generic Type - single](https://github.com/Park-SM/HiltBinder#generic-type---single)
+  - [Generic Type - multiple](https://github.com/Park-SM/HiltBinder#generic-type---multiple)
+  - [Generic Type - set multibinding](https://github.com/Park-SM/HiltBinder#generic-type---set-multibinding)
+  - [Nested Type](https://github.com/Park-SM/HiltBinder#nested-type)
+- [More Sample Code](https://github.com/Park-SM/HiltBinder/tree/develop/app/src/main/java/com/smparkworld/hiltbinderexample)
 - [Performance monitoring](https://github.com/Park-SM/HiltBinder#-performance-monitoring)
 - [License](https://github.com/Park-SM/HiltBinder#-license)
 
@@ -67,7 +72,7 @@ class TestUseCaseImpl @Inject constructor(
 ```
 
 And the processor automatically generates the following Java files:
-```kotlin
+```java
 @Module
 @InstallIn(SingletonComponent.class)
 abstract class TestUseCaseImpl_BindsModule {
@@ -719,22 +724,199 @@ class MainActivity : AppCompatActivity() {
 
 <br><br>
 ## # Supported
-
-It also supports nested class as below code.
+### *Generic Type - single*<br>
+> You can set the return type to a single generic type through @HiltBinds.
 ```kotlin
-interface TestContract {
-    interface TestClass {
-        fun printSomething()
+interface SingleGenericSampleModel<T> {
+    fun printTestString(data: T)
+}
+
+@HiltBinds
+class SingleGenericSampleModelImpl1 @Inject constructor(
+    private val testString: String
+) : SingleGenericSampleModel<Int> {
+
+    override fun printTestString(data: Int) {
+        Log.d("Test!!", "TestString is `$testString` in GenericSampleModelImpl1 class. :: Generic type is <Int>")
     }
 }
 
 @HiltBinds
-class TestClassImpl @Inject constructor(
+class SingleGenericSampleModelImpl2 @Inject constructor(
     private val testString: String
-) : TestContract.TestClass {
+) : SingleGenericSampleModel<String> {
+
+    override fun printTestString(model: String) {
+        Log.d("Test!!", "TestString is `$testString` in GenericSampleModelImpl2 class. :: Generic type is <String>")
+    }
+}
+
+@HiltBinds
+class SingleGenericSampleModelImpl3 @Inject constructor(
+    private val testString: String
+) : SingleGenericSampleModel<Any> {
+
+    override fun printTestString(data: Any) {
+        Log.d("Test!!", "TestString is `$testString` in GenericSampleModelImpl3 class. :: Generic type is <Any>")
+    }
+}
+
+// This is the code to get Generic Type - single.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var singleGenericSampleModel1: SingleGenericSampleModel<Int>
+
+    @Inject
+    lateinit var singleGenericSampleModel2: SingleGenericSampleModel<String>
+
+    @Inject
+    lateinit var singleGenericSampleModel3: SingleGenericSampleModel<Any>
     
-    override fun printSomething() {
-        Log.d("Test!!", "TestString is $testString")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        singleGenericSampleModel1.printTestString(1205)
+        singleGenericSampleModel2.printTestString("String")
+        singleGenericSampleModel3.printTestString(1205.97)
+    }
+}
+```
+
+### *Generic Type - multiple*<br>
+> You can set the return type to multiple generic types through @HiltBinds.
+```kotlin
+interface MultipleGenericSampleModel<T1, T2> {
+    fun printTestString(data1: T1, data2: T2)
+}
+
+@HiltBinds
+class MultipleGenericSampleModelImpl @Inject constructor(
+    private val testString: String
+) : MultipleGenericSampleModel<Int, Any> {
+
+    override fun printTestString(data1: Int, data2: Any) {
+        Log.d("Test!!", "TestString is `$testString` in GenericSampleModelImpl1 class. :: Generic type is <Int, Any>")
+    }
+}
+
+// This is the code to get Generic Type - multiple.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var multipleGenericSampleModel: MultipleGenericSampleModel<Int, Any>
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        multipleGenericSampleModel.printTestString(97, 1205)
+    }
+}
+```
+
+### *Generic Type - set multibinding*<br>
+> You can set the return type as a generic type through @HiltSetBinds. Of course, multiple generic types are possible.
+```kotlin
+interface SetGenericSampleModel<T> {
+    fun printTestString(data: T)
+}
+
+@HiltSetBinds
+class SetGenericSampleModelImpl1 @Inject constructor(
+  private val testString: String
+) : SetGenericSampleModel<Int> {
+
+  override fun printTestString(data: Int) {
+    Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl1 class. :: Generic type is <Int>")
+  }
+}
+
+@HiltSetBinds
+class SetGenericSampleModelImpl2 @Inject constructor(
+  private val testString: String
+) : SetGenericSampleModel<Int> {
+
+  override fun printTestString(data: Int) {
+    Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl2 class. :: Generic type is <Int>")
+  }
+}
+
+@HiltSetBinds
+class SetGenericSampleModelImpl3 @Inject constructor(
+  private val testString: String
+) : SetGenericSampleModel<String> {
+
+  override fun printTestString(data: String) {
+    Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl3 class. :: Generic type is <String>")
+  }
+}
+
+@HiltSetBinds
+class SetGenericSampleModelImpl4 @Inject constructor(
+  private val testString: String
+) : SetGenericSampleModel<String> {
+
+  override fun printTestString(data: String) {
+    Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl4 class. :: Generic type is <String>")
+  }
+}
+
+// This is the code to get Generic Type - Set Multibinding.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+  @Inject
+  lateinit var setGenericSampleModelA: @JvmSuppressWildcards Set<SetGenericSampleModel<Int>>
+
+  @Inject
+  lateinit var setGenericSampleModelB: @JvmSuppressWildcards Set<SetGenericSampleModel<String>>
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    setGenericSampleModelA.forEach {
+      it.printTestString(1)
+    }
+
+    setGenericSampleModelB.forEach {
+      it.printTestString("String1")
+    }
+  }
+}
+```
+
+### *Nested Type*<br>
+> It also supports nested class as below code.
+```kotlin
+interface NestedSampleModel {
+    interface SampleModel {
+        fun printTestString()
+    }
+}
+
+@HiltBinds
+class NestedSampleModelImpl @Inject constructor(
+    private val testString: String
+) : NestedSampleModel.SampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in NestedSampleModelImpl class.")
+    }
+}
+
+// This is the code to get Nested Type.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var nestedSampleModel: NestedSampleModel.SampleModel
+    
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        nestedSampleModel.printTestString()
     }
 }
 ```
