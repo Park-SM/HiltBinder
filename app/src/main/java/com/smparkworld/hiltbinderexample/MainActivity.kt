@@ -3,6 +3,7 @@ package com.smparkworld.hiltbinderexample
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.smparkworld.hiltbinderexample.sample.supported.generic.single.SingleGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.component.ComponentSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.from.FromSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.named.NamedSampleModel
@@ -28,6 +29,9 @@ import com.smparkworld.hiltbinderexample.sample.intoset.named.NamedSetSampleMode
 import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.SampleSetQualifier1
 import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.SampleSetQualifier2
 import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.QualifiedSetSampleModel
+import com.smparkworld.hiltbinderexample.sample.supported.generic.intoset.SetGenericSampleModel
+import com.smparkworld.hiltbinderexample.sample.supported.generic.multiple.MultipleGenericSampleModel
+import com.smparkworld.hiltbinderexample.sample.supported.nested.NestedSampleModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import javax.inject.Named
@@ -157,6 +161,38 @@ class MainActivity : AppCompatActivity() {
     lateinit var namedCustomKeySampleMap2: @JvmSuppressWildcards Map<SampleKey, Provider<NamedMapCustomKeySampleModel>>
     ////////////////////////////////////////////
 
+    ////////////////////////////////////////////
+    // supported - single generic type
+    @Inject
+    lateinit var singleGenericSampleModel1: SingleGenericSampleModel<Int>
+
+    @Inject
+    lateinit var singleGenericSampleModel2: SingleGenericSampleModel<String>
+
+    @Inject
+    lateinit var singleGenericSampleModel3: SingleGenericSampleModel<Any>
+    ////////////////////////////////////////////
+
+    ////////////////////////////////////////////
+    // supported - single generic type
+    @Inject
+    lateinit var multipleGenericSampleModel: MultipleGenericSampleModel<Int, Any>
+    ////////////////////////////////////////////
+
+    ////////////////////////////////////////////
+    // supported - set multibinding
+    @Inject
+    lateinit var setGenericSampleModelA: @JvmSuppressWildcards Set<SetGenericSampleModel<Int>>
+
+    @Inject
+    lateinit var setGenericSampleModelB: @JvmSuppressWildcards Set<SetGenericSampleModel<String>>
+    ////////////////////////////////////////////
+
+    ////////////////////////////////////////////
+    // supported - nested type
+    @Inject
+    lateinit var nestedSampleModel: NestedSampleModel.SampleModel
+    ////////////////////////////////////////////
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -247,5 +283,20 @@ class MainActivity : AppCompatActivity() {
             Log.d("Test!!", "key: $k")
             v.get().printTestString()
         }
+
+        singleGenericSampleModel1.printTestString(1205)
+        singleGenericSampleModel2.printTestString("String")
+        singleGenericSampleModel3.printTestString(1205.97)
+        multipleGenericSampleModel.printTestString(97, 1205)
+
+        setGenericSampleModelA.forEach {
+            it.printTestString(1)
+        }
+
+        setGenericSampleModelB.forEach {
+            it.printTestString("String1")
+        }
+
+        nestedSampleModel.printTestString()
     }
 }
