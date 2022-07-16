@@ -8,8 +8,8 @@ import com.smparkworld.hiltbinderexample.sample.basic.component.ComponentSampleM
 import com.smparkworld.hiltbinderexample.sample.basic.from.FromSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.named.NamedSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.qualifier.QualifierSampleModel
-import com.smparkworld.hiltbinderexample.sample.basic.qualifier.SampleQualifier1
-import com.smparkworld.hiltbinderexample.sample.basic.qualifier.SampleQualifier2
+import com.smparkworld.hiltbinderexample.sample.basic.qualifier.SampleQualifierA
+import com.smparkworld.hiltbinderexample.sample.basic.qualifier.SampleQualifierB
 import com.smparkworld.hiltbinderexample.sample.basic.to.ToSampleModel
 import com.smparkworld.hiltbinderexample.sample.intomap.SampleType
 import com.smparkworld.hiltbinderexample.sample.intomap.complexkey.MapComplexKeySampleModel
@@ -22,12 +22,12 @@ import com.smparkworld.hiltbinderexample.sample.intomap.hiltdefault.stringkey.Ma
 import com.smparkworld.hiltbinderexample.sample.intomap.qualifier.QualifiedMapCustomKeySampleModel
 import com.smparkworld.hiltbinderexample.sample.intomap.SampleKey
 import com.smparkworld.hiltbinderexample.sample.intomap.named.NamedMapCustomKeySampleModel
-import com.smparkworld.hiltbinderexample.sample.intomap.qualifier.SampleMapQualifier1
-import com.smparkworld.hiltbinderexample.sample.intomap.qualifier.SampleMapQualifier2
+import com.smparkworld.hiltbinderexample.sample.intomap.qualifier.SampleMapQualifierA
+import com.smparkworld.hiltbinderexample.sample.intomap.qualifier.SampleMapQualifierB
 import com.smparkworld.hiltbinderexample.sample.intoset.SetSampleModel
 import com.smparkworld.hiltbinderexample.sample.intoset.named.NamedSetSampleModel
-import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.SampleSetQualifier1
-import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.SampleSetQualifier2
+import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.SampleSetQualifierA
+import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.SampleSetQualifierB
 import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.QualifiedSetSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.generic.intoset.SetGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.generic.multiple.MultipleGenericSampleModel
@@ -56,24 +56,24 @@ class MainActivity : AppCompatActivity() {
     ////////////////////////////////////////////
     // Basic usage - qualifier
     @Inject
-    @SampleQualifier1
-    lateinit var qualifierSampleModel1: QualifierSampleModel
+    @SampleQualifierA
+    lateinit var qualifierSampleModelA: QualifierSampleModel
 
     @Inject
-    @SampleQualifier2
-    lateinit var qualifierSampleModel2: QualifierSampleModel
+    @SampleQualifierB
+    lateinit var qualifierSampleModelB: QualifierSampleModel
     ////////////////////////////////////////////
 
 
     ////////////////////////////////////////////
     // Basic usage - named
     @Inject
-    @Named("model1")
-    lateinit var namedSampleModel1: NamedSampleModel
+    @Named("modelA")
+    lateinit var namedSampleModelA: NamedSampleModel
 
     @Inject
-    @Named("model2")
-    lateinit var namedSampleModel2: NamedSampleModel
+    @Named("modelB")
+    lateinit var namedSampleModelB: NamedSampleModel
     ////////////////////////////////////////////
 
 
@@ -87,24 +87,24 @@ class MainActivity : AppCompatActivity() {
     ////////////////////////////////////////////
     // Set Multibinding - qualifier
     @Inject
-    @SampleSetQualifier1
-    lateinit var sampleQualifiedSet1: @JvmSuppressWildcards Set<QualifiedSetSampleModel>
+    @SampleSetQualifierA
+    lateinit var sampleQualifiedSetA: @JvmSuppressWildcards Set<QualifiedSetSampleModel>
 
     @Inject
-    @SampleSetQualifier2
-    lateinit var sampleQualifiedSet2: @JvmSuppressWildcards Set<QualifiedSetSampleModel>
+    @SampleSetQualifierB
+    lateinit var sampleQualifiedSetB: @JvmSuppressWildcards Set<QualifiedSetSampleModel>
     ////////////////////////////////////////////
 
 
     ////////////////////////////////////////////
     // Set Multibinding - named
     @Inject
-    @Named("sampleNamedSet1")
-    lateinit var sampleNamedSet1: @JvmSuppressWildcards Set<NamedSetSampleModel>
+    @Named("sampleNamedSetA")
+    lateinit var sampleNamedSetA: @JvmSuppressWildcards Set<NamedSetSampleModel>
 
     @Inject
-    @Named("sampleNamedSet2")
-    lateinit var sampleNamedSet2: @JvmSuppressWildcards Set<NamedSetSampleModel>
+    @Named("sampleNamedSetB")
+    lateinit var sampleNamedSetB: @JvmSuppressWildcards Set<NamedSetSampleModel>
     ////////////////////////////////////////////
 
 
@@ -141,25 +141,26 @@ class MainActivity : AppCompatActivity() {
     ////////////////////////////////////////////
     // Map Multibinding - qualifier
     @Inject
-    @SampleMapQualifier1
-    lateinit var qualifiedCustomKeySampleMap1: @JvmSuppressWildcards Map<SampleKey, Provider<QualifiedMapCustomKeySampleModel>>
+    @SampleMapQualifierA
+    lateinit var qualifiedCustomKeySampleMapA: @JvmSuppressWildcards Map<SampleKey, Provider<QualifiedMapCustomKeySampleModel>>
 
     @Inject
-    @SampleMapQualifier2
-    lateinit var qualifiedCustomKeySampleMap2: @JvmSuppressWildcards Map<SampleKey, Provider<QualifiedMapCustomKeySampleModel>>
+    @SampleMapQualifierB
+    lateinit var qualifiedCustomKeySampleMapB: @JvmSuppressWildcards Map<SampleKey, Provider<QualifiedMapCustomKeySampleModel>>
     ////////////////////////////////////////////
 
 
     ////////////////////////////////////////////
     // Map Multibinding - named
     @Inject
-    @Named("sampleNamedMap1")
-    lateinit var namedCustomKeySampleMap1: @JvmSuppressWildcards Map<SampleKey, Provider<NamedMapCustomKeySampleModel>>
+    @Named("sampleNamedMapA")
+    lateinit var namedCustomKeySampleMapA: @JvmSuppressWildcards Map<SampleKey, Provider<NamedMapCustomKeySampleModel>>
 
     @Inject
-    @Named("sampleNamedMap2")
-    lateinit var namedCustomKeySampleMap2: @JvmSuppressWildcards Map<SampleKey, Provider<NamedMapCustomKeySampleModel>>
+    @Named("sampleNamedMapB")
+    lateinit var namedCustomKeySampleMapB: @JvmSuppressWildcards Map<SampleKey, Provider<NamedMapCustomKeySampleModel>>
     ////////////////////////////////////////////
+
 
     ////////////////////////////////////////////
     // supported - single generic type
@@ -173,11 +174,13 @@ class MainActivity : AppCompatActivity() {
     lateinit var singleGenericSampleModel3: SingleGenericSampleModel<Any>
     ////////////////////////////////////////////
 
+
     ////////////////////////////////////////////
     // supported - single generic type
     @Inject
     lateinit var multipleGenericSampleModel: MultipleGenericSampleModel<Int, Any>
     ////////////////////////////////////////////
+
 
     ////////////////////////////////////////////
     // supported - set multibinding
@@ -187,6 +190,7 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var setGenericSampleModelB: @JvmSuppressWildcards Set<SetGenericSampleModel<String>>
     ////////////////////////////////////////////
+
 
     ////////////////////////////////////////////
     // supported - nested type
@@ -201,32 +205,32 @@ class MainActivity : AppCompatActivity() {
         toSampleModel.printTestString()
         fromSampleModel.printTestString()
         componentSampleModel.printTestString()
-        qualifierSampleModel1.printTestString()
-        qualifierSampleModel2.printTestString()
-        namedSampleModel1.printTestString()
-        namedSampleModel2.printTestString()
+        qualifierSampleModelA.printTestString()
+        qualifierSampleModelB.printTestString()
+        namedSampleModelA.printTestString()
+        namedSampleModelB.printTestString()
 
         sampleSet.forEach {
             it.printTestString()
         }
 
-        Log.d("Test!!", "qualifier: SampleSetQualifier1")
-        sampleQualifiedSet1.forEach {
+        Log.d("Test!!", "qualifier: SampleSetQualifierA")
+        sampleQualifiedSetA.forEach {
             it.printTestString()
         }
 
-        Log.d("Test!!", "qualifier: SampleSetQualifier2")
-        sampleQualifiedSet2.forEach {
+        Log.d("Test!!", "qualifier: SampleSetQualifierB")
+        sampleQualifiedSetB.forEach {
             it.printTestString()
         }
 
-        Log.d("Test!!", "named: sampleNamedSet1")
-        sampleNamedSet1.forEach {
+        Log.d("Test!!", "named: sampleNamedSetA")
+        sampleNamedSetA.forEach {
             it.printTestString()
         }
 
-        Log.d("Test!!", "named: sampleNamedSet2")
-        sampleNamedSet2.forEach {
+        Log.d("Test!!", "named: sampleNamedSetB")
+        sampleNamedSetB.forEach {
             it.printTestString()
         }
 
@@ -260,26 +264,26 @@ class MainActivity : AppCompatActivity() {
             v.get().printTestString()
         }
 
-        Log.d("Test!!", "qualifier: SampleMapQualifier1")
-        for ((k, v) in qualifiedCustomKeySampleMap1) {
+        Log.d("Test!!", "qualifier: SampleMapQualifierA")
+        for ((k, v) in qualifiedCustomKeySampleMapA) {
             Log.d("Test!!", "key: $k")
             v.get().printTestString()
         }
 
-        Log.d("Test!!", "qualifier: SampleMapQualifier2")
-        for ((k, v) in qualifiedCustomKeySampleMap2) {
+        Log.d("Test!!", "qualifier: SampleMapQualifierB")
+        for ((k, v) in qualifiedCustomKeySampleMapB) {
             Log.d("Test!!", "key: $k")
             v.get().printTestString()
         }
 
-        Log.d("Test!!", "named: sampleNamedMap1")
-        for ((k, v) in namedCustomKeySampleMap1) {
+        Log.d("Test!!", "named: sampleNamedMapA")
+        for ((k, v) in namedCustomKeySampleMapA) {
             Log.d("Test!!", "key: $k")
             v.get().printTestString()
         }
 
-        Log.d("Test!!", "named: sampleNamedMap2")
-        for ((k, v) in namedCustomKeySampleMap2) {
+        Log.d("Test!!", "named: sampleNamedMapB")
+        for ((k, v) in namedCustomKeySampleMapB) {
             Log.d("Test!!", "key: $k")
             v.get().printTestString()
         }
