@@ -10,10 +10,9 @@ import javax.lang.model.type.TypeMirror
 internal fun Element.asClassName(env: ProcessingEnvironment): ClassName =
     env.getClassName(this)
 
-internal fun Element.getGenericTypes(env: ProcessingEnvironment): List<Element> {
-    return (this as TypeElement).interfaces[0].let { type ->
+internal fun Element.getGenericTypes(env: ProcessingEnvironment): List<Element> =
+    (this as TypeElement).interfaces[0].let { type ->
         (type as DeclaredType).typeArguments.map {
             env.typeUtils.asElement(it)
         }
     }
-}
