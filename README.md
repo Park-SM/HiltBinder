@@ -1,11 +1,11 @@
 ![Generic badge](https://img.shields.io/badge/Platform-Android-green.svg)&nbsp;
 ![Generic badge](https://img.shields.io/badge/Repository-MavenCentral-blue.svg)&nbsp;
-![Generic badge](https://img.shields.io/badge/Version-v1.2.0-red.svg)&nbsp;
+![Generic badge](https://img.shields.io/badge/Version-v1.3.0-red.svg)&nbsp;
 ![Generic badge](https://img.shields.io/badge/License-Apache2.0-3DB7CC.svg)&nbsp;
 
 # HiltBinder
-An annotation processor example that automatically creates [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)'s `@Binds` functions and modules.  
-If you think this library is useful, please press `Star` button at upside : )
+An annotation processor example that automatically creates [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)'s `@Binds` functions and modules.   
+If you think this library is useful, please press `⭐️ Star` button at upside : )
 - [How to use](https://github.com/Park-SM/HiltBinder#-how-to-use)
 - [Basic usage](https://github.com/Park-SM/HiltBinder#-basic-usage)
 - [Options](https://github.com/Park-SM/HiltBinder#-options)
@@ -47,7 +47,7 @@ repositories {
 // build.gradle(:app)
 dependencies {
 
-    def hiltBinderVersion = "1.2.0"
+    def hiltBinderVersion = "1.3.0"
     implementation "com.smparkworld.hiltbinder:hiltbinder:$hiltBinderVersion"
     kapt "com.smparkworld.hiltbinder:hiltbinder-processor:$hiltBinderVersion"
 }
