@@ -4,13 +4,15 @@
 ![Generic badge](https://img.shields.io/badge/License-Apache2.0-3DB7CC.svg)&nbsp;
 
 # HiltBinder
-An annotation processor example that automatically creates [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)'s `@Binds` functions and modules
+An annotation processor example that automatically creates [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)'s `@Binds` functions and modules.  
+If you think this library is useful, please press `Star` button at upside : )
 - [How to use](https://github.com/Park-SM/HiltBinder#-how-to-use)
 - [Basic usage](https://github.com/Park-SM/HiltBinder#-basic-usage)
 - [Options](https://github.com/Park-SM/HiltBinder#-options)
   - [to property](https://github.com/Park-SM/HiltBinder#to)
   - [from property](https://github.com/Park-SM/HiltBinder#from)
   - [component property](https://github.com/Park-SM/HiltBinder#component)  
+  - [scope](https://github.com/Park-SM/HiltBinder#scope)
   - [qualifier](https://github.com/Park-SM/HiltBinder#qualifier)
   - [named](https://github.com/Park-SM/HiltBinder#named)
 - [Caution](https://github.com/Park-SM/HiltBinder#caution-here-)
@@ -28,6 +30,7 @@ An annotation processor example that automatically creates [Hilt](https://develo
   - [Generic Type - multiple](https://github.com/Park-SM/HiltBinder#generic-type---multiple)
   - [Generic Type - set multibinding](https://github.com/Park-SM/HiltBinder#generic-type---set-multibinding)
   - [Nested Type](https://github.com/Park-SM/HiltBinder#nested-type)
+- [More Sample Code](https://github.com/Park-SM/HiltBinder/tree/develop/app/src/main/java/com/smparkworld/hiltbinderexample)
 - [Performance monitoring](https://github.com/Park-SM/HiltBinder#-performance-monitoring)
 - [License](https://github.com/Park-SM/HiltBinder#-license)
 
@@ -83,6 +86,10 @@ abstract class TestUseCaseImpl_BindsModule {
 #### *to*<br>
 > The return type of the Binds abstract function.
 ```kotlin
+interface OtherSpec {
+  ...
+}
+
 interface ToSampleModel {
     fun printTestString()
 }
@@ -90,7 +97,7 @@ interface ToSampleModel {
 @HiltBinds(to = ToSampleModel::class)
 class ToSampleModelImpl @Inject constructor(
     private val testString: String
-) : ToSampleModel {
+) : OtherSpec, ToSampleModel {
 
     override fun printTestString() {
         Log.d("Test!!", "TestString is `$testString` in ToSampleModelImpl class.")
@@ -131,6 +138,35 @@ class ComponentSampleModelImpl @Inject constructor(
     override fun printTestString() {
         Log.d("Test!!", "TestString is `$testString` in ComponentSampleModelImpl class.")
     }
+}
+```
+
+#### *scope*<br>
+> To specify ranges separately, apply scope annotations as in the following code snippet. The reason this can work is that applying a scope to the implementing class works to keep the singleton in scope via the `dagger.internal.DoubleCheck` class within the Hilt.
+```kotlin
+interface ComponentSampleModel {
+    fun printTestString()
+}
+
+@HiltBinds(component = ActivityRetainedComponent::class)
+@ActivityRetainedScope
+class ComponentSampleModelImpl @Inject constructor(
+    private val testString: String
+) : ComponentSampleModel {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in ComponentSampleModelImpl class.")
+    }
+}
+
+or
+
+@HiltBinds
+@Singleton
+class SomethingSampleModelImpl @Inject constructor(
+    private val testString: String
+) : SomethingSampleModel {
+  ...
 }
 ```
 
@@ -687,7 +723,7 @@ class MainActivity : AppCompatActivity() {
 ```
 
 <br><br>
-## # MultiBinding
+## # Supported
 ### *Generic Type - single*<br>
 > You can set the return type to a single generic type through @HiltBinds.
 ```kotlin
