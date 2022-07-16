@@ -8,5 +8,6 @@ internal data class HiltBindsParamsModel(
     val from: Element,
     val component: Element? = null,
     val qualifier: Element? = null,
-    val namedValue: String? = null
+    val namedValue: String? = null,
+    val toGenerics: List<Element>? = null
 ) : ParametersModel
