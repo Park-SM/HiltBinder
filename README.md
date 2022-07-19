@@ -5,7 +5,7 @@
 
 # HiltBinder
 An annotation processor example that automatically creates [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)'s `@Binds` functions and modules.   
-If you think this library is useful, please press `⭐️ Stars` button at upside : )
+If you think this library is useful, please press `⭐️ Star` button at upside : )
 - [How to use](https://github.com/Park-SM/HiltBinder#-how-to-use)
 - [Basic usage](https://github.com/Park-SM/HiltBinder#-basic-usage)
 - [Options](https://github.com/Park-SM/HiltBinder#-options)
