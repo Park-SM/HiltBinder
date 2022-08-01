@@ -4,7 +4,7 @@
 ![Generic badge](https://img.shields.io/badge/License-Apache2.0-3DB7CC.svg)&nbsp;
 
 # HiltBinder
-An annotation processor example that automatically creates [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)'s `@Binds` functions and modules.   
+An annotation processor library that automatically creates [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)'s `@Binds` functions and modules.   
 If you think this library is useful, please press `⭐️ Star` button at upside : )
 - [How to use](https://github.com/Park-SM/HiltBinder#-how-to-use)
 - [Basic usage](https://github.com/Park-SM/HiltBinder#-basic-usage)
