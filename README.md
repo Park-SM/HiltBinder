@@ -104,6 +104,15 @@ class ToSampleModelImpl @Inject constructor(
     }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class ToSampleModelImpl_BindsModule {
+  @Binds
+  public abstract ToSampleModel bindToSampleModelImpl(ToSampleModelImpl target);
+}
+```
 
 #### *from*<br>
 > The argument type of the Binds abstract function. However, from an architectural point of view, this is not recommended.
@@ -122,6 +131,15 @@ class FromSampleModelImpl @Inject constructor(
     }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class FromSampleModel_BindsModule {
+  @Binds
+  public abstract FromSampleModel bindFromSampleModel(FromSampleModelImpl target);
+}
+```
 
 #### *component*<br>
 > Specifies in which component the class to be returned will be installed.
@@ -138,6 +156,15 @@ class ComponentSampleModelImpl @Inject constructor(
     override fun printTestString() {
         Log.d("Test!!", "TestString is `$testString` in ComponentSampleModelImpl class.")
     }
+}
+```
+```java
+// generated code
+@Module
+@InstallIn(ActivityRetainedComponent.class)
+abstract class ComponentSampleModelImpl_BindsModule {
+  @Binds
+  public abstract ComponentSampleModel bindComponentSampleModelImpl(ComponentSampleModelImpl target);
 }
 ```
 
@@ -207,6 +234,24 @@ class QualifierSampleModelImpl2 @Inject constructor(
     }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class QualifierSampleModelImpl1_BindsModule {
+  @Binds
+  @SampleQualifier1
+  public abstract QualifierSampleModel bindQualifierSampleModelImpl1(QualifierSampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class QualifierSampleModelImpl2_BindsModule {
+  @Binds
+  @SampleQualifier2
+  public abstract QualifierSampleModel bindQualifierSampleModelImpl2(QualifierSampleModelImpl2 target);
+}
+```
 
 #### *named*<br>
 > The Qualifier annotation to be applied to the return type.
@@ -235,6 +280,24 @@ class NamedSampleModelImpl2 @Inject constructor(
     override fun printTestString() {
         Log.d("Test!!", "TestString is `$testString` in NamedSampleModelImpl2 class.")
     }
+}
+```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class NamedSampleModelImpl1_BindsModule {
+  @Binds
+  @Named("model1")
+  public abstract NamedSampleModel bindNamedSampleModelImpl1(NamedSampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class NamedSampleModelImpl2_BindsModule {
+  @Binds
+  @Named("model2")
+  public abstract NamedSampleModel bindNamedSampleModelImpl2(NamedSampleModelImpl2 target);
 }
 ```
 
@@ -291,6 +354,24 @@ class MainActivity : AppCompatActivity() {
             it.printTestString()
         }
     }
+}
+```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class SetSampleModelImpl1_BindsModule {
+  @Binds
+  @IntoSet
+  public abstract SetSampleModel bindSetSampleModelImpl1(SetSampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class SetSampleModelImpl2_BindsModule {
+  @Binds
+  @IntoSet
+  public abstract SetSampleModel bindSetSampleModelImpl2(SetSampleModelImpl2 target);
 }
 ```
 
@@ -351,6 +432,26 @@ class MainActivity : AppCompatActivity() {
     }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class QualifiedSetSampleModelImpl1_BindsModule {
+  @Binds
+  @IntoSet
+  @SampleSetQualifierA
+  public abstract QualifiedSetSampleModel bindQualifiedSetSampleModelImpl1(QualifiedSetSampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class QualifiedSetSampleModelImpl2_BindsModule {
+  @Binds
+  @IntoSet
+  @SampleSetQualifierB
+  public abstract QualifiedSetSampleModel bindQualifiedSetSampleModelImpl2(QualifiedSetSampleModelImpl2 target);
+}
+```
 
 ### *Set Multibinding - named*<br>
 > If you want to configure multiple `Set Multibinding` of the same type, you can use @Named(`javax.inject.Named`) annotations like this:
@@ -401,6 +502,26 @@ class MainActivity : AppCompatActivity() {
     }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class NamedSetSampleModelImpl1_BindsModule {
+  @Binds
+  @IntoSet
+  @Named("sampleNamedSetA")
+  public abstract NamedSetSampleModel bindNamedSetSampleModelImpl1(NamedSetSampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class NamedSetSampleModelImpl2_BindsModule {
+  @Binds
+  @IntoSet
+  @Named("sampleNamedSetB")
+  public abstract NamedSetSampleModel bindNamedSetSampleModelImpl2(NamedSetSampleModelImpl2 target);
+}
+```
 
 ### *Map Multibinding - basics*<br>
 > You must use `@HiltMapBinds` to apply `Map Multibinding`. And you must to add a Key annotation with hilt's `@MapKey` applied, as in the code below. You can use the `@ClassKey`, `@StringKey`, `@IntKey`, `@LongKey` provided by hilt.
@@ -446,6 +567,26 @@ class MainActivity : AppCompatActivity() {
             v.get().printTestString()
         }
     }
+}
+```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class MapStringKeySampleModelImpl1_BindsModule {
+  @Binds
+  @IntoMap
+  @StringKey("model1")
+  public abstract MapStringKeySampleModel bindMapStringKeySampleModelImpl1(MapStringKeySampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class MapStringKeySampleModelImpl2_BindsModule {
+  @Binds
+  @IntoMap
+  @StringKey("model2")
+  public abstract MapStringKeySampleModel bindMapStringKeySampleModelImpl2(MapStringKeySampleModelImpl2 target);
 }
 ```
   
@@ -502,6 +643,26 @@ class MainActivity : AppCompatActivity() {
             v.get().printTestString()
         }
     }
+}
+```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class MapCustomKeySampleModelImpl1_BindsModule {
+  @Binds
+  @IntoMap
+  @SampleMapCustomKey(key = SampleType.SAMPLE1)
+  public abstract MapCustomKeySampleModel bindMapCustomKeySampleModelImpl1(MapCustomKeySampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class MapCustomKeySampleModelImpl2_BindsModule {
+  @Binds
+  @IntoMap
+  @SampleMapCustomKey(key = SampleType.SAMPLE2)
+  public abstract MapCustomKeySampleModel bindMapCustomKeySampleModelImpl2(MapCustomKeySampleModelImpl2 target);
 }
 ```
   
@@ -581,6 +742,38 @@ class MainActivity : AppCompatActivity() {
     }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class MapComplexKeySampleModelImpl1_BindsModule {
+  @Binds
+  @IntoMap
+  @SampleMapComplexKey(
+          key1 = "sample1",
+          key2 = MapComplexKeySampleModelImpl1.class,
+          key3 = {"s1","s2","s3"},
+          key4 = {1,2,3},
+          key5 = SampleType.SAMPLE1
+  )
+  public abstract MapComplexKeySampleModel bindMapComplexKeySampleModelImpl1(MapComplexKeySampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class MapComplexKeySampleModelImpl2_BindsModule {
+  @Binds
+  @IntoMap
+  @SampleMapComplexKey(
+          key1 = "sample2",
+          key2 = MapComplexKeySampleModelImpl2.class,
+          key3 = {"s4","s5","s6"},
+          key4 = {4,5,6},
+          key5 = SampleType.SAMPLE2
+  )
+  public abstract MapComplexKeySampleModel bindMapComplexKeySampleModelImpl2(MapComplexKeySampleModelImpl2 target);
+}
+```
 
 ### *Map Multibinding - qualifier*<br>
 > If you want to configure multiple `Map Multibinding` of the same type, you can use @Qualifier(`javax.inject.Qualifier`) annotations like this:
@@ -657,6 +850,28 @@ class MainActivity : AppCompatActivity() {
     }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class QualifiedMapCustomKeySampleModelImpl1_BindsModule {
+  @Binds
+  @IntoMap
+  @QualifiedSampleMapCustomKey(key = SampleKey.KEY1)
+  @SampleMapQualifierA
+  public abstract QualifiedMapCustomKeySampleModel bindQualifiedMapCustomKeySampleModelImpl1(QualifiedMapCustomKeySampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class QualifiedMapCustomKeySampleModelImpl2_BindsModule {
+  @Binds
+  @IntoMap
+  @QualifiedSampleMapCustomKey(key = SampleKey.KEY2)
+  @SampleMapQualifierB
+  public abstract QualifiedMapCustomKeySampleModel bindQualifiedMapCustomKeySampleModelImpl2(QualifiedMapCustomKeySampleModelImpl2 target);
+}
+```
 
 ### *Map Multibinding - named*<br>
 > If you want to configure multiple `Map Multibinding` of the same type, you can use @Named(`javax.inject.Named`) annotations like this:
@@ -721,6 +936,28 @@ class MainActivity : AppCompatActivity() {
     }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class NamedMapCustomKeySampleModelImpl1_BindsModule {
+  @Binds
+  @IntoMap
+  @NamedSampleMapCustomKey(key = SampleKey.KEY1)
+  @Named("sampleNamedMapA")
+  public abstract NamedMapCustomKeySampleModel bindNamedMapCustomKeySampleModelImpl1(NamedMapCustomKeySampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class NamedMapCustomKeySampleModelImpl2_BindsModule {
+  @Binds
+  @IntoMap
+  @NamedSampleMapCustomKey(key = SampleKey.KEY2)
+  @Named("sampleNamedMapB")
+  public abstract NamedMapCustomKeySampleModel bindNamedMapCustomKeySampleModelImpl2(NamedMapCustomKeySampleModelImpl2 target);
+}
+```
 
 <br><br>
 ## # Supported
@@ -783,6 +1020,29 @@ class MainActivity : AppCompatActivity() {
     }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class SingleGenericSampleModelImpl1_BindsModule {
+  @Binds
+  public abstract SingleGenericSampleModel<Integer> bindSingleGenericSampleModelImpl1(SingleGenericSampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class SingleGenericSampleModelImpl2_BindsModule {
+  @Binds
+  public abstract SingleGenericSampleModel<String> bindSingleGenericSampleModelImpl2(SingleGenericSampleModelImpl2 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class SingleGenericSampleModelImpl3_BindsModule {
+  @Binds
+  public abstract SingleGenericSampleModel<Object> bindSingleGenericSampleModelImpl3(SingleGenericSampleModelImpl3 target);
+}
+```
 
 ### *Generic Type - multiple*<br>
 > You can set the return type to multiple generic types through @HiltBinds.
@@ -813,6 +1073,15 @@ class MainActivity : AppCompatActivity() {
 
         multipleGenericSampleModel.printTestString(97, 1205)
     }
+}
+```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class MultipleGenericSampleModelImpl_BindsModule {
+  @Binds
+  public abstract MultipleGenericSampleModel<Integer, Object> bindMultipleGenericSampleModelImpl(MultipleGenericSampleModelImpl target);
 }
 ```
 
@@ -886,6 +1155,40 @@ class MainActivity : AppCompatActivity() {
   }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class SetGenericSampleModelImpl1_BindsModule {
+  @Binds
+  @IntoSet
+  public abstract SetGenericSampleModel<Integer> bindSetGenericSampleModelImpl1(SetGenericSampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class SetGenericSampleModelImpl2_BindsModule {
+  @Binds
+  @IntoSet
+  public abstract SetGenericSampleModel<Integer> bindSetGenericSampleModelImpl2(SetGenericSampleModelImpl2 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class SetGenericSampleModelImpl3_BindsModule {
+  @Binds
+  @IntoSet
+  public abstract SetGenericSampleModel<String> bindSetGenericSampleModelImpl3(SetGenericSampleModelImpl3 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class SetGenericSampleModelImpl4_BindsModule {
+  @Binds
+  @IntoSet
+  public abstract SetGenericSampleModel<String> bindSetGenericSampleModelImpl4(SetGenericSampleModelImpl4 target);
+}
+```
 
 ### *Nested Type*<br>
 > It also supports nested class as below code.
@@ -918,6 +1221,15 @@ class MainActivity : AppCompatActivity() {
 
         nestedSampleModel.printTestString()
     }
+}
+```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class NestedSampleModelImpl_BindsModule {
+  @Binds
+  public abstract SampleModel bindNestedSampleModelImpl(NestedSampleModelImpl target);
 }
 ```
 
