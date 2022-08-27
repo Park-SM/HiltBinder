@@ -10,5 +10,6 @@ internal data class HiltMapBindsParamsModel(
     val qualifier: Element? = null,
     val namedValue: String? = null,
     val mapKey: Element,
-    val mapKeyParams: Map<String, Any>
+    val mapKeyParams: Map<String, Any>,
+    val toGenerics: List<Element>? = null
 ) : ParametersModel

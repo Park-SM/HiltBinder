@@ -4,6 +4,7 @@ import com.smparkworld.hiltbinder.HiltMapBinds
 import com.smparkworld.hiltbinder_processor.core.base.ParameterMapper
 import com.smparkworld.hiltbinder_processor.core.manager.AnnotationManager
 import com.smparkworld.hiltbinder_processor.extension.error
+import com.smparkworld.hiltbinder_processor.extension.getGenericTypes
 import com.smparkworld.hiltbinder_processor.extension.getSuperInterfaceElement
 import com.smparkworld.hiltbinder_processor.model.HiltMapBindsParamsModel
 import dagger.MapKey
@@ -64,7 +65,8 @@ internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsM
                     qualifier,
                     namedValue,
                     mapKey,
-                    mapKeyParams
+                    mapKeyParams,
+                    element.getGenericTypes(env)
                 )
             }
             else -> {

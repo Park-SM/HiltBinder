@@ -32,6 +32,9 @@ import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.QualifiedSetSa
 import com.smparkworld.hiltbinderexample.sample.supported.generic.intoset.SetGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.generic.multiple.MultipleGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.nested.NestedSampleModel
+import com.smparkworld.hiltbinderexample.sample.test.TestA
+import com.smparkworld.hiltbinderexample.sample.test.TestB
+import com.smparkworld.hiltbinderexample.sample.test.TestModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import javax.inject.Named
@@ -198,9 +201,17 @@ class MainActivity : AppCompatActivity() {
     lateinit var nestedSampleModel: NestedSampleModel.SampleModel
     ////////////////////////////////////////////
 
+    @Inject
+    lateinit var testModels: @JvmSuppressWildcards Map<Class<*>, Provider<TestModel<TestA, TestB>>>
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        for ((k, v) in testModels) {
+            Log.d("Test!!", "TestModel key : $k")
+            v.get().test(TestA(), TestB())
+        }
 
         toSampleModel.printTestString()
         fromSampleModel.printTestString()
