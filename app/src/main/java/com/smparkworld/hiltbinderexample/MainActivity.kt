@@ -3,7 +3,6 @@ package com.smparkworld.hiltbinderexample
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.smparkworld.hiltbinderexample.sample.supported.generic.single.SingleGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.component.ComponentSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.from.FromSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.named.NamedSampleModel
@@ -11,6 +10,7 @@ import com.smparkworld.hiltbinderexample.sample.basic.qualifier.QualifierSampleM
 import com.smparkworld.hiltbinderexample.sample.basic.qualifier.SampleQualifierA
 import com.smparkworld.hiltbinderexample.sample.basic.qualifier.SampleQualifierB
 import com.smparkworld.hiltbinderexample.sample.basic.to.ToSampleModel
+import com.smparkworld.hiltbinderexample.sample.intomap.SampleKey
 import com.smparkworld.hiltbinderexample.sample.intomap.SampleType
 import com.smparkworld.hiltbinderexample.sample.intomap.complexkey.MapComplexKeySampleModel
 import com.smparkworld.hiltbinderexample.sample.intomap.complexkey.SampleMapComplexKey
@@ -19,22 +19,19 @@ import com.smparkworld.hiltbinderexample.sample.intomap.hiltdefault.classkey.Map
 import com.smparkworld.hiltbinderexample.sample.intomap.hiltdefault.intkey.MapIntKeySampleModel
 import com.smparkworld.hiltbinderexample.sample.intomap.hiltdefault.longkey.MapLongKeySampleModel
 import com.smparkworld.hiltbinderexample.sample.intomap.hiltdefault.stringkey.MapStringKeySampleModel
-import com.smparkworld.hiltbinderexample.sample.intomap.qualifier.QualifiedMapCustomKeySampleModel
-import com.smparkworld.hiltbinderexample.sample.intomap.SampleKey
 import com.smparkworld.hiltbinderexample.sample.intomap.named.NamedMapCustomKeySampleModel
+import com.smparkworld.hiltbinderexample.sample.intomap.qualifier.QualifiedMapCustomKeySampleModel
 import com.smparkworld.hiltbinderexample.sample.intomap.qualifier.SampleMapQualifierA
 import com.smparkworld.hiltbinderexample.sample.intomap.qualifier.SampleMapQualifierB
 import com.smparkworld.hiltbinderexample.sample.intoset.SetSampleModel
 import com.smparkworld.hiltbinderexample.sample.intoset.named.NamedSetSampleModel
+import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.QualifiedSetSampleModel
 import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.SampleSetQualifierA
 import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.SampleSetQualifierB
-import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.QualifiedSetSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.generic.intoset.SetGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.generic.multiple.MultipleGenericSampleModel
+import com.smparkworld.hiltbinderexample.sample.supported.generic.single.SingleGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.nested.NestedSampleModel
-import com.smparkworld.hiltbinderexample.sample.test.TestA
-import com.smparkworld.hiltbinderexample.sample.test.TestB
-import com.smparkworld.hiltbinderexample.sample.test.TestModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import javax.inject.Named
@@ -201,17 +198,9 @@ class MainActivity : AppCompatActivity() {
     lateinit var nestedSampleModel: NestedSampleModel.SampleModel
     ////////////////////////////////////////////
 
-    @Inject
-    lateinit var testModels: @JvmSuppressWildcards Map<Class<*>, Provider<TestModel<TestA, TestB>>>
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        for ((k, v) in testModels) {
-            Log.d("Test!!", "TestModel key : $k")
-            v.get().test(TestA(), TestB())
-        }
 
         toSampleModel.printTestString()
         fromSampleModel.printTestString()
