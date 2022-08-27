@@ -29,8 +29,7 @@ internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsM
                     paramFrom,
                     paramComponent,
                     qualifier,
-                    namedValue,
-                    null
+                    namedValue
                 )
             }
             (paramFrom == null && paramTo != null) -> {
@@ -39,8 +38,7 @@ internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsM
                     element,
                     paramComponent,
                     qualifier,
-                    namedValue,
-                    null
+                    namedValue
                 )
             }
             (paramFrom == null && paramTo == null) -> {
