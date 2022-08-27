@@ -3,9 +3,10 @@ package com.smparkworld.hiltbinder_processor.generator.hiltmapbinds
 import com.smparkworld.hiltbinder.HiltMapBinds
 import com.smparkworld.hiltbinder_processor.core.base.ParameterMapper
 import com.smparkworld.hiltbinder_processor.core.manager.AnnotationManager
+import com.smparkworld.hiltbinder_processor.extension.asElement
 import com.smparkworld.hiltbinder_processor.extension.error
 import com.smparkworld.hiltbinder_processor.extension.getGenericTypes
-import com.smparkworld.hiltbinder_processor.extension.getSuperInterfaceElement
+import com.smparkworld.hiltbinder_processor.extension.getSuperTypeMirror
 import com.smparkworld.hiltbinder_processor.model.HiltMapBindsParamsModel
 import dagger.MapKey
 import javax.annotation.processing.ProcessingEnvironment
@@ -58,8 +59,14 @@ internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsM
                 )
             }
             (paramFrom == null && paramTo == null) -> {
+                val to = element.getSuperTypeMirror()?.asElement(env)
+                if (to == null) {
+                    env.error(ERROR_MSG_NOT_FOUND_SUPER)
+                    throw IllegalStateException(ERROR_MSG_NOT_FOUND_SUPER)
+                }
+
                 HiltMapBindsParamsModel(
-                    env.getSuperInterfaceElement(element),
+                    to,
                     element,
                     paramComponent,
                     qualifier,
@@ -80,6 +87,7 @@ internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsM
         private const val ERROR_MSG_NOT_FOUND_KEY = "@HiltMapBinds must have Key annotation."
         private const val ERROR_MSG_PARAMS_EMPTY = "key annotation must not be empty."
         private const val ERROR_MSG_SIGNED_TOGETHER = "`to` and `from` cannot be signed together."
+        private const val ERROR_MSG_NOT_FOUND_SUPER = "Super class not found."
 
         private const val PARAM_TO = "to"
         private const val PARAM_FROM = "from"

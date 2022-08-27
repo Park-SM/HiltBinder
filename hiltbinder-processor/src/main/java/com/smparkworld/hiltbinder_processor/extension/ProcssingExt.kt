@@ -15,8 +15,5 @@ internal fun ProcessingEnvironment.error(message: String) =
 internal fun ProcessingEnvironment.getClassName(element: Element): ClassName =
     ClassName.get(getPackageName(element), element.simpleName.toString())
 
-internal fun ProcessingEnvironment.getSuperInterfaceElement(element: Element): Element =
-    typeUtils.asElement((element as TypeElement).interfaces[0])
-
 internal fun ProcessingEnvironment.getPackageName(element: Element): String =
     elementUtils.getPackageOf(element).toString()

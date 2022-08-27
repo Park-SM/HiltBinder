@@ -3,9 +3,10 @@ package com.smparkworld.hiltbinder_processor.generator.hiltsetbinds
 import com.smparkworld.hiltbinder.HiltBinds
 import com.smparkworld.hiltbinder_processor.core.base.ParameterMapper
 import com.smparkworld.hiltbinder_processor.core.manager.AnnotationManager
+import com.smparkworld.hiltbinder_processor.extension.asElement
 import com.smparkworld.hiltbinder_processor.extension.error
 import com.smparkworld.hiltbinder_processor.extension.getGenericTypes
-import com.smparkworld.hiltbinder_processor.extension.getSuperInterfaceElement
+import com.smparkworld.hiltbinder_processor.extension.getSuperTypeMirror
 import com.smparkworld.hiltbinder_processor.model.HiltSetBindsParamsModel
 import javax.annotation.processing.ProcessingEnvironment
 import javax.inject.Named
@@ -41,8 +42,14 @@ internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsM
                 )
             }
             (paramFrom == null && paramTo == null) -> {
+                val to = element.getSuperTypeMirror()?.asElement(env)
+                if (to == null) {
+                    env.error(ERROR_MSG_NOT_FOUND_SUPER)
+                    throw IllegalStateException(ERROR_MSG_NOT_FOUND_SUPER)
+                }
+
                 HiltSetBindsParamsModel(
-                    env.getSuperInterfaceElement(element),
+                    to,
                     element,
                     paramComponent,
                     qualifier,
@@ -59,6 +66,7 @@ internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsM
 
     companion object {
         private const val ERROR_MSG_SIGNED_TOGETHER = "`to` and `from` cannot be signed together."
+        private const val ERROR_MSG_NOT_FOUND_SUPER = "Super class not found."
 
         private const val PARAM_TO = "to"
         private const val PARAM_FROM = "from"
