@@ -4,6 +4,8 @@ interface NestedSampleModel {
 
     interface SampleModel {
 
-        fun printTestString()
+        interface SampleModelInternal {
+            fun printTestString()
+        }
     }
 }

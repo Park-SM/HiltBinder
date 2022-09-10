@@ -32,6 +32,8 @@ import com.smparkworld.hiltbinderexample.sample.supported.generic.intoset.SetGen
 import com.smparkworld.hiltbinderexample.sample.supported.generic.multiple.MultipleGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.generic.single.SingleGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.nested.NestedSampleModel
+import com.smparkworld.hiltbinderexample.sample.supported.generic.nested.NestedGenericSampleModel
+import com.smparkworld.hiltbinderexample.sample.supported.generic.nested.SampleParam
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import javax.inject.Named
@@ -183,6 +185,13 @@ class MainActivity : AppCompatActivity() {
 
 
     ////////////////////////////////////////////
+    // supported - single generic type
+    @Inject
+    lateinit var nestedGenericSampleModel: NestedGenericSampleModel<SampleParam<SampleParam<String>>>
+    ////////////////////////////////////////////
+
+
+    ////////////////////////////////////////////
     // supported - set multibinding
     @Inject
     lateinit var setGenericSampleModelA: @JvmSuppressWildcards Set<SetGenericSampleModel<Int>>
@@ -195,7 +204,7 @@ class MainActivity : AppCompatActivity() {
     ////////////////////////////////////////////
     // supported - nested type
     @Inject
-    lateinit var nestedSampleModel: NestedSampleModel.SampleModel
+    lateinit var nestedSampleModel: NestedSampleModel.SampleModel.SampleModelInternal
     ////////////////////////////////////////////
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -292,6 +301,12 @@ class MainActivity : AppCompatActivity() {
         singleGenericSampleModel2.printTestString("String")
         singleGenericSampleModel3.printTestString(1205.97)
         multipleGenericSampleModel.printTestString(97, 1205)
+        val test = SampleParam(
+            key = SampleParam(
+                key = "nestedTestKey"
+            )
+        )
+        nestedGenericSampleModel.printTest(test)
 
         setGenericSampleModelA.forEach {
             it.printTestString(1)
