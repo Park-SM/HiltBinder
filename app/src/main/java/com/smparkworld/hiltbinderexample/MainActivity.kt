@@ -38,6 +38,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Provider
+import kotlin.reflect.KClass
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -191,6 +192,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var nestedGenericSetSampleModels: @JvmSuppressWildcards Set<NestedGenericSampleModel<SampleParam<SampleParam<String>>>>
+
+    @Inject
+    lateinit var nestedGenericMapSampleModels: @JvmSuppressWildcards Map<String, Provider<NestedGenericSampleModel<SampleParam<SampleParam<String>>>>>
     ////////////////////////////////////////////
 
 
@@ -313,6 +317,10 @@ class MainActivity : AppCompatActivity() {
         nestedGenericSampleModel.printTest(test)
         nestedGenericSetSampleModels.forEach {
             it.printTest(test)
+        }
+        for ((k, v) in nestedGenericMapSampleModels) {
+            Log.d("Test!!", "key: $k")
+            v.get().printTest(test)
         }
 
         setGenericSampleModelA.forEach {
