@@ -11,7 +11,6 @@ import com.smparkworld.hiltbinder_processor.model.HiltMapBindsParamsModel
 import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
-import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeSpec
 import dagger.Binds
 import dagger.Module
@@ -83,15 +82,6 @@ internal class HiltMapBindsModuleGenerator : ModuleGenerator {
             }
             .build()
 
-        val specReturns = if (params.toGenerics.isNullOrEmpty()) {
-            params.to.asClassName(env)
-        } else {
-            ParameterizedTypeName.get(
-                params.to.asClassName(env),
-                *params.toGenerics.map { it.asClassName(env) }.toTypedArray()
-            )
-        }
-
         val spec = MethodSpec.methodBuilder("$FUN_PREFIX${element.simpleName}")
             .addAnnotation(Binds::class.java)
             .addAnnotation(IntoMap::class.java)
@@ -99,8 +89,8 @@ internal class HiltMapBindsModuleGenerator : ModuleGenerator {
             .addAnnotationIfNotNull(env, params.qualifier)
             .addAnnotationIfNotNull(namedAnnotation)
             .addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)
-            .addParameter(params.from.asClassName(env), PARAMETER_NAME)
-            .returns(specReturns)
+            .addParameter(params.from, PARAMETER_NAME)
+            .returns(params.to)
             .build()
 
         val installInAnnotation = AnnotationSpec.builder(InstallIn::class.java)

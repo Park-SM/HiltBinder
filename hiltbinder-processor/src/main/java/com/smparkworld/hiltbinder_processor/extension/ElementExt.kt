@@ -5,7 +5,6 @@ import com.squareup.javapoet.ClassName
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
-import javax.lang.model.type.DeclaredType
 import javax.lang.model.type.TypeMirror
 
 internal fun Element.asClassName(env: ProcessingEnvironment): ClassName =
@@ -22,10 +21,3 @@ internal fun Element.getSuperTypeMirror(): TypeMirror? {
     }
     return null
 }
-
-internal fun Element.getGenericTypes(env: ProcessingEnvironment): List<Element> =
-    getSuperTypeMirror().let { type ->
-        (type as DeclaredType).typeArguments.map {
-            env.typeUtils.asElement(it)
-        }
-    }
