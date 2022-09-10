@@ -185,9 +185,12 @@ class MainActivity : AppCompatActivity() {
 
 
     ////////////////////////////////////////////
-    // supported - single generic type
+    // supported - nested generic type
     @Inject
     lateinit var nestedGenericSampleModel: NestedGenericSampleModel<SampleParam<SampleParam<String>>>
+
+    @Inject
+    lateinit var nestedGenericSetSampleModels: @JvmSuppressWildcards Set<NestedGenericSampleModel<SampleParam<SampleParam<String>>>>
     ////////////////////////////////////////////
 
 
@@ -301,12 +304,16 @@ class MainActivity : AppCompatActivity() {
         singleGenericSampleModel2.printTestString("String")
         singleGenericSampleModel3.printTestString(1205.97)
         multipleGenericSampleModel.printTestString(97, 1205)
+
         val test = SampleParam(
             key = SampleParam(
                 key = "nestedTestKey"
             )
         )
         nestedGenericSampleModel.printTest(test)
+        nestedGenericSetSampleModels.forEach {
+            it.printTest(test)
+        }
 
         setGenericSampleModelA.forEach {
             it.printTestString(1)
