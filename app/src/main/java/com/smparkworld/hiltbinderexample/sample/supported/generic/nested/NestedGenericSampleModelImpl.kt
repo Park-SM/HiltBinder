@@ -10,6 +10,6 @@ class NestedGenericSampleModelImpl @Inject constructor(
 ) : NestedGenericSampleModel<SampleParam<SampleParam<String>>> {
 
     override fun printTest(test: SampleParam<SampleParam<String>>) {
-        Log.d("Test!!", "test is $test")
+        Log.d("Test!!", "TestString is `$testString` in NestedGenericSampleModelImpl class. :: $test")
     }
 }

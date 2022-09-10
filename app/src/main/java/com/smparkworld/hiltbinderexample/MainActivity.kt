@@ -30,15 +30,14 @@ import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.SampleSetQuali
 import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.SampleSetQualifierB
 import com.smparkworld.hiltbinderexample.sample.supported.generic.intoset.SetGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.generic.multiple.MultipleGenericSampleModel
-import com.smparkworld.hiltbinderexample.sample.supported.generic.single.SingleGenericSampleModel
-import com.smparkworld.hiltbinderexample.sample.supported.nested.NestedSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.generic.nested.NestedGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.generic.nested.SampleParam
+import com.smparkworld.hiltbinderexample.sample.supported.generic.single.SingleGenericSampleModel
+import com.smparkworld.hiltbinderexample.sample.supported.nested.NestedSampleModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Provider
-import kotlin.reflect.KClass
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
