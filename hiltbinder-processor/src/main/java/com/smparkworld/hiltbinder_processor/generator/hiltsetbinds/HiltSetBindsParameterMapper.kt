@@ -1,6 +1,6 @@
 package com.smparkworld.hiltbinder_processor.generator.hiltsetbinds
 
-import com.smparkworld.hiltbinder.HiltBinds
+import com.smparkworld.hiltbinder.HiltSetBinds
 import com.smparkworld.hiltbinder_processor.core.base.ParameterMapper
 import com.smparkworld.hiltbinder_processor.core.manager.AnnotationManager
 import com.smparkworld.hiltbinder_processor.extension.asClassName
@@ -11,15 +11,17 @@ import com.smparkworld.hiltbinder_processor.model.HiltSetBindsParamsModel
 import javax.annotation.processing.ProcessingEnvironment
 import javax.inject.Named
 import javax.inject.Qualifier
+import javax.inject.Scope
 import javax.lang.model.element.Element
 
 internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsModel> {
 
     override fun toParamsModel(env: ProcessingEnvironment, element: Element): HiltSetBindsParamsModel {
-        val paramTo = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_TO)
-        val paramFrom = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_FROM)
-        val paramComponent = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_COMPONENT)
+        val paramTo = AnnotationManager.getAnnotationValue<HiltSetBinds>(env, element, PARAM_TO)
+        val paramFrom = AnnotationManager.getAnnotationValue<HiltSetBinds>(env, element, PARAM_FROM)
+        val paramComponent = AnnotationManager.getAnnotationValue<HiltSetBinds>(env, element, PARAM_COMPONENT)
         val qualifier = AnnotationManager.getAnnotationByParentAnnotation(env, element, Qualifier::class, Named::class)
+        val scope = AnnotationManager.getAnnotationByParentAnnotation(env, element, Scope::class)
         val namedValue = AnnotationManager.getAnnotationValues<Named>(env, element)?.get(NAMED_PARAM) as? String
 
         return when {
@@ -29,6 +31,7 @@ internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsM
                     paramFrom.asClassName(env),
                     paramComponent,
                     qualifier,
+                    scope,
                     namedValue
                 )
             }
@@ -38,6 +41,7 @@ internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsM
                     element.asClassName(env),
                     paramComponent,
                     qualifier,
+                    scope,
                     namedValue
                 )
             }
@@ -53,6 +57,7 @@ internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsM
                     element.asClassName(env),
                     paramComponent,
                     qualifier,
+                    scope,
                     namedValue
                 )
             }

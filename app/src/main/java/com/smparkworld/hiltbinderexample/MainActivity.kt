@@ -9,6 +9,7 @@ import com.smparkworld.hiltbinderexample.sample.basic.named.NamedSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.qualifier.QualifierSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.qualifier.SampleQualifierA
 import com.smparkworld.hiltbinderexample.sample.basic.qualifier.SampleQualifierB
+import com.smparkworld.hiltbinderexample.sample.basic.scope.ScopeSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.to.ToSampleModel
 import com.smparkworld.hiltbinderexample.sample.intomap.SampleKey
 import com.smparkworld.hiltbinderexample.sample.intomap.SampleType
@@ -76,6 +77,12 @@ class MainActivity : AppCompatActivity() {
     @Inject
     @Named("modelB")
     lateinit var namedSampleModelB: NamedSampleModel
+    ////////////////////////////////////////////
+
+    ////////////////////////////////////////////
+    // Basic usage - scoped
+    @Inject
+    lateinit var scopeSampleModel: ScopeSampleModel
     ////////////////////////////////////////////
 
 
@@ -224,6 +231,7 @@ class MainActivity : AppCompatActivity() {
         qualifierSampleModelB.printTestString()
         namedSampleModelA.printTestString()
         namedSampleModelB.printTestString()
+        scopeSampleModel.printTestString()
 
         sampleSet.forEach {
             it.printTestString()

@@ -48,6 +48,7 @@ internal class HiltSetBindsModuleGenerator : ModuleGenerator {
         val spec = MethodSpec.methodBuilder("$FUN_PREFIX${element.simpleName}")
             .addAnnotation(Binds::class.java)
             .addAnnotation(IntoSet::class.java)
+            .addAnnotationIfNotNull(env, params.scope)
             .addAnnotationIfNotNull(env, params.qualifier)
             .addAnnotationIfNotNull(namedAnnotation)
             .addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)

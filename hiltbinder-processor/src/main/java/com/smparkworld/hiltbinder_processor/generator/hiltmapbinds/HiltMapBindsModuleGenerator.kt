@@ -86,6 +86,7 @@ internal class HiltMapBindsModuleGenerator : ModuleGenerator {
             .addAnnotation(Binds::class.java)
             .addAnnotation(IntoMap::class.java)
             .addAnnotation(mapKeyAnnotation)
+            .addAnnotationIfNotNull(env, params.scope)
             .addAnnotationIfNotNull(env, params.qualifier)
             .addAnnotationIfNotNull(namedAnnotation)
             .addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)
