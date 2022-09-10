@@ -5,7 +5,6 @@ import com.smparkworld.hiltbinder.HiltSetBinds
 import com.smparkworld.hiltbinder_processor.core.base.ModuleGenerator
 import com.smparkworld.hiltbinder_processor.core.base.ParameterMapper
 import com.smparkworld.hiltbinder_processor.extension.addAnnotationIfNotNull
-import com.smparkworld.hiltbinder_processor.extension.addImportIfNestedClass
 import com.smparkworld.hiltbinder_processor.extension.asClassName
 import com.smparkworld.hiltbinder_processor.extension.getPackageName
 import com.smparkworld.hiltbinder_processor.model.HiltSetBindsParamsModel
@@ -81,8 +80,6 @@ internal class HiltSetBindsModuleGenerator : ModuleGenerator {
             .build()
 
         val javaFile = JavaFile.builder(env.getPackageName(element), moduleClazz)
-            .addImportIfNestedClass(env, params.to)
-            .addImportIfNestedClass(env, params.from)
             .build()
 
         env.filer.createSourceFile("${env.getPackageName(element)}.${moduleFileName}")
