@@ -34,7 +34,6 @@ internal class HiltBindsModuleGenerator : ModuleGenerator {
     )
 
     override fun generate(env: ProcessingEnvironment, element: Element, annotation: Annotation) {
-        println("Test!! :: ${element.simpleName}")
         val params = parameterMapper.toParamsModel(env, element)
 
         val moduleFileName = "${element.simpleName}$MODULE_SUFFIX"

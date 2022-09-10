@@ -3,9 +3,9 @@ package com.smparkworld.hiltbinder_processor.generator.hiltsetbinds
 import com.smparkworld.hiltbinder.HiltBinds
 import com.smparkworld.hiltbinder_processor.core.base.ParameterMapper
 import com.smparkworld.hiltbinder_processor.core.manager.AnnotationManager
-import com.smparkworld.hiltbinder_processor.extension.asElement
+import com.smparkworld.hiltbinder_processor.extension.asClassName
 import com.smparkworld.hiltbinder_processor.extension.error
-import com.smparkworld.hiltbinder_processor.extension.getGenericTypes
+import com.smparkworld.hiltbinder_processor.extension.getGenericTypeNames
 import com.smparkworld.hiltbinder_processor.extension.getSuperTypeMirror
 import com.smparkworld.hiltbinder_processor.model.HiltSetBindsParamsModel
 import javax.annotation.processing.ProcessingEnvironment
@@ -25,8 +25,8 @@ internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsM
         return when {
             (paramFrom != null && paramTo == null) -> {
                 HiltSetBindsParamsModel(
-                    element,
-                    paramFrom,
+                    element.asClassName(env),
+                    paramFrom.asClassName(env),
                     paramComponent,
                     qualifier,
                     namedValue
@@ -34,27 +34,26 @@ internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsM
             }
             (paramFrom == null && paramTo != null) -> {
                 HiltSetBindsParamsModel(
-                    paramTo,
-                    element,
+                    paramTo.asClassName(env),
+                    element.asClassName(env),
                     paramComponent,
                     qualifier,
                     namedValue
                 )
             }
             (paramFrom == null && paramTo == null) -> {
-                val to = element.getSuperTypeMirror()?.asElement(env)
+                val to = element.getSuperTypeMirror()
                 if (to == null) {
                     env.error(ERROR_MSG_NOT_FOUND_SUPER)
                     throw IllegalStateException(ERROR_MSG_NOT_FOUND_SUPER)
                 }
 
                 HiltSetBindsParamsModel(
-                    to,
-                    element,
+                    to.getGenericTypeNames(env),
+                    element.asClassName(env),
                     paramComponent,
                     qualifier,
-                    namedValue,
-                    element.getGenericTypes(env)
+                    namedValue
                 )
             }
             else -> {
