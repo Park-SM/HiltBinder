@@ -5,14 +5,11 @@ import com.smparkworld.hiltbinder.HiltBinds
 import com.smparkworld.hiltbinder_processor.core.base.ModuleGenerator
 import com.smparkworld.hiltbinder_processor.core.base.ParameterMapper
 import com.smparkworld.hiltbinder_processor.extension.addAnnotationIfNotNull
-import com.smparkworld.hiltbinder_processor.extension.addImportIfNestedClass
-import com.smparkworld.hiltbinder_processor.extension.asClassName
 import com.smparkworld.hiltbinder_processor.extension.getPackageName
 import com.smparkworld.hiltbinder_processor.model.HiltBindsParamsModel
 import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
-import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeSpec
 import dagger.Binds
 import dagger.Module
@@ -47,22 +44,13 @@ internal class HiltBindsModuleGenerator : ModuleGenerator {
                 .build()
         }
 
-        val specReturns = if (params.toGenerics.isNullOrEmpty()) {
-            params.to.asClassName(env)
-        } else {
-            ParameterizedTypeName.get(
-                params.to.asClassName(env),
-                *params.toGenerics.map { it.asClassName(env) }.toTypedArray()
-            )
-        }
-
         val spec = MethodSpec.methodBuilder("$FUN_PREFIX${element.simpleName}")
             .addAnnotation(Binds::class.java)
             .addAnnotationIfNotNull(env, params.qualifier)
             .addAnnotationIfNotNull(namedAnnotation)
             .addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)
-            .addParameter(params.from.asClassName(env), PARAMETER_NAME)
-            .returns(specReturns)
+            .addParameter(params.from, PARAMETER_NAME)
+            .returns(params.to)
             .build()
 
         val installInAnnotation = AnnotationSpec.builder(InstallIn::class.java)
@@ -79,8 +67,6 @@ internal class HiltBindsModuleGenerator : ModuleGenerator {
             .build()
 
         val javaFile = JavaFile.builder(env.getPackageName(element), moduleClazz)
-            .addImportIfNestedClass(env, params.to)
-            .addImportIfNestedClass(env, params.from)
             .build()
 
         env.filer.createSourceFile("${env.getPackageName(element)}.${moduleFileName}")

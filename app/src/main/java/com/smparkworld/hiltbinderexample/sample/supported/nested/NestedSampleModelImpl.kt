@@ -7,7 +7,7 @@ import javax.inject.Inject
 @HiltBinds
 class NestedSampleModelImpl @Inject constructor(
     private val testString: String
-) : NestedSampleModel.SampleModel {
+) : NestedSampleModel.SampleModel.SampleModelInternal {
 
     override fun printTestString() {
         Log.d("Test!!", "TestString is `$testString` in NestedSampleModelImpl class.")

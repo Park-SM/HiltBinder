@@ -3,9 +3,9 @@ package com.smparkworld.hiltbinder_processor.generator.hiltmapbinds
 import com.smparkworld.hiltbinder.HiltMapBinds
 import com.smparkworld.hiltbinder_processor.core.base.ParameterMapper
 import com.smparkworld.hiltbinder_processor.core.manager.AnnotationManager
-import com.smparkworld.hiltbinder_processor.extension.asElement
+import com.smparkworld.hiltbinder_processor.extension.asClassName
 import com.smparkworld.hiltbinder_processor.extension.error
-import com.smparkworld.hiltbinder_processor.extension.getGenericTypes
+import com.smparkworld.hiltbinder_processor.extension.getGenericTypeNames
 import com.smparkworld.hiltbinder_processor.extension.getSuperTypeMirror
 import com.smparkworld.hiltbinder_processor.model.HiltMapBindsParamsModel
 import dagger.MapKey
@@ -38,8 +38,8 @@ internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsM
         return when {
             (paramFrom != null && paramTo == null) -> {
                 HiltMapBindsParamsModel(
-                    element,
-                    paramFrom,
+                    element.asClassName(env),
+                    paramFrom.asClassName(env),
                     paramComponent,
                     qualifier,
                     namedValue,
@@ -49,8 +49,8 @@ internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsM
             }
             (paramFrom == null && paramTo != null) -> {
                 HiltMapBindsParamsModel(
-                    paramTo,
-                    element,
+                    paramTo.asClassName(env),
+                    element.asClassName(env),
                     paramComponent,
                     qualifier,
                     namedValue,
@@ -59,21 +59,20 @@ internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsM
                 )
             }
             (paramFrom == null && paramTo == null) -> {
-                val to = element.getSuperTypeMirror()?.asElement(env)
+                val to = element.getSuperTypeMirror()
                 if (to == null) {
                     env.error(ERROR_MSG_NOT_FOUND_SUPER)
                     throw IllegalStateException(ERROR_MSG_NOT_FOUND_SUPER)
                 }
 
                 HiltMapBindsParamsModel(
-                    to,
-                    element,
+                    to.getGenericTypeNames(env),
+                    element.asClassName(env),
                     paramComponent,
                     qualifier,
                     namedValue,
                     mapKey,
-                    mapKeyParams,
-                    element.getGenericTypes(env)
+                    mapKeyParams
                 )
             }
             else -> {
