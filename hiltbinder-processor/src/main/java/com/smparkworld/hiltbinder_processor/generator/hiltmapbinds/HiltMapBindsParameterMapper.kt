@@ -12,6 +12,7 @@ import dagger.MapKey
 import javax.annotation.processing.ProcessingEnvironment
 import javax.inject.Named
 import javax.inject.Qualifier
+import javax.inject.Scope
 import javax.lang.model.element.Element
 
 internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsModel> {
@@ -20,9 +21,10 @@ internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsM
         val paramTo = AnnotationManager.getAnnotationValue<HiltMapBinds>(env, element, PARAM_TO)
         val paramFrom = AnnotationManager.getAnnotationValue<HiltMapBinds>(env, element, PARAM_FROM)
         val paramComponent = AnnotationManager.getAnnotationValue<HiltMapBinds>(env, element, PARAM_COMPONENT)
-
         val qualifier = AnnotationManager.getAnnotationByParentAnnotation(env, element, Qualifier::class, Named::class)
+        val scope = AnnotationManager.getAnnotationByParentAnnotation(env, element, Scope::class)
         val namedValue = AnnotationManager.getAnnotationValues<Named>(env, element)?.get(NAMED_PARAM) as? String
+
         val mapKey = AnnotationManager.getAnnotationByParentAnnotation(env, element, MapKey::class)
         val mapKeyParams = AnnotationManager.getAnnotationValuesByParentAnnotation(env, element, MapKey::class)
 
@@ -42,6 +44,7 @@ internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsM
                     paramFrom.asClassName(env),
                     paramComponent,
                     qualifier,
+                    scope,
                     namedValue,
                     mapKey,
                     mapKeyParams
@@ -53,6 +56,7 @@ internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsM
                     element.asClassName(env),
                     paramComponent,
                     qualifier,
+                    scope,
                     namedValue,
                     mapKey,
                     mapKeyParams
@@ -70,6 +74,7 @@ internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsM
                     element.asClassName(env),
                     paramComponent,
                     qualifier,
+                    scope,
                     namedValue,
                     mapKey,
                     mapKeyParams
