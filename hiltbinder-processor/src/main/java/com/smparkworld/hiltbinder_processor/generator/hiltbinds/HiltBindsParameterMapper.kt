@@ -11,6 +11,7 @@ import com.smparkworld.hiltbinder_processor.model.HiltBindsParamsModel
 import javax.annotation.processing.ProcessingEnvironment
 import javax.inject.Named
 import javax.inject.Qualifier
+import javax.inject.Scope
 import javax.lang.model.element.Element
 
 internal class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> {
@@ -20,6 +21,7 @@ internal class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> 
         val paramFrom = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_FROM)
         val paramComponent = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_COMPONENT)
         val qualifier = AnnotationManager.getAnnotationByParentAnnotation(env, element, Qualifier::class, Named::class)
+        val scope = AnnotationManager.getAnnotationByParentAnnotation(env, element, Scope::class)
         val namedValue = AnnotationManager.getAnnotationValues<Named>(env, element)?.get(NAMED_PARAM) as? String
 
         return when {
@@ -29,6 +31,7 @@ internal class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> 
                     paramFrom.asClassName(env),
                     paramComponent,
                     qualifier,
+                    scope,
                     namedValue
                 )
             }
@@ -38,6 +41,7 @@ internal class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> 
                     element.asClassName(env),
                     paramComponent,
                     qualifier,
+                    scope,
                     namedValue
                 )
             }
@@ -53,6 +57,7 @@ internal class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> 
                     element.asClassName(env),
                     paramComponent,
                     qualifier,
+                    scope,
                     namedValue
                 )
             }
