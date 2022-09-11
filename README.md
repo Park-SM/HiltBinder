@@ -1268,9 +1268,9 @@ abstract class SetGenericSampleModelImpl4_BindsModule {
 ```kotlin
 interface NestedSampleModel {
     interface SampleModel {
-      interface SampleModelInternal {
-        fun printTestString()
-      }
+        interface SampleModelInternal {
+            fun printTestString()
+        }
     }
 }
 
