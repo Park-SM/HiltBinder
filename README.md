@@ -1,6 +1,6 @@
 ![Generic badge](https://img.shields.io/badge/Platform-Android-green.svg)&nbsp;
 ![Generic badge](https://img.shields.io/badge/Repository-MavenCentral-blue.svg)&nbsp;
-![Generic badge](https://img.shields.io/badge/Version-v1.3.0-red.svg)&nbsp;
+![Generic badge](https://img.shields.io/badge/Version-v1.4.0-red.svg)&nbsp;
 ![Generic badge](https://img.shields.io/badge/License-Apache2.0-3DB7CC.svg)&nbsp;
 
 # HiltBinder
@@ -28,6 +28,7 @@ If you think this library is useful, please press `⭐️ Star` button at upside
 - [Supported](https://github.com/Park-SM/HiltBinder#-supported)
   - [Generic Type - single](https://github.com/Park-SM/HiltBinder#generic-type---single)
   - [Generic Type - multiple](https://github.com/Park-SM/HiltBinder#generic-type---multiple)
+  - [Generic Type - nested type](https://github.com/Park-SM/HiltBinder#generic-type---nested-type)
   - [Generic Type - set multibinding](https://github.com/Park-SM/HiltBinder#generic-type---set-multibinding)
   - [Nested Type](https://github.com/Park-SM/HiltBinder#nested-type)
 - [More Sample Code](https://github.com/Park-SM/HiltBinder/tree/develop/app/src/main/java/com/smparkworld/hiltbinderexample)
@@ -47,7 +48,7 @@ repositories {
 // build.gradle(:app)
 dependencies {
 
-    def hiltBinderVersion = "1.3.0"
+    def hiltBinderVersion = "1.4.0"
     implementation "com.smparkworld.hiltbinder:hiltbinder:$hiltBinderVersion"
     kapt "com.smparkworld.hiltbinder:hiltbinder-processor:$hiltBinderVersion"
 }
@@ -142,21 +143,21 @@ class ComponentSampleModelImpl @Inject constructor(
 ```
 
 #### *scope*<br>
-> To specify ranges separately, apply scope annotations as in the following code snippet. The reason this can work is that applying a scope to the implementing class works to keep the singleton in scope via the `dagger.internal.DoubleCheck` class within the Hilt.
+> To specify ranges separately, apply scope annotations as in the following code snippet. 
 ```kotlin
-interface ComponentSampleModel {
-    fun printTestString()
+interface ScopeSampleModel {
+  fun printTestString()
 }
 
 @HiltBinds(component = ActivityRetainedComponent::class)
-@ActivityRetainedScope
-class ComponentSampleModelImpl @Inject constructor(
-    private val testString: String
-) : ComponentSampleModel {
+@ActivityRetainedScoped
+class ScopeSampleModelImpl @Inject constructor(
+  private val testString: String
+) : ScopeSampleModel {
 
-    override fun printTestString() {
-        Log.d("Test!!", "TestString is `$testString` in ComponentSampleModelImpl class.")
-    }
+  override fun printTestString() {
+    Log.d("Test!!", "TestString is `$testString` in ScopeSampleModelImpl class.");
+  }
 }
 
 or
@@ -813,6 +814,47 @@ class MainActivity : AppCompatActivity() {
 
         multipleGenericSampleModel.printTestString(97, 1205)
     }
+}
+```
+
+### *Generic Type - nested type*<br>
+> You can set the return type as a nested generic type. There is no limit of depth because recursive search finds generic types. Not only `@HiltBinds`, but also `@HiltSetBinds` and `@HiltMapBinds`. Of course, multiple generic types are possible.
+```kotlin
+interface NestedGenericSampleModel<T> {
+    fun printTest(test: T)
+}
+
+data class SampleParam<T>(
+  val key: T
+)
+
+@HiltBinds
+class NestedGenericSampleModelImpl @Inject constructor(
+  private val testString: String
+) : NestedGenericSampleModel<SampleParam<SampleParam<String>>> {
+
+  override fun printTest(test: SampleParam<SampleParam<String>>) {
+    Log.d("Test!!", "TestString is `$testString` in NestedGenericSampleModelImpl class. :: $test")
+  }
+}
+
+// This is the code to get Generic Type - nested type.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+  @Inject
+  lateinit var nestedGenericSampleModel: NestedGenericSampleModel<SampleParam<SampleParam<String>>>
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    val test = SampleParam(
+      key = SampleParam(
+        key = "nestedTestKey"
+      )
+    )
+    nestedGenericSampleModel.printTest(test)
+  }
 }
 ```
 
