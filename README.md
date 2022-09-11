@@ -28,6 +28,7 @@ If you think this library is useful, please press `⭐️ Star` button at upside
 - [Supported](https://github.com/Park-SM/HiltBinder#-supported)
   - [Generic Type - single](https://github.com/Park-SM/HiltBinder#generic-type---single)
   - [Generic Type - multiple](https://github.com/Park-SM/HiltBinder#generic-type---multiple)
+  - [Generic Type - nested type](https://github.com/Park-SM/HiltBinder#generic-type---nested-type)
   - [Generic Type - set multibinding](https://github.com/Park-SM/HiltBinder#generic-type---set-multibinding)
   - [Nested Type](https://github.com/Park-SM/HiltBinder#nested-type)
 - [More Sample Code](https://github.com/Park-SM/HiltBinder/tree/develop/app/src/main/java/com/smparkworld/hiltbinderexample)
