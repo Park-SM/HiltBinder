@@ -51,7 +51,8 @@ internal class HiltMapBindsModuleGenerator : ModuleGenerator {
                     when (value) {
                         is Element -> {
                             when(value.kind) {
-                                ElementKind.CLASS -> {
+                                ElementKind.CLASS,
+                                ElementKind.INTERFACE -> {
                                     addMember(key, "\$T.class", value)
                                 }
                                 ElementKind.ENUM_CONSTANT -> {
