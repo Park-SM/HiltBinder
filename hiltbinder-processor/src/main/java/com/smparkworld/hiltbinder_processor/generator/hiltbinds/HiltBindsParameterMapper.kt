@@ -3,13 +3,15 @@ package com.smparkworld.hiltbinder_processor.generator.hiltbinds
 import com.smparkworld.hiltbinder.HiltBinds
 import com.smparkworld.hiltbinder_processor.core.base.ParameterMapper
 import com.smparkworld.hiltbinder_processor.core.manager.AnnotationManager
+import com.smparkworld.hiltbinder_processor.extension.asClassName
 import com.smparkworld.hiltbinder_processor.extension.error
-import com.smparkworld.hiltbinder_processor.extension.getGenericTypes
-import com.smparkworld.hiltbinder_processor.extension.getSuperInterfaceElement
+import com.smparkworld.hiltbinder_processor.extension.getGenericTypeNames
+import com.smparkworld.hiltbinder_processor.extension.getSuperTypeMirror
 import com.smparkworld.hiltbinder_processor.model.HiltBindsParamsModel
 import javax.annotation.processing.ProcessingEnvironment
 import javax.inject.Named
 import javax.inject.Qualifier
+import javax.inject.Scope
 import javax.lang.model.element.Element
 
 internal class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> {
@@ -19,37 +21,44 @@ internal class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> 
         val paramFrom = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_FROM)
         val paramComponent = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_COMPONENT)
         val qualifier = AnnotationManager.getAnnotationByParentAnnotation(env, element, Qualifier::class, Named::class)
+        val scope = AnnotationManager.getAnnotationByParentAnnotation(env, element, Scope::class)
         val namedValue = AnnotationManager.getAnnotationValues<Named>(env, element)?.get(NAMED_PARAM) as? String
 
         return when {
             (paramFrom != null && paramTo == null) -> {
                 HiltBindsParamsModel(
-                    element,
-                    paramFrom,
+                    element.asClassName(env),
+                    paramFrom.asClassName(env),
                     paramComponent,
                     qualifier,
-                    namedValue,
-                    null
+                    scope,
+                    namedValue
                 )
             }
             (paramFrom == null && paramTo != null) -> {
                 HiltBindsParamsModel(
-                    paramTo,
-                    element,
+                    paramTo.asClassName(env),
+                    element.asClassName(env),
                     paramComponent,
                     qualifier,
-                    namedValue,
-                    null
+                    scope,
+                    namedValue
                 )
             }
             (paramFrom == null && paramTo == null) -> {
+                val to = element.getSuperTypeMirror()
+                if (to == null) {
+                    env.error(ERROR_MSG_NOT_FOUND_SUPER)
+                    throw IllegalStateException(ERROR_MSG_NOT_FOUND_SUPER)
+                }
+
                 HiltBindsParamsModel(
-                    env.getSuperInterfaceElement(element),
-                    element,
+                    to.getGenericTypeNames(env),
+                    element.asClassName(env),
                     paramComponent,
                     qualifier,
-                    namedValue,
-                    element.getGenericTypes(env)
+                    scope,
+                    namedValue
                 )
             }
             else -> {
@@ -61,6 +70,8 @@ internal class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> 
 
     companion object {
         private const val ERROR_MSG_SIGNED_TOGETHER = "`to` and `from` cannot be signed together."
+        private const val ERROR_MSG_NOT_FOUND_SUPER = "Super class not found."
+
 
         private const val PARAM_TO = "to"
         private const val PARAM_FROM = "from"

@@ -3,14 +3,15 @@ package com.smparkworld.hiltbinderexample
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.smparkworld.hiltbinderexample.sample.supported.generic.single.SingleGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.component.ComponentSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.from.FromSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.named.NamedSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.qualifier.QualifierSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.qualifier.SampleQualifierA
 import com.smparkworld.hiltbinderexample.sample.basic.qualifier.SampleQualifierB
+import com.smparkworld.hiltbinderexample.sample.basic.scope.ScopeSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.to.ToSampleModel
+import com.smparkworld.hiltbinderexample.sample.intomap.SampleKey
 import com.smparkworld.hiltbinderexample.sample.intomap.SampleType
 import com.smparkworld.hiltbinderexample.sample.intomap.complexkey.MapComplexKeySampleModel
 import com.smparkworld.hiltbinderexample.sample.intomap.complexkey.SampleMapComplexKey
@@ -19,18 +20,20 @@ import com.smparkworld.hiltbinderexample.sample.intomap.hiltdefault.classkey.Map
 import com.smparkworld.hiltbinderexample.sample.intomap.hiltdefault.intkey.MapIntKeySampleModel
 import com.smparkworld.hiltbinderexample.sample.intomap.hiltdefault.longkey.MapLongKeySampleModel
 import com.smparkworld.hiltbinderexample.sample.intomap.hiltdefault.stringkey.MapStringKeySampleModel
-import com.smparkworld.hiltbinderexample.sample.intomap.qualifier.QualifiedMapCustomKeySampleModel
-import com.smparkworld.hiltbinderexample.sample.intomap.SampleKey
 import com.smparkworld.hiltbinderexample.sample.intomap.named.NamedMapCustomKeySampleModel
+import com.smparkworld.hiltbinderexample.sample.intomap.qualifier.QualifiedMapCustomKeySampleModel
 import com.smparkworld.hiltbinderexample.sample.intomap.qualifier.SampleMapQualifierA
 import com.smparkworld.hiltbinderexample.sample.intomap.qualifier.SampleMapQualifierB
 import com.smparkworld.hiltbinderexample.sample.intoset.SetSampleModel
 import com.smparkworld.hiltbinderexample.sample.intoset.named.NamedSetSampleModel
+import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.QualifiedSetSampleModel
 import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.SampleSetQualifierA
 import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.SampleSetQualifierB
-import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.QualifiedSetSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.generic.intoset.SetGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.generic.multiple.MultipleGenericSampleModel
+import com.smparkworld.hiltbinderexample.sample.supported.generic.nested.NestedGenericSampleModel
+import com.smparkworld.hiltbinderexample.sample.supported.generic.nested.SampleParam
+import com.smparkworld.hiltbinderexample.sample.supported.generic.single.SingleGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.nested.NestedSampleModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -74,6 +77,12 @@ class MainActivity : AppCompatActivity() {
     @Inject
     @Named("modelB")
     lateinit var namedSampleModelB: NamedSampleModel
+    ////////////////////////////////////////////
+
+    ////////////////////////////////////////////
+    // Basic usage - scoped
+    @Inject
+    lateinit var scopeSampleModel: ScopeSampleModel
     ////////////////////////////////////////////
 
 
@@ -183,6 +192,19 @@ class MainActivity : AppCompatActivity() {
 
 
     ////////////////////////////////////////////
+    // supported - nested generic type
+    @Inject
+    lateinit var nestedGenericSampleModel: NestedGenericSampleModel<SampleParam<SampleParam<String>>>
+
+    @Inject
+    lateinit var nestedGenericSetSampleModels: @JvmSuppressWildcards Set<NestedGenericSampleModel<SampleParam<SampleParam<String>>>>
+
+    @Inject
+    lateinit var nestedGenericMapSampleModels: @JvmSuppressWildcards Map<String, Provider<NestedGenericSampleModel<SampleParam<SampleParam<String>>>>>
+    ////////////////////////////////////////////
+
+
+    ////////////////////////////////////////////
     // supported - set multibinding
     @Inject
     lateinit var setGenericSampleModelA: @JvmSuppressWildcards Set<SetGenericSampleModel<Int>>
@@ -195,7 +217,7 @@ class MainActivity : AppCompatActivity() {
     ////////////////////////////////////////////
     // supported - nested type
     @Inject
-    lateinit var nestedSampleModel: NestedSampleModel.SampleModel
+    lateinit var nestedSampleModel: NestedSampleModel.SampleModel.SampleModelInternal
     ////////////////////////////////////////////
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -209,6 +231,7 @@ class MainActivity : AppCompatActivity() {
         qualifierSampleModelB.printTestString()
         namedSampleModelA.printTestString()
         namedSampleModelB.printTestString()
+        scopeSampleModel.printTestString()
 
         sampleSet.forEach {
             it.printTestString()
@@ -292,6 +315,20 @@ class MainActivity : AppCompatActivity() {
         singleGenericSampleModel2.printTestString("String")
         singleGenericSampleModel3.printTestString(1205.97)
         multipleGenericSampleModel.printTestString(97, 1205)
+
+        val test = SampleParam(
+            key = SampleParam(
+                key = "nestedTestKey"
+            )
+        )
+        nestedGenericSampleModel.printTest(test)
+        nestedGenericSetSampleModels.forEach {
+            it.printTest(test)
+        }
+        for ((k, v) in nestedGenericMapSampleModels) {
+            Log.d("Test!!", "key: $k")
+            v.get().printTest(test)
+        }
 
         setGenericSampleModelA.forEach {
             it.printTestString(1)
