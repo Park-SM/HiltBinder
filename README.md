@@ -1,6 +1,6 @@
 ![Generic badge](https://img.shields.io/badge/Platform-Android-green.svg)&nbsp;
 ![Generic badge](https://img.shields.io/badge/Repository-MavenCentral-blue.svg)&nbsp;
-![Generic badge](https://img.shields.io/badge/Version-v1.4.1-red.svg)&nbsp;
+![Generic badge](https://img.shields.io/badge/Version-v1.4.0-red.svg)&nbsp;
 ![Generic badge](https://img.shields.io/badge/License-Apache2.0-3DB7CC.svg)&nbsp;
 
 # HiltBinder
@@ -48,7 +48,7 @@ repositories {
 // build.gradle(:app)
 dependencies {
 
-    def hiltBinderVersion = "1.4.1"
+    def hiltBinderVersion = "1.4.0"
     implementation "com.smparkworld.hiltbinder:hiltbinder:$hiltBinderVersion"
     kapt "com.smparkworld.hiltbinder:hiltbinder-processor:$hiltBinderVersion"
 }
