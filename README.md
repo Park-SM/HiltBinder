@@ -1148,6 +1148,7 @@ class MainActivity : AppCompatActivity() {
 }
 ```
 ```java
+// generated code
 @Module
 @InstallIn(SingletonComponent.class)
 abstract class NestedGenericSampleModelImpl_BindsModule {
