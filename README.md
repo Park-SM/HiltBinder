@@ -1,6 +1,6 @@
 ![Generic badge](https://img.shields.io/badge/Platform-Android-green.svg)&nbsp;
 ![Generic badge](https://img.shields.io/badge/Repository-MavenCentral-blue.svg)&nbsp;
-![Generic badge](https://img.shields.io/badge/Version-v1.3.0-red.svg)&nbsp;
+![Generic badge](https://img.shields.io/badge/Version-v1.4.0-red.svg)&nbsp;
 ![Generic badge](https://img.shields.io/badge/License-Apache2.0-3DB7CC.svg)&nbsp;
 
 # HiltBinder
@@ -47,7 +47,7 @@ repositories {
 // build.gradle(:app)
 dependencies {
 
-    def hiltBinderVersion = "1.3.0"
+    def hiltBinderVersion = "1.4.0"
     implementation "com.smparkworld.hiltbinder:hiltbinder:$hiltBinderVersion"
     kapt "com.smparkworld.hiltbinder:hiltbinder-processor:$hiltBinderVersion"
 }
@@ -169,31 +169,52 @@ abstract class ComponentSampleModelImpl_BindsModule {
 ```
 
 #### *scope*<br>
-> To specify ranges separately, apply scope annotations as in the following code snippet. The reason this can work is that applying a scope to the implementing class works to keep the singleton in scope via the `dagger.internal.DoubleCheck` class within the Hilt.
+> To specify ranges separately, apply scope annotations as in the following code snippet.
 ```kotlin
-interface ComponentSampleModel {
-    fun printTestString()
+interface ScopeSampleModel {
+  fun printTestString()
 }
 
+// for ActivityRetainedComponent
 @HiltBinds(component = ActivityRetainedComponent::class)
-@ActivityRetainedScope
-class ComponentSampleModelImpl @Inject constructor(
+@ActivityRetainedScoped
+class ScopeSampleModelImpl @Inject constructor(
     private val testString: String
-) : ComponentSampleModel {
+) : ScopeSampleModel {
 
     override fun printTestString() {
-        Log.d("Test!!", "TestString is `$testString` in ComponentSampleModelImpl class.")
+      Log.d("Test!!", "TestString is `$testString` in ScopeSampleModelImpl class.");
     }
 }
 
-or
 
+// for Singleton
 @HiltBinds
 @Singleton
 class SomethingSampleModelImpl @Inject constructor(
     private val testString: String
 ) : SomethingSampleModel {
-  ...
+    ...
+}
+```
+```java
+// generated code
+// for ActivityRetainedComponent
+@Module
+@InstallIn(ActivityRetainedComponent.class)
+abstract class ScopeSampleModelImpl_BindsModule {
+  @Binds
+  @ActivityRetainedScoped
+  public abstract ScopeSampleModel bindScopeSampleModelImpl(ScopeSampleModelImpl target);
+}
+
+// for SingletonComponent
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class ScopeSampleModelImpl_BindsModule {
+  @Binds
+  @Singleton
+  public abstract ScopeSampleModel bindScopeSampleModelImpl(ScopeSampleModelImpl target);
 }
 ```
 
@@ -1085,6 +1106,56 @@ abstract class MultipleGenericSampleModelImpl_BindsModule {
 }
 ```
 
+### *Generic Type - nested type*<br>
+> You can set the return type as a nested generic type. There is no limit of depth because recursive search finds generic types. Not only `@HiltBinds`, but also `@HiltSetBinds` and `@HiltMapBinds`. Of course, multiple generic types are possible.
+```kotlin
+interface NestedGenericSampleModel<T> {
+    fun printTest(test: T)
+}
+
+data class SampleParam<T>(
+    val key: T
+)
+
+@HiltBinds
+class NestedGenericSampleModelImpl @Inject constructor(
+    private val testString: String
+) : NestedGenericSampleModel<SampleParam<SampleParam<String>>> {
+
+    override fun printTest(test: SampleParam<SampleParam<String>>) {
+        Log.d("Test!!", "TestString is `$testString` in NestedGenericSampleModelImpl class. :: $test")
+    }
+}
+
+// This is the code to get Generic Type - nested type.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+  @Inject
+  lateinit var nestedGenericSampleModel: NestedGenericSampleModel<SampleParam<SampleParam<String>>>
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+
+    val test = SampleParam(
+        key = SampleParam(
+            key = "nestedTestKey"
+        )
+    )
+    nestedGenericSampleModel.printTest(test)
+  }
+}
+```
+```java
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class NestedGenericSampleModelImpl_BindsModule {
+  @Binds
+  public abstract NestedGenericSampleModel<SampleParam<SampleParam<String>>> bindNestedGenericSampleModelImpl(
+      NestedGenericSampleModelImpl target);
+}
+```
+
 ### *Generic Type - set multibinding*<br>
 > You can set the return type as a generic type through @HiltSetBinds. Of course, multiple generic types are possible.
 ```kotlin
@@ -1191,18 +1262,20 @@ abstract class SetGenericSampleModelImpl4_BindsModule {
 ```
 
 ### *Nested Type*<br>
-> It also supports nested class as below code.
+> It also supports nested class as below code. There is no limit of depth because recursive search finds nested types.
 ```kotlin
 interface NestedSampleModel {
-    interface SampleModel {
-        fun printTestString()
+  interface SampleModel {
+    interface SampleModelInternal {
+      fun printTestString()
     }
+  }
 }
 
 @HiltBinds
 class NestedSampleModelImpl @Inject constructor(
     private val testString: String
-) : NestedSampleModel.SampleModel {
+) : NestedSampleModel.SampleModel.SampleModelInternal {
 
     override fun printTestString() {
         Log.d("Test!!", "TestString is `$testString` in NestedSampleModelImpl class.")
@@ -1214,7 +1287,7 @@ class NestedSampleModelImpl @Inject constructor(
 class MainActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var nestedSampleModel: NestedSampleModel.SampleModel
+    lateinit var nestedSampleModel: NestedSampleModel.SampleModel.SampleModelInternal
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -1229,7 +1302,8 @@ class MainActivity : AppCompatActivity() {
 @InstallIn(SingletonComponent.class)
 abstract class NestedSampleModelImpl_BindsModule {
   @Binds
-  public abstract SampleModel bindNestedSampleModelImpl(NestedSampleModelImpl target);
+  public abstract NestedSampleModel.SampleModel.SampleModelInternal bindNestedSampleModelImpl(
+          NestedSampleModelImpl target);
 }
 ```
 
