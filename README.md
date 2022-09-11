@@ -1136,14 +1136,14 @@ class MainActivity : AppCompatActivity() {
   lateinit var nestedGenericSampleModel: NestedGenericSampleModel<SampleParam<SampleParam<String>>>
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
+      super.onCreate(savedInstanceState)
 
-    val test = SampleParam(
-        key = SampleParam(
-            key = "nestedTestKey"
-        )
-    )
-    nestedGenericSampleModel.printTest(test)
+      val test = SampleParam(
+          key = SampleParam(
+              key = "nestedTestKey"
+          )
+      )
+      nestedGenericSampleModel.printTest(test)
   }
 }
 ```
@@ -1166,65 +1166,65 @@ interface SetGenericSampleModel<T> {
 
 @HiltSetBinds
 class SetGenericSampleModelImpl1 @Inject constructor(
-  private val testString: String
+    private val testString: String
 ) : SetGenericSampleModel<Int> {
 
-  override fun printTestString(data: Int) {
-    Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl1 class. :: Generic type is <Int>")
-  }
+    override fun printTestString(data: Int) {
+        Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl1 class. :: Generic type is <Int>")
+    }
 }
 
 @HiltSetBinds
 class SetGenericSampleModelImpl2 @Inject constructor(
-  private val testString: String
+    private val testString: String
 ) : SetGenericSampleModel<Int> {
 
-  override fun printTestString(data: Int) {
-    Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl2 class. :: Generic type is <Int>")
-  }
+    override fun printTestString(data: Int) {
+        Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl2 class. :: Generic type is <Int>")
+    }
 }
 
 @HiltSetBinds
 class SetGenericSampleModelImpl3 @Inject constructor(
-  private val testString: String
+    private val testString: String
 ) : SetGenericSampleModel<String> {
 
-  override fun printTestString(data: String) {
-    Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl3 class. :: Generic type is <String>")
-  }
+    override fun printTestString(data: String) {
+        Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl3 class. :: Generic type is <String>")
+    }
 }
 
 @HiltSetBinds
 class SetGenericSampleModelImpl4 @Inject constructor(
-  private val testString: String
+    private val testString: String
 ) : SetGenericSampleModel<String> {
 
-  override fun printTestString(data: String) {
-    Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl4 class. :: Generic type is <String>")
-  }
+    override fun printTestString(data: String) {
+        Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl4 class. :: Generic type is <String>")
+    }
 }
 
 // This is the code to get Generic Type - Set Multibinding.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-  @Inject
-  lateinit var setGenericSampleModelA: @JvmSuppressWildcards Set<SetGenericSampleModel<Int>>
+    @Inject
+    lateinit var setGenericSampleModelA: @JvmSuppressWildcards Set<SetGenericSampleModel<Int>>
 
-  @Inject
-  lateinit var setGenericSampleModelB: @JvmSuppressWildcards Set<SetGenericSampleModel<String>>
+    @Inject
+    lateinit var setGenericSampleModelB: @JvmSuppressWildcards Set<SetGenericSampleModel<String>>
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+      super.onCreate(savedInstanceState)
 
-    setGenericSampleModelA.forEach {
-      it.printTestString(1)
+      setGenericSampleModelA.forEach {
+        it.printTestString(1)
+      }
+
+      setGenericSampleModelB.forEach {
+        it.printTestString("String1")
+      }
     }
-
-    setGenericSampleModelB.forEach {
-      it.printTestString("String1")
-    }
-  }
 }
 ```
 ```java
@@ -1266,11 +1266,11 @@ abstract class SetGenericSampleModelImpl4_BindsModule {
 > It also supports nested class as below code. There is no limit of depth because recursive search finds nested types.
 ```kotlin
 interface NestedSampleModel {
-  interface SampleModel {
-    interface SampleModelInternal {
-      fun printTestString()
+    interface SampleModel {
+      interface SampleModelInternal {
+        fun printTestString()
+      }
     }
-  }
 }
 
 @HiltBinds
