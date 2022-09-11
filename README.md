@@ -984,7 +984,7 @@ abstract class NamedMapCustomKeySampleModelImpl2_BindsModule {
 <br><br>
 ## # Supported
 ### *Generic Type - single*<br>
-> You can set the return type to a single generic type through @HiltBinds.
+> You can set the return type to a single generic type. Not only `@HiltBinds`, but also `@HiltSetBinds` and `@HiltMapBinds`.
 ```kotlin
 interface SingleGenericSampleModel<T> {
     fun printTestString(data: T)
@@ -1067,7 +1067,7 @@ abstract class SingleGenericSampleModelImpl3_BindsModule {
 ```
 
 ### *Generic Type - multiple*<br>
-> You can set the return type to multiple generic types through @HiltBinds.
+> You can set the return type to multiple generic types. Not only `@HiltBinds`, but also `@HiltSetBinds` and `@HiltMapBinds`.
 ```kotlin
 interface MultipleGenericSampleModel<T1, T2> {
     fun printTestString(data1: T1, data2: T2)
@@ -1158,7 +1158,7 @@ abstract class NestedGenericSampleModelImpl_BindsModule {
 ```
 
 ### *Generic Type - set multibinding*<br>
-> You can set the return type as a generic type through @HiltSetBinds. Of course, multiple generic types are possible.
+> You can set the return type as a generic type through `@HiltSetBinds`. Not only `@HiltSetBinds` but also `@HiltMapBinds`. Of course, multiple generic types are possible. 
 ```kotlin
 interface SetGenericSampleModel<T> {
     fun printTestString(data: T)
