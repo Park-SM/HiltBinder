@@ -336,7 +336,7 @@ interface SomethingClass    // throws an exception.
 <br><br>
 ## # MultiBinding
 ### *Set Multibinding - basics*<br>
-> You must use `@HiltSetBinds` to apply Set Multibinding.
+> You must use `@HiltSetBinds` to apply `Set Multibinding`.
 ```kotlin
 interface SetSampleModel {
     fun printTestString()
