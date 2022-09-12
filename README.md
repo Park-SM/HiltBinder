@@ -1108,7 +1108,7 @@ abstract class MultipleGenericSampleModelImpl_BindsModule {
 ```
 
 ### *Generic Type - nested type*<br>
-> You can set the return type as a nested generic type. There is no limit of depth because recursive search finds generic types. Not only `@HiltBinds`, but also `@HiltSetBinds` and `@HiltMapBinds`. Of course, multiple generic types are possible.
+> You can set the return type as a nested generic type. There is no limit of depth because finds generic types recursively. Not only `@HiltBinds`, but also `@HiltSetBinds` and `@HiltMapBinds`. Of course, multiple generic types are possible.
 ```kotlin
 interface NestedGenericSampleModel<T> {
     fun printTest(test: T)
@@ -1264,7 +1264,7 @@ abstract class SetGenericSampleModelImpl4_BindsModule {
 ```
 
 ### *Nested Type*<br>
-> It also supports nested class as below code. There is no limit of depth because recursive search finds nested types.
+> It also supports nested class as below code. There is no limit of depth because finds generic types recursively.
 ```kotlin
 interface NestedSampleModel {
     interface SampleModel {
