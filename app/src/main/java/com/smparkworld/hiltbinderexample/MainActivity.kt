@@ -30,6 +30,7 @@ import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.QualifiedSetSa
 import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.SampleSetQualifierA
 import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.SampleSetQualifierB
 import com.smparkworld.hiltbinderexample.sample.supported.generic.intoset.SetGenericSampleModel
+import com.smparkworld.hiltbinderexample.sample.supported.generic.intoset.stars.SetStarGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.generic.multiple.MultipleGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.generic.nested.NestedGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.generic.nested.SampleParam
@@ -220,6 +221,13 @@ class MainActivity : AppCompatActivity() {
     lateinit var nestedSampleModel: NestedSampleModel.SampleModel.SampleModelInternal
     ////////////////////////////////////////////
 
+
+    ////////////////////////////////////////////
+    // supported - set multibinding for star-projections
+    @Inject
+    lateinit var setStarGenericSampleModel: @JvmSuppressWildcards Set<SetStarGenericSampleModel<*>>
+    ////////////////////////////////////////////
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -339,5 +347,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         nestedSampleModel.printTestString()
+
+        setStarGenericSampleModel.forEach {
+            it.printTestString()
+        }
     }
 }
