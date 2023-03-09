@@ -1,6 +1,5 @@
 package com.smparkworld.hiltbinder_processor.extension
 
-import com.squareup.javapoet.ClassName
 import com.squareup.javapoet.ParameterizedTypeName
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.WildcardTypeName
