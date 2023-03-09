@@ -143,6 +143,7 @@ internal object AnnotationManager {
             when (val value = v.value) {
                 is Number,
                 is String,
+                is Boolean,
                 is Array<*>,
                 is Element -> {
                     params[k.simpleName.toString()] = value
