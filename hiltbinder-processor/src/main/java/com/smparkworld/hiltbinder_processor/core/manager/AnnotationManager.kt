@@ -29,7 +29,7 @@ internal object AnnotationManager {
         return elementCount
     }
 
-    inline fun <reified T : Annotation> getAnnotationValue(
+    inline fun <reified T : Annotation> getElementFromAnnotation(
         env: ProcessingEnvironment,
         element: Element,
         key: String
@@ -41,16 +41,16 @@ internal object AnnotationManager {
         }
     }
 
-    inline fun <reified T : Annotation> getAnnotationValues(
+    inline fun <reified T : Annotation> getValuesFromAnnotation(
         env: ProcessingEnvironment,
         element: Element
     ): Map<String, Any>? {
         return getAnnotationMirror(element, T::class.java)?.let { mirror ->
-            getAnnotationValues(env, mirror)
+            getValuesFromAnnotation(env, mirror)
         }
     }
 
-    fun getAnnotationValueByParentAnnotation(
+    fun getElementByParentAnnotation(
         env: ProcessingEnvironment,
         element: Element,
         parent: KClass<out Annotation>,
@@ -64,14 +64,14 @@ internal object AnnotationManager {
         }
     }
 
-    fun getAnnotationValuesByParentAnnotation(
+    fun getValuesFromParentAnnotation(
         env: ProcessingEnvironment,
         element: Element,
         parent: KClass<out Annotation>,
         vararg ignores: KClass<out Annotation>
     ): Map<String, Any>? {
         return getAnnotationMirrorByParentAnnotation(env, element, parent, *ignores)?.let { mirror ->
-            getAnnotationValues(env, mirror)
+            getValuesFromAnnotation(env, mirror)
         }
     }
 
@@ -134,7 +134,7 @@ internal object AnnotationManager {
         return null
     }
 
-    private fun getAnnotationValues(
+    private fun getValuesFromAnnotation(
         env: ProcessingEnvironment,
         annotationMirror: AnnotationMirror
     ): Map<String, Any> {

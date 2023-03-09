@@ -17,12 +17,12 @@ import javax.lang.model.element.Element
 internal class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> {
 
     override fun toParamsModel(env: ProcessingEnvironment, element: Element): HiltBindsParamsModel {
-        val paramTo = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_TO)
-        val paramFrom = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_FROM)
-        val paramComponent = AnnotationManager.getAnnotationValue<HiltBinds>(env, element, PARAM_COMPONENT)
+        val paramTo = AnnotationManager.getElementFromAnnotation<HiltBinds>(env, element, PARAM_TO)
+        val paramFrom = AnnotationManager.getElementFromAnnotation<HiltBinds>(env, element, PARAM_FROM)
+        val paramComponent = AnnotationManager.getElementFromAnnotation<HiltBinds>(env, element, PARAM_COMPONENT)
         val qualifier = AnnotationManager.getAnnotationByParentAnnotation(env, element, Qualifier::class, Named::class)
         val scope = AnnotationManager.getAnnotationByParentAnnotation(env, element, Scope::class)
-        val namedValue = AnnotationManager.getAnnotationValues<Named>(env, element)?.get(NAMED_PARAM) as? String
+        val namedValue = AnnotationManager.getValuesFromAnnotation<Named>(env, element)?.get(NAMED_PARAM) as? String
 
         return when {
             (paramFrom != null && paramTo == null) -> {

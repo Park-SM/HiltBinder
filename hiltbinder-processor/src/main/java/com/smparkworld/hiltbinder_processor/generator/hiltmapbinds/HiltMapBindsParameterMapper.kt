@@ -18,15 +18,15 @@ import javax.lang.model.element.Element
 internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsModel> {
 
     override fun toParamsModel(env: ProcessingEnvironment, element: Element): HiltMapBindsParamsModel {
-        val paramTo = AnnotationManager.getAnnotationValue<HiltMapBinds>(env, element, PARAM_TO)
-        val paramFrom = AnnotationManager.getAnnotationValue<HiltMapBinds>(env, element, PARAM_FROM)
-        val paramComponent = AnnotationManager.getAnnotationValue<HiltMapBinds>(env, element, PARAM_COMPONENT)
+        val paramTo = AnnotationManager.getElementFromAnnotation<HiltMapBinds>(env, element, PARAM_TO)
+        val paramFrom = AnnotationManager.getElementFromAnnotation<HiltMapBinds>(env, element, PARAM_FROM)
+        val paramComponent = AnnotationManager.getElementFromAnnotation<HiltMapBinds>(env, element, PARAM_COMPONENT)
         val qualifier = AnnotationManager.getAnnotationByParentAnnotation(env, element, Qualifier::class, Named::class)
         val scope = AnnotationManager.getAnnotationByParentAnnotation(env, element, Scope::class)
-        val namedValue = AnnotationManager.getAnnotationValues<Named>(env, element)?.get(NAMED_PARAM) as? String
+        val namedValue = AnnotationManager.getValuesFromAnnotation<Named>(env, element)?.get(NAMED_PARAM) as? String
 
         val mapKey = AnnotationManager.getAnnotationByParentAnnotation(env, element, MapKey::class)
-        val mapKeyParams = AnnotationManager.getAnnotationValuesByParentAnnotation(env, element, MapKey::class)
+        val mapKeyParams = AnnotationManager.getValuesFromParentAnnotation(env, element, MapKey::class)
 
         if (mapKey == null || mapKeyParams == null) {
             env.error(ERROR_MSG_NOT_FOUND_KEY)

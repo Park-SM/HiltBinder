@@ -17,13 +17,13 @@ import javax.lang.model.element.Element
 internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsModel> {
 
     override fun toParamsModel(env: ProcessingEnvironment, element: Element): HiltSetBindsParamsModel {
-        val paramTo = AnnotationManager.getAnnotationValue<HiltSetBinds>(env, element, PARAM_TO)
-        val paramFrom = AnnotationManager.getAnnotationValue<HiltSetBinds>(env, element, PARAM_FROM)
-        val paramComponent = AnnotationManager.getAnnotationValue<HiltSetBinds>(env, element, PARAM_COMPONENT)
-        val paramCombined =  AnnotationManager.getAnnotationValues<HiltSetBinds>(env, element)?.get(PARAM_COMBINED) as? Boolean
+        val paramTo = AnnotationManager.getElementFromAnnotation<HiltSetBinds>(env, element, PARAM_TO)
+        val paramFrom = AnnotationManager.getElementFromAnnotation<HiltSetBinds>(env, element, PARAM_FROM)
+        val paramComponent = AnnotationManager.getElementFromAnnotation<HiltSetBinds>(env, element, PARAM_COMPONENT)
+        val paramCombined =  AnnotationManager.getValuesFromAnnotation<HiltSetBinds>(env, element)?.get(PARAM_COMBINED) as? Boolean
         val qualifier = AnnotationManager.getAnnotationByParentAnnotation(env, element, Qualifier::class, Named::class)
         val scope = AnnotationManager.getAnnotationByParentAnnotation(env, element, Scope::class)
-        val namedValue = AnnotationManager.getAnnotationValues<Named>(env, element)?.get(NAMED_PARAM) as? String
+        val namedValue = AnnotationManager.getValuesFromAnnotation<Named>(env, element)?.get(NAMED_PARAM) as? String
 
         return when {
             (paramFrom != null && paramTo == null) -> {
