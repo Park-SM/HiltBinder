@@ -2,7 +2,6 @@ package com.smparkworld.hiltbinderexample.sample.supported.generic.intomap
 
 import android.util.Log
 import com.smparkworld.hiltbinder.HiltMapBinds
-import com.smparkworld.hiltbinder.HiltSetBinds
 import dagger.multibindings.StringKey
 import javax.inject.Inject
 
