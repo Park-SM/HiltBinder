@@ -18,5 +18,6 @@ import kotlin.reflect.KClass
 annotation class HiltBinds(
     val to: KClass<*> = Nothing::class,
     val from: KClass<*> = Nothing::class,
-    val component: KClass<*> = Nothing::class
+    val component: KClass<*> = Nothing::class,
+    val combined: Boolean = false
 )
