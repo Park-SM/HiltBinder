@@ -41,11 +41,11 @@ If you think this library is useful, please press `⭐️ Star` button at upside
 
 <br><br>
 ## # How to use
-Can be used in android project with hilt applied. And add dependency like below code.
+The `mavenCentral` repository must be registered. Add dependencies as shown in the code below.
 ```groovy
 // build.gradle(:project)
 repositories {
-    google()
+    ....
     mavenCentral()
 }
 
@@ -92,7 +92,7 @@ abstract class TestUseCaseImpl_BindsModule {
 > The return type of the Binds abstract function.
 ```kotlin
 open class BaseSampleModel {
-  ...
+    ....
 }
 
 interface ToSampleModel {
