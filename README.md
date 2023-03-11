@@ -1,10 +1,10 @@
 ![Generic badge](https://img.shields.io/badge/Platform-Android-green.svg)&nbsp;
 ![Generic badge](https://img.shields.io/badge/Repository-MavenCentral-blue.svg)&nbsp;
-![Generic badge](https://img.shields.io/badge/Version-v1.3.0-red.svg)&nbsp;
+![Generic badge](https://img.shields.io/badge/Version-v1.4.1-red.svg)&nbsp;
 ![Generic badge](https://img.shields.io/badge/License-Apache2.0-3DB7CC.svg)&nbsp;
 
 # HiltBinder
-An annotation processor example that automatically creates [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)'s `@Binds` functions and modules.   
+An annotation processor library that automatically creates [Hilt](https://developer.android.com/training/dependency-injection/hilt-android)'s `@Binds` functions and modules.   
 If you think this library is useful, please press `⭐️ Star` button at upside : )
 - [How to use](https://github.com/Park-SM/HiltBinder#-how-to-use)
 - [Basic usage](https://github.com/Park-SM/HiltBinder#-basic-usage)
@@ -28,6 +28,7 @@ If you think this library is useful, please press `⭐️ Star` button at upside
 - [Supported](https://github.com/Park-SM/HiltBinder#-supported)
   - [Generic Type - single](https://github.com/Park-SM/HiltBinder#generic-type---single)
   - [Generic Type - multiple](https://github.com/Park-SM/HiltBinder#generic-type---multiple)
+  - [Generic Type - nested type](https://github.com/Park-SM/HiltBinder#generic-type---nested-type)
   - [Generic Type - set multibinding](https://github.com/Park-SM/HiltBinder#generic-type---set-multibinding)
   - [Nested Type](https://github.com/Park-SM/HiltBinder#nested-type)
 - [More Sample Code](https://github.com/Park-SM/HiltBinder/tree/develop/app/src/main/java/com/smparkworld/hiltbinderexample)
@@ -47,7 +48,7 @@ repositories {
 // build.gradle(:app)
 dependencies {
 
-    def hiltBinderVersion = "1.3.0"
+    def hiltBinderVersion = "1.4.1"
     implementation "com.smparkworld.hiltbinder:hiltbinder:$hiltBinderVersion"
     kapt "com.smparkworld.hiltbinder:hiltbinder-processor:$hiltBinderVersion"
 }
@@ -86,7 +87,7 @@ abstract class TestUseCaseImpl_BindsModule {
 #### *to*<br>
 > The return type of the Binds abstract function.
 ```kotlin
-interface OtherSpec {
+open class BaseSampleModel {
   ...
 }
 
@@ -97,11 +98,20 @@ interface ToSampleModel {
 @HiltBinds(to = ToSampleModel::class)
 class ToSampleModelImpl @Inject constructor(
     private val testString: String
-) : OtherSpec, ToSampleModel {
+) : BaseSampleModel(), ToSampleModel {
 
     override fun printTestString() {
         Log.d("Test!!", "TestString is `$testString` in ToSampleModelImpl class.")
     }
+}
+```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class ToSampleModelImpl_BindsModule {
+  @Binds
+  public abstract ToSampleModel bindToSampleModelImpl(ToSampleModelImpl target);
 }
 ```
 
@@ -122,6 +132,15 @@ class FromSampleModelImpl @Inject constructor(
     }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class FromSampleModel_BindsModule {
+  @Binds
+  public abstract FromSampleModel bindFromSampleModel(FromSampleModelImpl target);
+}
+```
 
 #### *component*<br>
 > Specifies in which component the class to be returned will be installed.
@@ -140,33 +159,63 @@ class ComponentSampleModelImpl @Inject constructor(
     }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(ActivityRetainedComponent.class)
+abstract class ComponentSampleModelImpl_BindsModule {
+  @Binds
+  public abstract ComponentSampleModel bindComponentSampleModelImpl(ComponentSampleModelImpl target);
+}
+```
 
 #### *scope*<br>
-> To specify ranges separately, apply scope annotations as in the following code snippet. The reason this can work is that applying a scope to the implementing class works to keep the singleton in scope via the `dagger.internal.DoubleCheck` class within the Hilt.
+> To specify ranges separately, apply scope annotations as in the following code snippet.
 ```kotlin
-interface ComponentSampleModel {
-    fun printTestString()
+interface ScopeSampleModel {
+  fun printTestString()
 }
 
+// for ActivityRetainedComponent
 @HiltBinds(component = ActivityRetainedComponent::class)
-@ActivityRetainedScope
-class ComponentSampleModelImpl @Inject constructor(
+@ActivityRetainedScoped
+class ScopeSampleModelImpl @Inject constructor(
     private val testString: String
-) : ComponentSampleModel {
+) : ScopeSampleModel {
 
     override fun printTestString() {
-        Log.d("Test!!", "TestString is `$testString` in ComponentSampleModelImpl class.")
+      Log.d("Test!!", "TestString is `$testString` in ScopeSampleModelImpl class.");
     }
 }
 
-or
 
+// for Singleton
 @HiltBinds
 @Singleton
 class SomethingSampleModelImpl @Inject constructor(
     private val testString: String
 ) : SomethingSampleModel {
-  ...
+    ...
+}
+```
+```java
+// generated code
+// for ActivityRetainedComponent
+@Module
+@InstallIn(ActivityRetainedComponent.class)
+abstract class ScopeSampleModelImpl_BindsModule {
+  @Binds
+  @ActivityRetainedScoped
+  public abstract ScopeSampleModel bindScopeSampleModelImpl(ScopeSampleModelImpl target);
+}
+
+// for SingletonComponent
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class ScopeSampleModelImpl_BindsModule {
+  @Binds
+  @Singleton
+  public abstract ScopeSampleModel bindScopeSampleModelImpl(ScopeSampleModelImpl target);
 }
 ```
 
@@ -207,6 +256,24 @@ class QualifierSampleModelImpl2 @Inject constructor(
     }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class QualifierSampleModelImpl1_BindsModule {
+  @Binds
+  @SampleQualifier1
+  public abstract QualifierSampleModel bindQualifierSampleModelImpl1(QualifierSampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class QualifierSampleModelImpl2_BindsModule {
+  @Binds
+  @SampleQualifier2
+  public abstract QualifierSampleModel bindQualifierSampleModelImpl2(QualifierSampleModelImpl2 target);
+}
+```
 
 #### *named*<br>
 > The Qualifier annotation to be applied to the return type.
@@ -237,6 +304,24 @@ class NamedSampleModelImpl2 @Inject constructor(
     }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class NamedSampleModelImpl1_BindsModule {
+  @Binds
+  @Named("model1")
+  public abstract NamedSampleModel bindNamedSampleModelImpl1(NamedSampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class NamedSampleModelImpl2_BindsModule {
+  @Binds
+  @Named("model2")
+  public abstract NamedSampleModel bindNamedSampleModelImpl2(NamedSampleModelImpl2 target);
+}
+```
 
 <br><br>
 #### *CAUTION HERE* ✋<br>
@@ -251,7 +336,7 @@ interface SomethingClass    // throws an exception.
 <br><br>
 ## # MultiBinding
 ### *Set Multibinding - basics*<br>
-> You must use `@HiltSetBinds` to apply Set Multibinding.
+> You must use `@HiltSetBinds` to apply `Set Multibinding`.
 ```kotlin
 interface SetSampleModel {
     fun printTestString()
@@ -291,6 +376,24 @@ class MainActivity : AppCompatActivity() {
             it.printTestString()
         }
     }
+}
+```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class SetSampleModelImpl1_BindsModule {
+  @Binds
+  @IntoSet
+  public abstract SetSampleModel bindSetSampleModelImpl1(SetSampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class SetSampleModelImpl2_BindsModule {
+  @Binds
+  @IntoSet
+  public abstract SetSampleModel bindSetSampleModelImpl2(SetSampleModelImpl2 target);
 }
 ```
 
@@ -351,6 +454,26 @@ class MainActivity : AppCompatActivity() {
     }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class QualifiedSetSampleModelImpl1_BindsModule {
+  @Binds
+  @IntoSet
+  @SampleSetQualifierA
+  public abstract QualifiedSetSampleModel bindQualifiedSetSampleModelImpl1(QualifiedSetSampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class QualifiedSetSampleModelImpl2_BindsModule {
+  @Binds
+  @IntoSet
+  @SampleSetQualifierB
+  public abstract QualifiedSetSampleModel bindQualifiedSetSampleModelImpl2(QualifiedSetSampleModelImpl2 target);
+}
+```
 
 ### *Set Multibinding - named*<br>
 > If you want to configure multiple `Set Multibinding` of the same type, you can use @Named(`javax.inject.Named`) annotations like this:
@@ -401,6 +524,26 @@ class MainActivity : AppCompatActivity() {
     }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class NamedSetSampleModelImpl1_BindsModule {
+  @Binds
+  @IntoSet
+  @Named("sampleNamedSetA")
+  public abstract NamedSetSampleModel bindNamedSetSampleModelImpl1(NamedSetSampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class NamedSetSampleModelImpl2_BindsModule {
+  @Binds
+  @IntoSet
+  @Named("sampleNamedSetB")
+  public abstract NamedSetSampleModel bindNamedSetSampleModelImpl2(NamedSetSampleModelImpl2 target);
+}
+```
 
 ### *Map Multibinding - basics*<br>
 > You must use `@HiltMapBinds` to apply `Map Multibinding`. And you must to add a Key annotation with hilt's `@MapKey` applied, as in the code below. You can use the `@ClassKey`, `@StringKey`, `@IntKey`, `@LongKey` provided by hilt.
@@ -446,6 +589,26 @@ class MainActivity : AppCompatActivity() {
             v.get().printTestString()
         }
     }
+}
+```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class MapStringKeySampleModelImpl1_BindsModule {
+  @Binds
+  @IntoMap
+  @StringKey("model1")
+  public abstract MapStringKeySampleModel bindMapStringKeySampleModelImpl1(MapStringKeySampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class MapStringKeySampleModelImpl2_BindsModule {
+  @Binds
+  @IntoMap
+  @StringKey("model2")
+  public abstract MapStringKeySampleModel bindMapStringKeySampleModelImpl2(MapStringKeySampleModelImpl2 target);
 }
 ```
   
@@ -502,6 +665,26 @@ class MainActivity : AppCompatActivity() {
             v.get().printTestString()
         }
     }
+}
+```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class MapCustomKeySampleModelImpl1_BindsModule {
+  @Binds
+  @IntoMap
+  @SampleMapCustomKey(key = SampleType.SAMPLE1)
+  public abstract MapCustomKeySampleModel bindMapCustomKeySampleModelImpl1(MapCustomKeySampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class MapCustomKeySampleModelImpl2_BindsModule {
+  @Binds
+  @IntoMap
+  @SampleMapCustomKey(key = SampleType.SAMPLE2)
+  public abstract MapCustomKeySampleModel bindMapCustomKeySampleModelImpl2(MapCustomKeySampleModelImpl2 target);
 }
 ```
   
@@ -581,6 +764,38 @@ class MainActivity : AppCompatActivity() {
     }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class MapComplexKeySampleModelImpl1_BindsModule {
+  @Binds
+  @IntoMap
+  @SampleMapComplexKey(
+          key1 = "sample1",
+          key2 = MapComplexKeySampleModelImpl1.class,
+          key3 = {"s1","s2","s3"},
+          key4 = {1,2,3},
+          key5 = SampleType.SAMPLE1
+  )
+  public abstract MapComplexKeySampleModel bindMapComplexKeySampleModelImpl1(MapComplexKeySampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class MapComplexKeySampleModelImpl2_BindsModule {
+  @Binds
+  @IntoMap
+  @SampleMapComplexKey(
+          key1 = "sample2",
+          key2 = MapComplexKeySampleModelImpl2.class,
+          key3 = {"s4","s5","s6"},
+          key4 = {4,5,6},
+          key5 = SampleType.SAMPLE2
+  )
+  public abstract MapComplexKeySampleModel bindMapComplexKeySampleModelImpl2(MapComplexKeySampleModelImpl2 target);
+}
+```
 
 ### *Map Multibinding - qualifier*<br>
 > If you want to configure multiple `Map Multibinding` of the same type, you can use @Qualifier(`javax.inject.Qualifier`) annotations like this:
@@ -657,6 +872,28 @@ class MainActivity : AppCompatActivity() {
     }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class QualifiedMapCustomKeySampleModelImpl1_BindsModule {
+  @Binds
+  @IntoMap
+  @QualifiedSampleMapCustomKey(key = SampleKey.KEY1)
+  @SampleMapQualifierA
+  public abstract QualifiedMapCustomKeySampleModel bindQualifiedMapCustomKeySampleModelImpl1(QualifiedMapCustomKeySampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class QualifiedMapCustomKeySampleModelImpl2_BindsModule {
+  @Binds
+  @IntoMap
+  @QualifiedSampleMapCustomKey(key = SampleKey.KEY2)
+  @SampleMapQualifierB
+  public abstract QualifiedMapCustomKeySampleModel bindQualifiedMapCustomKeySampleModelImpl2(QualifiedMapCustomKeySampleModelImpl2 target);
+}
+```
 
 ### *Map Multibinding - named*<br>
 > If you want to configure multiple `Map Multibinding` of the same type, you can use @Named(`javax.inject.Named`) annotations like this:
@@ -721,11 +958,33 @@ class MainActivity : AppCompatActivity() {
     }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class NamedMapCustomKeySampleModelImpl1_BindsModule {
+  @Binds
+  @IntoMap
+  @NamedSampleMapCustomKey(key = SampleKey.KEY1)
+  @Named("sampleNamedMapA")
+  public abstract NamedMapCustomKeySampleModel bindNamedMapCustomKeySampleModelImpl1(NamedMapCustomKeySampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class NamedMapCustomKeySampleModelImpl2_BindsModule {
+  @Binds
+  @IntoMap
+  @NamedSampleMapCustomKey(key = SampleKey.KEY2)
+  @Named("sampleNamedMapB")
+  public abstract NamedMapCustomKeySampleModel bindNamedMapCustomKeySampleModelImpl2(NamedMapCustomKeySampleModelImpl2 target);
+}
+```
 
 <br><br>
 ## # Supported
 ### *Generic Type - single*<br>
-> You can set the return type to a single generic type through @HiltBinds.
+> You can set the return type to a single generic type. Not only `@HiltBinds`, but also `@HiltSetBinds` and `@HiltMapBinds`.
 ```kotlin
 interface SingleGenericSampleModel<T> {
     fun printTestString(data: T)
@@ -783,9 +1042,32 @@ class MainActivity : AppCompatActivity() {
     }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class SingleGenericSampleModelImpl1_BindsModule {
+  @Binds
+  public abstract SingleGenericSampleModel<Integer> bindSingleGenericSampleModelImpl1(SingleGenericSampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class SingleGenericSampleModelImpl2_BindsModule {
+  @Binds
+  public abstract SingleGenericSampleModel<String> bindSingleGenericSampleModelImpl2(SingleGenericSampleModelImpl2 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class SingleGenericSampleModelImpl3_BindsModule {
+  @Binds
+  public abstract SingleGenericSampleModel<Object> bindSingleGenericSampleModelImpl3(SingleGenericSampleModelImpl3 target);
+}
+```
 
 ### *Generic Type - multiple*<br>
-> You can set the return type to multiple generic types through @HiltBinds.
+> You can set the return type to multiple generic types. Not only `@HiltBinds`, but also `@HiltSetBinds` and `@HiltMapBinds`.
 ```kotlin
 interface MultipleGenericSampleModel<T1, T2> {
     fun printTestString(data1: T1, data2: T2)
@@ -815,9 +1097,69 @@ class MainActivity : AppCompatActivity() {
     }
 }
 ```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class MultipleGenericSampleModelImpl_BindsModule {
+  @Binds
+  public abstract MultipleGenericSampleModel<Integer, Object> bindMultipleGenericSampleModelImpl(MultipleGenericSampleModelImpl target);
+}
+```
+
+### *Generic Type - nested type*<br>
+> You can set the return type as a nested generic type. There is no limit of depth because finds generic types recursively. Not only `@HiltBinds`, but also `@HiltSetBinds` and `@HiltMapBinds`. Of course, multiple generic types are possible.
+```kotlin
+interface NestedGenericSampleModel<T> {
+    fun printTest(test: T)
+}
+
+data class SampleParam<T>(
+    val key: T
+)
+
+@HiltBinds
+class NestedGenericSampleModelImpl @Inject constructor(
+    private val testString: String
+) : NestedGenericSampleModel<SampleParam<SampleParam<String>>> {
+
+    override fun printTest(test: SampleParam<SampleParam<String>>) {
+        Log.d("Test!!", "TestString is `$testString` in NestedGenericSampleModelImpl class. :: $test")
+    }
+}
+
+// This is the code to get Generic Type - nested type.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+  @Inject
+  lateinit var nestedGenericSampleModel: NestedGenericSampleModel<SampleParam<SampleParam<String>>>
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+      super.onCreate(savedInstanceState)
+
+      val test = SampleParam(
+          key = SampleParam(
+              key = "nestedTestKey"
+          )
+      )
+      nestedGenericSampleModel.printTest(test)
+  }
+}
+```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class NestedGenericSampleModelImpl_BindsModule {
+  @Binds
+  public abstract NestedGenericSampleModel<SampleParam<SampleParam<String>>> bindNestedGenericSampleModelImpl(
+      NestedGenericSampleModelImpl target);
+}
+```
 
 ### *Generic Type - set multibinding*<br>
-> You can set the return type as a generic type through @HiltSetBinds. Of course, multiple generic types are possible.
+> You can set the return type as a generic type through `@HiltSetBinds`. Not only `@HiltSetBinds` but also `@HiltMapBinds`. Of course, multiple generic types are possible. 
 ```kotlin
 interface SetGenericSampleModel<T> {
     fun printTestString(data: T)
@@ -825,81 +1167,117 @@ interface SetGenericSampleModel<T> {
 
 @HiltSetBinds
 class SetGenericSampleModelImpl1 @Inject constructor(
-  private val testString: String
+    private val testString: String
 ) : SetGenericSampleModel<Int> {
 
-  override fun printTestString(data: Int) {
-    Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl1 class. :: Generic type is <Int>")
-  }
+    override fun printTestString(data: Int) {
+        Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl1 class. :: Generic type is <Int>")
+    }
 }
 
 @HiltSetBinds
 class SetGenericSampleModelImpl2 @Inject constructor(
-  private val testString: String
+    private val testString: String
 ) : SetGenericSampleModel<Int> {
 
-  override fun printTestString(data: Int) {
-    Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl2 class. :: Generic type is <Int>")
-  }
+    override fun printTestString(data: Int) {
+        Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl2 class. :: Generic type is <Int>")
+    }
 }
 
 @HiltSetBinds
 class SetGenericSampleModelImpl3 @Inject constructor(
-  private val testString: String
+    private val testString: String
 ) : SetGenericSampleModel<String> {
 
-  override fun printTestString(data: String) {
-    Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl3 class. :: Generic type is <String>")
-  }
+    override fun printTestString(data: String) {
+        Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl3 class. :: Generic type is <String>")
+    }
 }
 
 @HiltSetBinds
 class SetGenericSampleModelImpl4 @Inject constructor(
-  private val testString: String
+    private val testString: String
 ) : SetGenericSampleModel<String> {
 
-  override fun printTestString(data: String) {
-    Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl4 class. :: Generic type is <String>")
-  }
+    override fun printTestString(data: String) {
+        Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl4 class. :: Generic type is <String>")
+    }
 }
 
 // This is the code to get Generic Type - Set Multibinding.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-  @Inject
-  lateinit var setGenericSampleModelA: @JvmSuppressWildcards Set<SetGenericSampleModel<Int>>
+    @Inject
+    lateinit var setGenericSampleModelA: @JvmSuppressWildcards Set<SetGenericSampleModel<Int>>
 
-  @Inject
-  lateinit var setGenericSampleModelB: @JvmSuppressWildcards Set<SetGenericSampleModel<String>>
+    @Inject
+    lateinit var setGenericSampleModelB: @JvmSuppressWildcards Set<SetGenericSampleModel<String>>
 
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+      super.onCreate(savedInstanceState)
 
-    setGenericSampleModelA.forEach {
-      it.printTestString(1)
+      setGenericSampleModelA.forEach {
+        it.printTestString(1)
+      }
+
+      setGenericSampleModelB.forEach {
+        it.printTestString("String1")
+      }
     }
+}
+```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class SetGenericSampleModelImpl1_BindsModule {
+  @Binds
+  @IntoSet
+  public abstract SetGenericSampleModel<Integer> bindSetGenericSampleModelImpl1(SetGenericSampleModelImpl1 target);
+}
 
-    setGenericSampleModelB.forEach {
-      it.printTestString("String1")
-    }
-  }
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class SetGenericSampleModelImpl2_BindsModule {
+  @Binds
+  @IntoSet
+  public abstract SetGenericSampleModel<Integer> bindSetGenericSampleModelImpl2(SetGenericSampleModelImpl2 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class SetGenericSampleModelImpl3_BindsModule {
+  @Binds
+  @IntoSet
+  public abstract SetGenericSampleModel<String> bindSetGenericSampleModelImpl3(SetGenericSampleModelImpl3 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class SetGenericSampleModelImpl4_BindsModule {
+  @Binds
+  @IntoSet
+  public abstract SetGenericSampleModel<String> bindSetGenericSampleModelImpl4(SetGenericSampleModelImpl4 target);
 }
 ```
 
 ### *Nested Type*<br>
-> It also supports nested class as below code.
+> It also supports nested class as below code. There is no limit of depth because finds generic types recursively.
 ```kotlin
 interface NestedSampleModel {
     interface SampleModel {
-        fun printTestString()
+        interface SampleModelInternal {
+            fun printTestString()
+        }
     }
 }
 
 @HiltBinds
 class NestedSampleModelImpl @Inject constructor(
     private val testString: String
-) : NestedSampleModel.SampleModel {
+) : NestedSampleModel.SampleModel.SampleModelInternal {
 
     override fun printTestString() {
         Log.d("Test!!", "TestString is `$testString` in NestedSampleModelImpl class.")
@@ -911,13 +1289,23 @@ class NestedSampleModelImpl @Inject constructor(
 class MainActivity : AppCompatActivity() {
 
     @Inject
-    lateinit var nestedSampleModel: NestedSampleModel.SampleModel
+    lateinit var nestedSampleModel: NestedSampleModel.SampleModel.SampleModelInternal
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         nestedSampleModel.printTestString()
     }
+}
+```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class NestedSampleModelImpl_BindsModule {
+  @Binds
+  public abstract NestedSampleModel.SampleModel.SampleModelInternal bindNestedSampleModelImpl(
+          NestedSampleModelImpl target);
 }
 ```
 
