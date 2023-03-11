@@ -177,7 +177,7 @@ abstract class ComponentSampleModelImpl_BindsModule {
 > To specify ranges separately, apply scope annotations as in the following code snippet.
 ```kotlin
 interface ScopeSampleModel {
-  fun printTestString()
+    fun printTestString()
 }
 
 // for ActivityRetainedComponent
@@ -199,7 +199,7 @@ class ScopeSampleModelImpl @Inject constructor(
 class SomethingSampleModelImpl @Inject constructor(
     private val testString: String
 ) : SomethingSampleModel {
-    ...
+    ....
 }
 ```
 ```java
@@ -228,18 +228,18 @@ abstract class ScopeSampleModelImpl_BindsModule {
 ```kotlin
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class SampleQualifier1
+annotation class SampleQualifierA
 
 @Qualifier
 @Retention(AnnotationRetention.RUNTIME)
-annotation class SampleQualifier2
+annotation class SampleQualifierB
 
 interface QualifierSampleModel {
     fun printTestString()
 }
 
 @HiltBinds
-@SampleQualifier1
+@SampleQualifierA
 class QualifierSampleModelImpl1 @Inject constructor(
     private val testString: String
 ) : QualifierSampleModel {
@@ -250,13 +250,33 @@ class QualifierSampleModelImpl1 @Inject constructor(
 }
 
 @HiltBinds
-@SampleQualifier2
+@SampleQualifierB
 class QualifierSampleModelImpl2 @Inject constructor(
     private val testString: String
 ) : QualifierSampleModel {
 
     override fun printTestString() {
         Log.d("Test!!", "TestString is `$testString` in QualifierSampleModelImpl2 class.")
+    }
+}
+
+// The code to be injected.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+    @Inject
+    @SampleQualifierA
+    lateinit var qualifierSampleModelA: QualifierSampleModel
+  
+    @Inject
+    @SampleQualifierB
+    lateinit var qualifierSampleModelB: QualifierSampleModel
+  
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        qualifierSampleModelA.printTestString()
+        qualifierSampleModelB.printTestString()
     }
 }
 ```
@@ -287,7 +307,7 @@ interface NamedSampleModel {
 }
 
 @HiltBinds
-@Named("model1")
+@Named("modelA")
 class NamedSampleModelImpl1 @Inject constructor(
    private val testString: String
 ) : NamedSampleModel {
@@ -298,13 +318,33 @@ class NamedSampleModelImpl1 @Inject constructor(
 }
 
 @HiltBinds
-@Named("model2")
+@Named("modelB")
 class NamedSampleModelImpl2 @Inject constructor(
    private val testString: String
 ) : NamedSampleModel {
 
     override fun printTestString() {
         Log.d("Test!!", "TestString is `$testString` in NamedSampleModelImpl2 class.")
+    }
+}
+
+// The code to be injected.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+    @Inject
+    @Named("modelA")
+    lateinit var namedSampleModelA: NamedSampleModel
+
+    @Inject
+    @Named("modelB")
+    lateinit var namedSampleModelB: NamedSampleModel
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        namedSampleModelA.printTestString()
+        namedSampleModelB.printTestString()
     }
 }
 ```
@@ -314,7 +354,7 @@ class NamedSampleModelImpl2 @Inject constructor(
 @InstallIn(SingletonComponent.class)
 abstract class NamedSampleModelImpl1_BindsModule {
   @Binds
-  @Named("model1")
+  @Named("modelA")
   public abstract NamedSampleModel bindNamedSampleModelImpl1(NamedSampleModelImpl1 target);
 }
 
@@ -322,7 +362,7 @@ abstract class NamedSampleModelImpl1_BindsModule {
 @InstallIn(SingletonComponent.class)
 abstract class NamedSampleModelImpl2_BindsModule {
   @Binds
-  @Named("model2")
+  @Named("modelB")
   public abstract NamedSampleModel bindNamedSampleModelImpl2(NamedSampleModelImpl2 target);
 }
 ```
@@ -366,7 +406,7 @@ class SetSampleModelImpl2 @Inject constructor(
     }
 }
 
-// This is the code to get Set Multibinding.
+// The code to be injected.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -438,7 +478,7 @@ class QualifiedSetSampleModelImpl2 @Inject constructor(
     }
 }
 
-// This is the code to get Set Multibinding - qualifier.
+// The code to be injected.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -508,7 +548,7 @@ class NamedSetSampleModelImpl2 @Inject constructor(
     }
 }
 
-// This is the code to get Set Multibinding - named.
+// The code to be injected.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -578,7 +618,7 @@ class MapStringKeySampleModelImpl2 @Inject constructor(
     }
 }
 
-// This is the code to get Map Multibinding.
+// The code to be injected.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -654,7 +694,7 @@ class MapCustomKeySampleModelImpl2 @Inject constructor(
     }
 }
 
-// This is the code to get Map Multibinding.
+// The code to be injected.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -751,7 +791,7 @@ class MapComplexKeySampleModelImpl2 @Inject constructor(
     }
 }
 
-// This is the code to get Map Multibinding.
+// The code to be injected.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -849,7 +889,7 @@ class QualifiedMapCustomKeySampleModelImpl2 @Inject constructor(
     }
 }
 
-// This is the code to get Map Multibinding - qualifier.
+// The code to be injected.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -935,7 +975,7 @@ class NamedMapCustomKeySampleModelImpl2 @Inject constructor(
     }
 }
 
-// This is the code to get Map Multibinding - named.
+// The code to be injected.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -1024,7 +1064,7 @@ class SingleGenericSampleModelImpl3 @Inject constructor(
     }
 }
 
-// This is the code to get Generic Type - single.
+// The code to be injected.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -1087,7 +1127,7 @@ class MultipleGenericSampleModelImpl @Inject constructor(
     }
 }
 
-// This is the code to get Generic Type - multiple.
+// The code to be injected.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -1132,7 +1172,7 @@ class NestedGenericSampleModelImpl @Inject constructor(
     }
 }
 
-// This is the code to get Generic Type - nested type.
+// The code to be injected.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -1209,7 +1249,7 @@ class SetGenericSampleModelImpl4 @Inject constructor(
     }
 }
 
-// This is the code to get Generic Type - Set Multibinding.
+// The code to be injected.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -1318,7 +1358,7 @@ class MapGenericSampleModelImpl4 @Inject constructor(
     }
 }
 
-// This is the code to get Generic Type - Set Multibinding.
+// The code to be injected.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -1399,7 +1439,7 @@ class StarSingleGenericSampleModelImpl @Inject constructor(
     }
 }
 
-// This is the code to get Generic Type - Set Multibinding.
+// The code to be injected.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -1450,7 +1490,7 @@ class SetStarGenericSampleModelImpl2 @Inject constructor(
     }
 }
 
-// This is the code to get Generic Type - Set Multibinding.
+// The code to be injected.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -1514,7 +1554,7 @@ class MapStarGenericSampleModelImpl2 @Inject constructor(
     }
 }
 
-// This is the code to get Generic Type - Set Multibinding.
+// The code to be injected.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
@@ -1573,7 +1613,7 @@ class NestedSampleModelImpl @Inject constructor(
     }
 }
 
-// This is the code to get Nested Type.
+// The code to be injected.
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
