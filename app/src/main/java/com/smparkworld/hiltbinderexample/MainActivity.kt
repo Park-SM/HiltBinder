@@ -29,6 +29,8 @@ import com.smparkworld.hiltbinderexample.sample.intoset.named.NamedSetSampleMode
 import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.QualifiedSetSampleModel
 import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.SampleSetQualifierA
 import com.smparkworld.hiltbinderexample.sample.intoset.qualifier.SampleSetQualifierB
+import com.smparkworld.hiltbinderexample.sample.supported.generic.intomap.MapGenericSampleModel
+import com.smparkworld.hiltbinderexample.sample.supported.generic.intomap.stars.MapStarGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.generic.intoset.SetGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.generic.intoset.stars.SetStarGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.generic.multiple.MultipleGenericSampleModel
@@ -214,6 +216,15 @@ class MainActivity : AppCompatActivity() {
     lateinit var setGenericSampleModelB: @JvmSuppressWildcards Set<SetGenericSampleModel<String>>
     ////////////////////////////////////////////
 
+    ////////////////////////////////////////////
+    // supported - map multibinding
+    @Inject
+    lateinit var mapGenericSampleModelA: @JvmSuppressWildcards Map<String, MapGenericSampleModel<Int>>
+
+    @Inject
+    lateinit var mapGenericSampleModelB: @JvmSuppressWildcards Map<String, MapGenericSampleModel<String>>
+    ////////////////////////////////////////////
+
 
     ////////////////////////////////////////////
     // supported - nested type
@@ -226,6 +237,12 @@ class MainActivity : AppCompatActivity() {
     // supported - set multibinding for star-projections
     @Inject
     lateinit var setStarGenericSampleModel: @JvmSuppressWildcards Set<SetStarGenericSampleModel<*>>
+    ////////////////////////////////////////////
+
+    ////////////////////////////////////////////
+    // supported - map multibinding for star-projections
+    @Inject
+    lateinit var mapStarGenericSampleModel: @JvmSuppressWildcards Map<String, MapStarGenericSampleModel<*>>
     ////////////////////////////////////////////
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -346,10 +363,28 @@ class MainActivity : AppCompatActivity() {
             it.printTestString("String1")
         }
 
+        Log.d("Test!!", "generic: mapGenericSampleModelA")
+        for ((k, v) in mapGenericSampleModelA) {
+            Log.d("Test!!", "key: $k")
+            v.printTestString(1234)
+        }
+
+        Log.d("Test!!", "generic: mapGenericSampleModelB")
+        for ((k, v) in mapGenericSampleModelB) {
+            Log.d("Test!!", "key: $k")
+            v.printTestString("4567")
+        }
+
         nestedSampleModel.printTestString()
 
         setStarGenericSampleModel.forEach {
             it.printTestString()
+        }
+
+        Log.d("Test!!", "combined: mapStarGenericSampleModel")
+        for ((k, v) in mapStarGenericSampleModel) {
+            Log.d("Test!!", "key: $k")
+            v.printTestString()
         }
     }
 }
