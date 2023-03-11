@@ -1109,7 +1109,7 @@ abstract class MultipleGenericSampleModelImpl_BindsModule {
 ```
 
 ### *Generic Type - nested type*<br>
-> You can set the return type as a nested generic type. There is no limit of depth because finds generic types recursively. Not only `@HiltBinds`, but also `@HiltSetBinds` and `@HiltMapBinds`. Of course, multiple generic types are possible.
+> You can set the return type as a nested generic type. There is no limit of depth because finds generic types recursively. Not only `@HiltBinds`, but also `@HiltSetBinds` and `@HiltMapBinds`. Of course, you can use multiple members in the generic type.
 ```kotlin
 interface NestedGenericSampleModel<T> {
     fun printTest(test: T)
@@ -1160,7 +1160,7 @@ abstract class NestedGenericSampleModelImpl_BindsModule {
 ```
 
 ### *Generic Type - set multibinding*<br>
-> You can set the return type as a generic type through `@HiltSetBinds`. Not only `@HiltSetBinds` but also `@HiltMapBinds`. Of course, multiple generic types are possible. 
+> You can set the return type as a generic type through `@HiltSetBinds`. Of course, you can use multiple members in the generic type. 
 ```kotlin
 interface SetGenericSampleModel<T> {
     fun printTestString(data: T)
@@ -1265,7 +1265,7 @@ abstract class SetGenericSampleModelImpl4_BindsModule {
 ```
 
 ### *Generic Type - map multibinding*<br>
-> You can set the return type as a generic type through @HiltMapBinds. Of course, multiple generic types are possible.
+> You can set the return type as a generic type through `@HiltMapBinds`. Of course, you can use multiple members in the generic type.
 ```kotlin
 interface MapGenericSampleModel<T> {
     fun printTestString(data: T)
@@ -1376,6 +1376,176 @@ abstract class MapGenericSampleModelImpl4_BindsModule {
   @IntoMap
   @StringKey("impl4")
   public abstract MapGenericSampleModel<String> bindMapGenericSampleModelImpl4(MapGenericSampleModelImpl4 target);
+}
+```
+
+### *Generic Type w/ combined - general*<br>
+> The "combined" value lets you set the return type to star-projections for generic type. Of course, you can use multiple members in the generic type.
+```kotlin
+interface StarSingleGenericSampleModel<T> {
+    fun printTestString()
+}
+
+@HiltBinds(combined = true)
+class StarSingleGenericSampleModelImpl @Inject constructor(
+    private val testString: String
+) : StarSingleGenericSampleModel<Int> {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in StarSingleGenericSampleModelImpl class. :: Generic type is <Int>")
+    }
+}
+
+// This is the code to get Generic Type - Set Multibinding.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var starGenericSampleModel: StarSingleGenericSampleModel<*>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+      
+        starGenericSampleModel.printTestString()
+    }
+}
+```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class StarSingleGenericSampleModelImpl_BindsModule {
+  @Binds
+  public abstract StarSingleGenericSampleModel<?> bindStarSingleGenericSampleModelImpl(StarSingleGenericSampleModelImpl target);
+}
+```
+
+### *Generic Type w/ combined - set multibinding*<br>
+> The "combined" value lets you set the return type to star-projections for generic type. Of course, you can use multiple members in the generic type.
+```kotlin
+interface SetStarGenericSampleModel<T> {
+    fun printTestString()
+}
+
+@HiltSetBinds(combined = true)
+class SetStarGenericSampleModelImpl1 @Inject constructor(
+    private val testString: String
+) : SetStarGenericSampleModel<String> {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in SetStarGenericSampleModelImpl1 class. :: Generic type is <String>") 
+    }
+}
+
+@HiltSetBinds(combined = true)
+class SetStarGenericSampleModelImpl2 @Inject constructor(
+    private val testString: String
+) : SetStarGenericSampleModel<Int> {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in SetStarGenericSampleModelImpl2 class. :: Generic type is <Int>") 
+    }
+}
+
+// This is the code to get Generic Type - Set Multibinding.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var setStarGenericSampleModel: @JvmSuppressWildcards Set<SetStarGenericSampleModel<*>>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setStarGenericSampleModel.forEach {
+            it.printTestString()
+        }
+    }
+}
+```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class SetStarGenericSampleModelImpl1_BindsModule {
+  @Binds
+  @IntoSet
+  public abstract SetStarGenericSampleModel<?> bindSetStarGenericSampleModelImpl1(SetStarGenericSampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class SetStarGenericSampleModelImpl2_BindsModule {
+  @Binds
+  @IntoSet
+  public abstract SetStarGenericSampleModel<?> bindSetStarGenericSampleModelImpl2(SetStarGenericSampleModelImpl2 target);
+}
+```
+
+### *Generic Type w/ combined - map multibinding*<br>
+> The "combined" value lets you set the return type to star-projections for generic type. Of course, you can use multiple members in the generic type.
+```kotlin
+interface MapStarGenericSampleModel<T> {
+    fun printTestString()
+}
+
+@HiltMapBinds(combined = true)
+@StringKey("impl1")
+class MapStarGenericSampleModelImpl1 @Inject constructor(
+    private val testString: String
+) : MapStarGenericSampleModel<Int> {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in MapStarGenericSampleModelImpl1 class. :: Generic type is <Int>")
+    }
+}
+
+@HiltMapBinds(combined = true)
+@StringKey("impl2")
+class MapStarGenericSampleModelImpl2 @Inject constructor(
+    private val testString: String
+) : MapStarGenericSampleModel<String> {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in MapStarGenericSampleModelImpl2 class. :: Generic type is <String>")
+    }
+}
+
+// This is the code to get Generic Type - Set Multibinding.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+    @Inject 
+    lateinit var mapStarGenericSampleModel: @JvmSuppressWildcards Map<String, MapStarGenericSampleModel<*>>
+  
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        for ((k, v) in mapStarGenericSampleModel) {
+            Log.d("Test!!", "key: $k")
+            v.printTestString()
+        }
+    }
+}
+```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class MapStarGenericSampleModelImpl1_BindsModule {
+  @Binds
+  @IntoMap
+  @StringKey("impl1")
+  public abstract MapStarGenericSampleModel<?> bindMapStarGenericSampleModelImpl1(MapStarGenericSampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class MapStarGenericSampleModelImpl2_BindsModule {
+  @Binds
+  @IntoMap
+  @StringKey("impl2")
+  public abstract MapStarGenericSampleModel<?> bindMapStarGenericSampleModelImpl2(MapStarGenericSampleModelImpl2 target);
 }
 ```
 
