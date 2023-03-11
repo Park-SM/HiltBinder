@@ -30,6 +30,7 @@ If you think this library is useful, please press `⭐️ Star` button at upside
   - [Generic Type - multiple](https://github.com/Park-SM/HiltBinder#generic-type---multiple)
   - [Generic Type - nested type](https://github.com/Park-SM/HiltBinder#generic-type---nested-type)
   - [Generic Type - set multibinding](https://github.com/Park-SM/HiltBinder#generic-type---set-multibinding)
+  - [Generic Type - map multibinding](https://github.com/Park-SM/HiltBinder#generic-type---map-multibinding)
   - [Nested Type](https://github.com/Park-SM/HiltBinder#nested-type)
 - [More Sample Code](https://github.com/Park-SM/HiltBinder/tree/develop/app/src/main/java/com/smparkworld/hiltbinderexample)
 - [Performance monitoring](https://github.com/Park-SM/HiltBinder#-performance-monitoring)
@@ -1198,8 +1199,8 @@ class SetGenericSampleModelImpl3 @Inject constructor(
 @HiltSetBinds
 class SetGenericSampleModelImpl4 @Inject constructor(
     private val testString: String
-) : SetGenericSampleModel<String> {
-
+) : SetGenericSampleModel<String> { 
+  
     override fun printTestString(data: String) {
         Log.d("Test!!", "TestString is `$testString` in SetGenericSampleModelImpl4 class. :: Generic type is <String>")
     }
@@ -1216,15 +1217,15 @@ class MainActivity : AppCompatActivity() {
     lateinit var setGenericSampleModelB: @JvmSuppressWildcards Set<SetGenericSampleModel<String>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-      super.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState)
 
-      setGenericSampleModelA.forEach {
-        it.printTestString(1)
-      }
+        setGenericSampleModelA.forEach {
+            it.printTestString(1) 
+        }
 
-      setGenericSampleModelB.forEach {
-        it.printTestString("String1")
-      }
+        setGenericSampleModelB.forEach {
+            it.printTestString("String1")
+        }
     }
 }
 ```
@@ -1260,6 +1261,121 @@ abstract class SetGenericSampleModelImpl4_BindsModule {
   @Binds
   @IntoSet
   public abstract SetGenericSampleModel<String> bindSetGenericSampleModelImpl4(SetGenericSampleModelImpl4 target);
+}
+```
+
+### *Generic Type - map multibinding*<br>
+> You can set the return type as a generic type through @HiltMapBinds. Of course, multiple generic types are possible.
+```kotlin
+interface MapGenericSampleModel<T> {
+    fun printTestString(data: T)
+}
+
+@HiltMapBinds
+@StringKey("impl1")
+class MapGenericSampleModelImpl1 @Inject constructor(
+    private val testString: String
+) : MapGenericSampleModel<Int> {
+
+    override fun printTestString(data: Int) {
+        Log.d("Test!!", "TestString is `$testString` in MapGenericSampleModelImpl1 class. :: Generic type is <Int>")
+    }
+}
+
+@HiltMapBinds
+@StringKey("impl2")
+class MapGenericSampleModelImpl2 @Inject constructor(
+    private val testString: String
+) : MapGenericSampleModel<Int> {
+
+    override fun printTestString(data: Int) {
+        Log.d("Test!!", "TestString is `$testString` in MapGenericSampleModelImpl2 class. :: Generic type is <Int>")
+    }
+}
+
+@HiltMapBinds
+@StringKey("impl3")
+class MapGenericSampleModelImpl3 @Inject constructor(
+    private val testString: String
+) : MapGenericSampleModel<String> {
+
+    override fun printTestString(data: String) {
+        Log.d("Test!!", "TestString is `$testString` in MapGenericSampleModelImpl3 class. :: Generic type is <String>")
+    }
+}
+
+@HiltMapBinds
+@StringKey("impl4")
+class MapGenericSampleModelImpl4 @Inject constructor(
+    private val testString: String
+) : MapGenericSampleModel<String> {
+
+    override fun printTestString(data: String) {
+        Log.d("Test!!", "TestString is `$testString` in MapGenericSampleModelImpl4 class. :: Generic type is <String>")
+    }
+}
+
+// This is the code to get Generic Type - Set Multibinding.
+@AndroidEntryPoint
+class MainActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var mapGenericSampleModelA: @JvmSuppressWildcards Map<String, MapGenericSampleModel<Int>>
+
+    @Inject
+    lateinit var mapGenericSampleModelB: @JvmSuppressWildcards Map<String, MapGenericSampleModel<String>>
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+      
+        for ((k, v) in mapGenericSampleModelA) { 
+            Log.d("Test!!", "key: $k")
+            v.printTestString(1234)
+        }
+      
+        for ((k, v) in mapGenericSampleModelB) { 
+            Log.d("Test!!", "key: $k")
+            v.printTestString("4567")
+        }
+    }
+}
+```
+```java
+// generated code
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class MapGenericSampleModelImpl1_BindsModule {
+  @Binds
+  @IntoMap
+  @StringKey("impl1")
+  public abstract MapGenericSampleModel<Integer> bindMapGenericSampleModelImpl1(MapGenericSampleModelImpl1 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class MapGenericSampleModelImpl2_BindsModule {
+  @Binds
+  @IntoMap
+  @StringKey("impl2")
+  public abstract MapGenericSampleModel<Integer> bindMapGenericSampleModelImpl2(MapGenericSampleModelImpl2 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class MapGenericSampleModelImpl3_BindsModule {
+  @Binds
+  @IntoMap
+  @StringKey("impl3")
+  public abstract MapGenericSampleModel<String> bindMapGenericSampleModelImpl3(MapGenericSampleModelImpl3 target);
+}
+
+@Module
+@InstallIn(SingletonComponent.class)
+abstract class MapGenericSampleModelImpl4_BindsModule {
+  @Binds
+  @IntoMap
+  @StringKey("impl4")
+  public abstract MapGenericSampleModel<String> bindMapGenericSampleModelImpl4(MapGenericSampleModelImpl4 target);
 }
 ```
 
