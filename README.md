@@ -286,7 +286,7 @@ class MainActivity : AppCompatActivity() {
 @InstallIn(SingletonComponent.class)
 abstract class QualifierSampleModelImpl1_BindsModule {
   @Binds
-  @SampleQualifier1
+  @SampleQualifierA
   public abstract QualifierSampleModel bindQualifierSampleModelImpl1(QualifierSampleModelImpl1 target);
 }
 
@@ -294,7 +294,7 @@ abstract class QualifierSampleModelImpl1_BindsModule {
 @InstallIn(SingletonComponent.class)
 abstract class QualifierSampleModelImpl2_BindsModule {
   @Binds
-  @SampleQualifier2
+  @SampleQualifierB
   public abstract QualifierSampleModel bindQualifierSampleModelImpl2(QualifierSampleModelImpl2 target);
 }
 ```
