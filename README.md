@@ -61,14 +61,14 @@ dependencies {
 ## # Basic usage
 No longer need abstract module classes. Just add `@HiltBinds` and the Binds module will be created automatically.
 ```kotlin
-interface TestUseCase {
+interface TestRepository {
     fun printTestString()
 }
 
 @HiltBinds
-class TestUseCaseImpl @Inject constructor(
+class TestRepositoryImpl @Inject constructor(
     private val testString: String
-) : TestUseCase {
+) : TestRepository {
 
     override fun printTestString() {
         Log.d("Test!!", "TestString is $testString in UseCase.")
