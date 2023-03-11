@@ -37,6 +37,7 @@ import com.smparkworld.hiltbinderexample.sample.supported.generic.multiple.Multi
 import com.smparkworld.hiltbinderexample.sample.supported.generic.nested.NestedGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.generic.nested.SampleParam
 import com.smparkworld.hiltbinderexample.sample.supported.generic.single.SingleGenericSampleModel
+import com.smparkworld.hiltbinderexample.sample.supported.generic.single.stars.StarSingleGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.supported.nested.NestedSampleModel
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -232,6 +233,11 @@ class MainActivity : AppCompatActivity() {
     lateinit var nestedSampleModel: NestedSampleModel.SampleModel.SampleModelInternal
     ////////////////////////////////////////////
 
+    ////////////////////////////////////////////
+    // supported - set multibinding for star-projections
+    @Inject
+    lateinit var starGenericSampleModel: StarSingleGenericSampleModel<*>
+    ////////////////////////////////////////////
 
     ////////////////////////////////////////////
     // supported - set multibinding for star-projections
@@ -376,6 +382,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         nestedSampleModel.printTestString()
+
+        starGenericSampleModel.printTestString()
 
         setStarGenericSampleModel.forEach {
             it.printTestString()
