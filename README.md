@@ -32,7 +32,7 @@ If you think this library is useful, please press `⭐️ Star` button at upside
   - [Generic Type - set multibinding](https://github.com/Park-SM/HiltBinder#generic-type---set-multibinding)
   - [Generic Type - map multibinding](https://github.com/Park-SM/HiltBinder#generic-type---map-multibinding)
   - [Generic Type w/ combined - general](https://github.com/Park-SM/HiltBinder#generic-type-w-combined---general)
-  - [Generic Type w/ combined - map multibinding](https://github.com/Park-SM/HiltBinder#generic-type-w-combined---set-multibinding)
+  - [Generic Type w/ combined - set multibinding](https://github.com/Park-SM/HiltBinder#generic-type-w-combined---set-multibinding)
   - [Generic Type w/ combined - map multibinding](https://github.com/Park-SM/HiltBinder#generic-type-w-combined---map-multibinding)
   - [Nested Type](https://github.com/Park-SM/HiltBinder#nested-type)
 - [More Sample Code](https://github.com/Park-SM/HiltBinder/tree/develop/app/src/main/java/com/smparkworld/hiltbinderexample)
