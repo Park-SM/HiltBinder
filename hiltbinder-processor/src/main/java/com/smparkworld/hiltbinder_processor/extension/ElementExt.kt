@@ -15,9 +15,15 @@ internal fun Element.getSuperTypeMirror(): TypeMirror? {
     if (superClass != null && !Utils.isObjectClass(superClass)) {
         return superClass
     }
-    val superInterface = (this as? TypeElement)?.interfaces?.getOrNull(0)
-    if (superInterface != null) {
-        return superInterface
+    return (this as? TypeElement)?.interfaces?.getOrNull(0)
+}
+
+internal fun Element.findSuperTypeMirror(target: Element): TypeMirror? {
+    val superClass = (this as? TypeElement)?.superclass
+    if (superClass != null && !Utils.isObjectClass(superClass) && Utils.isSameClass(superClass, target.asType())) {
+        return superClass
     }
-    return null
+    return (this as? TypeElement)?.interfaces.orEmpty().find { interfaceClass ->
+        Utils.isSameClass(interfaceClass, target.asType())
+    }
 }

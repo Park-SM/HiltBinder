@@ -5,8 +5,10 @@ import com.smparkworld.hiltbinder_processor.core.base.ParameterMapper
 import com.smparkworld.hiltbinder_processor.core.manager.AnnotationManager
 import com.smparkworld.hiltbinder_processor.extension.asClassName
 import com.smparkworld.hiltbinder_processor.extension.error
+import com.smparkworld.hiltbinder_processor.extension.findSuperTypeMirror
 import com.smparkworld.hiltbinder_processor.extension.getGenericTypeNames
 import com.smparkworld.hiltbinder_processor.extension.getSuperTypeMirror
+import com.smparkworld.hiltbinder_processor.generator.hiltmapbinds.HiltMapBindsParameterMapper
 import com.smparkworld.hiltbinder_processor.model.HiltSetBindsParamsModel
 import javax.annotation.processing.ProcessingEnvironment
 import javax.inject.Named
@@ -37,8 +39,14 @@ internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsM
                 )
             }
             (paramFrom == null && paramTo != null) -> {
+                val to = element.findSuperTypeMirror(paramTo)
+                if (to == null) {
+                    env.error(ERROR_MSG_NOT_FOUND_SUPER)
+                    throw IllegalStateException(ERROR_MSG_NOT_FOUND_SUPER)
+                }
+
                 HiltSetBindsParamsModel(
-                    paramTo.asClassName(env),
+                    to.getGenericTypeNames(env, paramCombined),
                     element.asClassName(env),
                     paramComponent,
                     qualifier,

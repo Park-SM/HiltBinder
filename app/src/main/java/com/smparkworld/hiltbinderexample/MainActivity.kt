@@ -11,6 +11,7 @@ import com.smparkworld.hiltbinderexample.sample.basic.qualifier.SampleQualifierA
 import com.smparkworld.hiltbinderexample.sample.basic.qualifier.SampleQualifierB
 import com.smparkworld.hiltbinderexample.sample.basic.scope.ScopeSampleModel
 import com.smparkworld.hiltbinderexample.sample.basic.to.ToSampleModel
+import com.smparkworld.hiltbinderexample.sample.basic.to.generic.ToGenericSampleModel
 import com.smparkworld.hiltbinderexample.sample.intomap.SampleKey
 import com.smparkworld.hiltbinderexample.sample.intomap.SampleType
 import com.smparkworld.hiltbinderexample.sample.intomap.complexkey.MapComplexKeySampleModel
@@ -51,6 +52,9 @@ class MainActivity : AppCompatActivity() {
     // Basic usage
     @Inject
     lateinit var toSampleModel: ToSampleModel
+
+    @Inject
+    lateinit var toGenericSampleModel: ToGenericSampleModel<String>
 
     @Inject
     lateinit var fromSampleModel: FromSampleModel
@@ -256,6 +260,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         toSampleModel.printTestString()
+        toGenericSampleModel.printTestString("sample string")
         fromSampleModel.printTestString()
         componentSampleModel.printTestString()
         qualifierSampleModelA.printTestString()

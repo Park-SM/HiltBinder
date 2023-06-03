@@ -15,3 +15,22 @@ class MapStarGenericSampleModelImpl2 @Inject constructor(
         Log.d("Test!!", "TestString is `$testString` in MapStarGenericSampleModelImpl2 class. :: Generic type is <String>")
     }
 }
+
+/* You can use below code that with `to` option.
+
+open class BaseModel
+
+@HiltMapBinds(
+    to = MapStarGenericSampleModel::class,
+    combined = true
+)
+@StringKey("impl2")
+class MapStarGenericSampleModelImpl2 @Inject constructor(
+    private val testString: String
+) : BaseModel(), MapStarGenericSampleModel<String> {
+
+    override fun printTestString() {
+        Log.d("Test!!", "TestString is `$testString` in MapStarGenericSampleModelImpl2 class. :: Generic type is <String>")
+    }
+}
+*/
