@@ -1,14 +1,13 @@
 package com.smparkworld.hiltbinder_processor.generator.hiltsetbinds
 
 import com.smparkworld.hiltbinder.HiltSetBinds
+import com.smparkworld.hiltbinder_processor.core.Logger
 import com.smparkworld.hiltbinder_processor.core.base.ParameterMapper
 import com.smparkworld.hiltbinder_processor.core.manager.AnnotationManager
 import com.smparkworld.hiltbinder_processor.extension.asClassName
-import com.smparkworld.hiltbinder_processor.extension.error
 import com.smparkworld.hiltbinder_processor.extension.findSuperTypeMirror
 import com.smparkworld.hiltbinder_processor.extension.getGenericTypeNames
 import com.smparkworld.hiltbinder_processor.extension.getSuperTypeMirror
-import com.smparkworld.hiltbinder_processor.generator.hiltmapbinds.HiltMapBindsParameterMapper
 import com.smparkworld.hiltbinder_processor.model.HiltSetBindsParamsModel
 import javax.annotation.processing.ProcessingEnvironment
 import javax.inject.Named
@@ -18,7 +17,7 @@ import javax.lang.model.element.Element
 
 internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsModel> {
 
-    override fun toParamsModel(env: ProcessingEnvironment, element: Element): HiltSetBindsParamsModel {
+    override fun toParamsModel(env: ProcessingEnvironment, element: Element, logger: Logger): HiltSetBindsParamsModel {
         val paramTo = AnnotationManager.getElementFromAnnotation<HiltSetBinds>(env, element, PARAM_TO)
         val paramFrom = AnnotationManager.getElementFromAnnotation<HiltSetBinds>(env, element, PARAM_FROM)
         val paramComponent = AnnotationManager.getElementFromAnnotation<HiltSetBinds>(env, element, PARAM_COMPONENT)
@@ -41,7 +40,7 @@ internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsM
             (paramFrom == null && paramTo != null) -> {
                 val to = element.findSuperTypeMirror(paramTo)
                 if (to == null) {
-                    env.error(ERROR_MSG_NOT_FOUND_SUPER)
+                    logger.error(ERROR_MSG_NOT_FOUND_SUPER)
                     throw IllegalStateException(ERROR_MSG_NOT_FOUND_SUPER)
                 }
 
@@ -57,7 +56,7 @@ internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsM
             (paramFrom == null && paramTo == null) -> {
                 val to = element.getSuperTypeMirror()
                 if (to == null) {
-                    env.error(ERROR_MSG_NOT_FOUND_SUPER)
+                    logger.error(ERROR_MSG_NOT_FOUND_SUPER)
                     throw IllegalStateException(ERROR_MSG_NOT_FOUND_SUPER)
                 }
 
@@ -71,7 +70,7 @@ internal class HiltSetBindsParameterMapper : ParameterMapper<HiltSetBindsParamsM
                 )
             }
             else -> {
-                env.error(ERROR_MSG_SIGNED_TOGETHER)
+                logger.error(ERROR_MSG_SIGNED_TOGETHER)
                 throw IllegalStateException(ERROR_MSG_SIGNED_TOGETHER)
             }
         }

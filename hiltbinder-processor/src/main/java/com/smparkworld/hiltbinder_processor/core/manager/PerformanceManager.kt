@@ -1,7 +1,6 @@
 package com.smparkworld.hiltbinder_processor.core.manager
 
-import com.smparkworld.hiltbinder_processor.extension.log
-import javax.annotation.processing.ProcessingEnvironment
+import com.smparkworld.hiltbinder_processor.core.Logger
 
 internal object PerformanceManager {
 
@@ -17,7 +16,7 @@ internal object PerformanceManager {
         completedAt = System.currentTimeMillis()
     }
 
-    fun reportPerformance(env: ProcessingEnvironment, count: Int) {
+    fun reportPerformance(logger: Logger, count: Int) {
 
         val startedAtInternal = startedAt
         val completedAtInternal = completedAt
@@ -25,7 +24,7 @@ internal object PerformanceManager {
         if (startedAtInternal != null && completedAtInternal != null) {
             val message = getReportMessage(completedAtInternal - startedAtInternal)
             if (message.isBlank().not()) {
-                env.log("HiltBinder: processed $count classes, total processing time: $message")
+                logger.log("HiltBinder: processed $count classes, total processing time: $message")
             }
         }
     }

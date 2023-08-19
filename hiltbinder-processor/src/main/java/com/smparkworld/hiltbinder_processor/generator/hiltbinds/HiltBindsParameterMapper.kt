@@ -1,10 +1,10 @@
 package com.smparkworld.hiltbinder_processor.generator.hiltbinds
 
 import com.smparkworld.hiltbinder.HiltBinds
+import com.smparkworld.hiltbinder_processor.core.Logger
 import com.smparkworld.hiltbinder_processor.core.base.ParameterMapper
 import com.smparkworld.hiltbinder_processor.core.manager.AnnotationManager
 import com.smparkworld.hiltbinder_processor.extension.asClassName
-import com.smparkworld.hiltbinder_processor.extension.error
 import com.smparkworld.hiltbinder_processor.extension.findSuperTypeMirror
 import com.smparkworld.hiltbinder_processor.extension.getGenericTypeNames
 import com.smparkworld.hiltbinder_processor.extension.getSuperTypeMirror
@@ -17,7 +17,7 @@ import javax.lang.model.element.Element
 
 internal class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> {
 
-    override fun toParamsModel(env: ProcessingEnvironment, element: Element): HiltBindsParamsModel {
+    override fun toParamsModel(env: ProcessingEnvironment, element: Element, logger: Logger): HiltBindsParamsModel {
         val paramTo = AnnotationManager.getElementFromAnnotation<HiltBinds>(env, element, PARAM_TO)
         val paramFrom = AnnotationManager.getElementFromAnnotation<HiltBinds>(env, element, PARAM_FROM)
         val paramComponent = AnnotationManager.getElementFromAnnotation<HiltBinds>(env, element, PARAM_COMPONENT)
@@ -40,7 +40,7 @@ internal class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> 
             (paramFrom == null && paramTo != null) -> {
                 val to = element.findSuperTypeMirror(paramTo)
                 if (to == null) {
-                    env.error(ERROR_MSG_NOT_FOUND_SUPER)
+                    logger.error(ERROR_MSG_NOT_FOUND_SUPER)
                     throw IllegalStateException(ERROR_MSG_NOT_FOUND_SUPER)
                 }
 
@@ -56,7 +56,7 @@ internal class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> 
             (paramFrom == null && paramTo == null) -> {
                 val to = element.getSuperTypeMirror()
                 if (to == null) {
-                    env.error(ERROR_MSG_NOT_FOUND_SUPER)
+                    logger.error(ERROR_MSG_NOT_FOUND_SUPER)
                     throw IllegalStateException(ERROR_MSG_NOT_FOUND_SUPER)
                 }
 
@@ -70,7 +70,7 @@ internal class HiltBindsParameterMapper : ParameterMapper<HiltBindsParamsModel> 
                 )
             }
             else -> {
-                env.error(ERROR_MSG_SIGNED_TOGETHER)
+                logger.error(ERROR_MSG_SIGNED_TOGETHER)
                 throw IllegalStateException(ERROR_MSG_SIGNED_TOGETHER)
             }
         }

@@ -1,14 +1,13 @@
 package com.smparkworld.hiltbinder_processor.generator.hiltmapbinds
 
 import com.smparkworld.hiltbinder.HiltMapBinds
+import com.smparkworld.hiltbinder_processor.core.Logger
 import com.smparkworld.hiltbinder_processor.core.base.ParameterMapper
 import com.smparkworld.hiltbinder_processor.core.manager.AnnotationManager
 import com.smparkworld.hiltbinder_processor.extension.asClassName
-import com.smparkworld.hiltbinder_processor.extension.error
 import com.smparkworld.hiltbinder_processor.extension.findSuperTypeMirror
 import com.smparkworld.hiltbinder_processor.extension.getGenericTypeNames
 import com.smparkworld.hiltbinder_processor.extension.getSuperTypeMirror
-import com.smparkworld.hiltbinder_processor.generator.hiltbinds.HiltBindsParameterMapper
 import com.smparkworld.hiltbinder_processor.model.HiltMapBindsParamsModel
 import dagger.MapKey
 import javax.annotation.processing.ProcessingEnvironment
@@ -19,7 +18,7 @@ import javax.lang.model.element.Element
 
 internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsModel> {
 
-    override fun toParamsModel(env: ProcessingEnvironment, element: Element): HiltMapBindsParamsModel {
+    override fun toParamsModel(env: ProcessingEnvironment, element: Element, logger: Logger): HiltMapBindsParamsModel {
         val paramTo = AnnotationManager.getElementFromAnnotation<HiltMapBinds>(env, element, PARAM_TO)
         val paramFrom = AnnotationManager.getElementFromAnnotation<HiltMapBinds>(env, element, PARAM_FROM)
         val paramComponent = AnnotationManager.getElementFromAnnotation<HiltMapBinds>(env, element, PARAM_COMPONENT)
@@ -32,11 +31,11 @@ internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsM
         val mapKeyParams = AnnotationManager.getValuesFromParentAnnotation(env, element, MapKey::class)
 
         if (mapKey == null || mapKeyParams == null) {
-            env.error(ERROR_MSG_NOT_FOUND_KEY)
+            logger.error(ERROR_MSG_NOT_FOUND_KEY)
             throw IllegalStateException(ERROR_MSG_NOT_FOUND_KEY)
         }
         if (mapKeyParams.isEmpty()) {
-            env.error(ERROR_MSG_PARAMS_EMPTY)
+            logger.error(ERROR_MSG_PARAMS_EMPTY)
             throw IllegalArgumentException(ERROR_MSG_PARAMS_EMPTY)
         }
 
@@ -56,7 +55,7 @@ internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsM
             (paramFrom == null && paramTo != null) -> {
                 val to = element.findSuperTypeMirror(paramTo)
                 if (to == null) {
-                    env.error(ERROR_MSG_NOT_FOUND_SUPER)
+                    logger.error(ERROR_MSG_NOT_FOUND_SUPER)
                     throw IllegalStateException(ERROR_MSG_NOT_FOUND_SUPER)
                 }
 
@@ -74,7 +73,7 @@ internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsM
             (paramFrom == null && paramTo == null) -> {
                 val to = element.getSuperTypeMirror()
                 if (to == null) {
-                    env.error(ERROR_MSG_NOT_FOUND_SUPER)
+                    logger.error(ERROR_MSG_NOT_FOUND_SUPER)
                     throw IllegalStateException(ERROR_MSG_NOT_FOUND_SUPER)
                 }
 
@@ -90,7 +89,7 @@ internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsM
                 )
             }
             else -> {
-                env.error(ERROR_MSG_SIGNED_TOGETHER)
+                logger.error(ERROR_MSG_SIGNED_TOGETHER)
                 throw IllegalStateException(ERROR_MSG_SIGNED_TOGETHER)
             }
         }

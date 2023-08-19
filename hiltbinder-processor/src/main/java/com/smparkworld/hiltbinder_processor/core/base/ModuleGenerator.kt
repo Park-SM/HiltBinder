@@ -1,5 +1,6 @@
 package com.smparkworld.hiltbinder_processor.core.base
 
+import com.smparkworld.hiltbinder_processor.core.Logger
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
@@ -11,5 +12,5 @@ internal interface ModuleGenerator {
 
     fun getSupportedElementTypes(): List<ElementKind>
 
-    fun generate(env: ProcessingEnvironment, element: Element, annotation: Annotation)
+    fun generate(env: ProcessingEnvironment, element: Element, annotation: Annotation, logger: Logger)
 }

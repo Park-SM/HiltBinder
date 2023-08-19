@@ -2,6 +2,7 @@ package com.smparkworld.hiltbinder_processor.generator.hiltsetbinds
 
 import com.google.auto.service.AutoService
 import com.smparkworld.hiltbinder.HiltSetBinds
+import com.smparkworld.hiltbinder_processor.core.Logger
 import com.smparkworld.hiltbinder_processor.core.base.ModuleGenerator
 import com.smparkworld.hiltbinder_processor.core.base.ParameterMapper
 import com.smparkworld.hiltbinder_processor.extension.addAnnotationIfNotNull
@@ -34,8 +35,8 @@ internal class HiltSetBindsModuleGenerator : ModuleGenerator {
         ElementKind.CLASS, ElementKind.INTERFACE
     )
 
-    override fun generate(env: ProcessingEnvironment, element: Element, annotation: Annotation) {
-        val params = parameterMapper.toParamsModel(env, element)
+    override fun generate(env: ProcessingEnvironment, element: Element, annotation: Annotation, logger: Logger) {
+        val params = parameterMapper.toParamsModel(env, element, logger)
 
         val moduleFileName = "${element.simpleName}$MODULE_SUFFIX"
 
