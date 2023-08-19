@@ -58,6 +58,9 @@ internal class HiltMapBindsModuleGenerator : ModuleGenerator {
                                 ElementKind.ENUM_CONSTANT -> {
                                     addMember(key, "\$T.\$L", value, value.simpleName)
                                 }
+                                else -> {
+                                    // do nothing.
+                                }
                             }
                         }
                         is Number -> {
