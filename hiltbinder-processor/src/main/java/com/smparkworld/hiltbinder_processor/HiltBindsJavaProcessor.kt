@@ -11,21 +11,20 @@ import javax.annotation.processing.Messager
 import javax.annotation.processing.Processor
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
-import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 import javax.tools.Diagnostic
 
 @AutoService(Processor::class)
 internal class HiltBindsJavaProcessor : AbstractProcessor() {
 
-    private val dispatcher = ModuleGeneratorDispatcher()
-
     override fun process(ignored: MutableSet<out TypeElement>?, environment: RoundEnvironment): Boolean {
         PerformanceManager.startProcessing()
 
         val logger = JavaLogger(processingEnv.messager)
+        val dispatcher = ModuleGeneratorDispatcher(logger)
+
         val processedCount = AnnotationManager.getElementsAnnotatedWith(environment) { element, annotation ->
-            dispatcher.dispatchGenerator(processingEnv, element, annotation, logger)
+            dispatcher.dispatchGenerator(processingEnv, element, annotation)
         }
         if (processedCount > 0) {
             PerformanceManager.stopProcessing()

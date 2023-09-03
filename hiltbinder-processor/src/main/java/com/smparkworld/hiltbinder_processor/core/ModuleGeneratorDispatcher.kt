@@ -4,35 +4,41 @@ import com.google.devtools.ksp.processing.SymbolProcessorEnvironment
 import com.google.devtools.ksp.symbol.KSAnnotation
 import com.google.devtools.ksp.symbol.KSDeclaration
 import com.smparkworld.hiltbinder_processor.core.base.JavaModuleGenerator
+import com.smparkworld.hiltbinder_processor.core.base.JavaParameterMapper
 import com.smparkworld.hiltbinder_processor.core.base.KotlinModuleGenerator
+import com.smparkworld.hiltbinder_processor.core.base.KotlinParameterMapper
+import com.smparkworld.hiltbinder_processor.core.base.ParametersModel
+import com.smparkworld.hiltbinder_processor.java.extension.isSameType
 import com.smparkworld.hiltbinder_processor.kotlin.extension.isSameType
 import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
 
-// FixMe Abstract ModuleGenerator class.
 internal class ModuleGeneratorDispatcher(
-    private val javaModuleGenerators: Set<JavaModuleGenerator> = ModuleGeneratorFactory.createJavaModuleGenerators(),
-    private val kotlinModuleGenerators: Set<KotlinModuleGenerator> = ModuleGeneratorFactory.createKotlinModuleGenerators()
+    private val logger: Logger,
+    private val javaModuleGenerators: Set<JavaModuleGenerator<*>> = ModuleGeneratorFactory.createJavaModuleGenerators(),
+    private val javaParameterMappers: Set<JavaParameterMapper<*>> = ParameterMapperFactory.createJavaParameterMappers(),
+    private val kotlinModuleGenerators: Set<KotlinModuleGenerator<*>> = ModuleGeneratorFactory.createKotlinModuleGenerators(),
+    private val kotlinParameterMappers: Set<KotlinParameterMapper<*>> = ParameterMapperFactory.createKotlinParameterMappers(),
 ) {
 
     fun dispatchGenerator(
         env: ProcessingEnvironment,
         element: Element,
-        annotation: Annotation,
-        logger: Logger
+        annotation: Annotation
     ): Boolean {
         var isGenerated = false
 
         javaModuleGenerators.forEach { generator ->
             if (!isGenerated && isAppropriateGenerator(generator, element, annotation)) {
-                generator.generate(env, element, annotation, logger)
+                generator.initialize(mapToParamModel(element, annotation, env))
+                generator.generate(env, logger)
                 isGenerated = true
             }
         }
         if (isGenerated) {
-            logger.log("$TAG ${element.simpleName}")
+            logger.log("$TAG $element")
         } else {
-            logger.error("$TAG ${element.simpleName} annotated with ${annotation.annotationClass.simpleName} are not supported.")
+            logger.error("$TAG $element annotated with ${annotation.annotationClass.simpleName} are not supported.")
         }
         return isGenerated
     }
@@ -40,14 +46,14 @@ internal class ModuleGeneratorDispatcher(
     fun dispatchGenerator(
         env: SymbolProcessorEnvironment,
         declaration: KSDeclaration,
-        annotation: KSAnnotation,
-        logger: Logger
+        annotation: KSAnnotation
     ): Boolean {
         var isGenerated = false
 
         kotlinModuleGenerators.forEach { generator ->
             if (!isGenerated && isAppropriateGenerator(generator, declaration, annotation)) {
-                generator.generate(env, declaration, annotation, logger)
+                generator.initialize(mapToParamModel(declaration, annotation, env))
+                generator.generate(env, logger)
                 isGenerated = true
             }
         }
@@ -60,18 +66,36 @@ internal class ModuleGeneratorDispatcher(
     }
 
     private fun isAppropriateGenerator(
-        generator: JavaModuleGenerator,
+        generator: JavaModuleGenerator<*>,
         element: Element,
         annotation: Annotation
-    ): Boolean =
-        (generator.getSupportedAnnotationType() == annotation.annotationClass) && (generator.checkValidation(element))
+    ): Boolean = (annotation.isSameType(generator.getSupportedAnnotationType()) && generator.checkValidation(element))
 
     private fun isAppropriateGenerator(
-        generator: KotlinModuleGenerator,
+        generator: KotlinModuleGenerator<*>,
         declaration: KSDeclaration,
         annotation: KSAnnotation
-    ): Boolean =
-        (annotation.isSameType(generator.getSupportedAnnotationType()) && generator.checkValidation(declaration))
+    ): Boolean = (annotation.isSameType(generator.getSupportedAnnotationType()) && generator.checkValidation(declaration))
+
+    private fun mapToParamModel(
+        element: Element,
+        annotation: Annotation,
+        env: ProcessingEnvironment
+    ): ParametersModel {
+        return javaParameterMappers.find { annotation.isSameType(it.getSupportedAnnotationType()) }
+            ?.toParamsModel(env, element, logger)
+            ?: throw IllegalStateException("Not found matched mapper.")
+    }
+
+    private fun mapToParamModel(
+        declaration: KSDeclaration,
+        annotation: KSAnnotation,
+        env: SymbolProcessorEnvironment
+    ): ParametersModel {
+        return kotlinParameterMappers.find { annotation.isSameType(it.getSupportedAnnotationType()) }
+            ?.toParamsModel(env, declaration, logger)
+            ?: throw IllegalStateException("Not found matched mapper.")
+    }
 
     companion object {
 

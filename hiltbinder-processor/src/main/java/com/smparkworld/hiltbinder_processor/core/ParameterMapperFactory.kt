@@ -1,15 +1,15 @@
 package com.smparkworld.hiltbinder_processor.core
 
-import com.smparkworld.hiltbinder_processor.core.base.JavaModuleGenerator
-import com.smparkworld.hiltbinder_processor.core.base.KotlinModuleGenerator
+import com.smparkworld.hiltbinder_processor.core.base.JavaParameterMapper
+import com.smparkworld.hiltbinder_processor.core.base.KotlinParameterMapper
 import java.util.ServiceLoader
 
-internal object ModuleGeneratorFactory {
+internal object ParameterMapperFactory {
 
-    fun createJavaModuleGenerators(): Set<JavaModuleGenerator<*>> =
+    fun createJavaParameterMappers(): Set<JavaParameterMapper<*>> =
         createModuleGeneratorInternal()
 
-    fun createKotlinModuleGenerators(): Set<KotlinModuleGenerator<*>> =
+    fun createKotlinParameterMappers(): Set<KotlinParameterMapper<*>> =
         createModuleGeneratorInternal()
 
     private inline fun <reified T> createModuleGeneratorInternal(): Set<T> {

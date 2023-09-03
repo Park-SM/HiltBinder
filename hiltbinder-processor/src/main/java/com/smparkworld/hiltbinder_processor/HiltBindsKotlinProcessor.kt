@@ -22,7 +22,7 @@ import kotlin.reflect.KClass
 internal class HiltBindsKotlinProcessor(
     private val env: SymbolProcessorEnvironment,
     private val logger: Logger,
-    private val dispatcher: ModuleGeneratorDispatcher = ModuleGeneratorDispatcher()
+    private val dispatcher: ModuleGeneratorDispatcher = ModuleGeneratorDispatcher(logger)
 ) : SymbolProcessor {
 
     override fun process(resolver: Resolver): List<KSAnnotated> {
@@ -42,7 +42,7 @@ internal class HiltBindsKotlinProcessor(
         val annotation = declaration.annotations.find { it.isSameType(annotationType) }
             ?: throw IllegalStateException("Not found annotation :: ${annotationType.simpleName}")
 
-        dispatcher.dispatchGenerator(env, declaration, annotation, logger)
+        dispatcher.dispatchGenerator(env, declaration, annotation)
     }
 
     private fun Resolver.getAnnotatedSymbolsCountOnEach(perform: (KSAnnotated, KClass<out Annotation>) -> Unit): Int {

@@ -1,25 +1,35 @@
 package com.smparkworld.hiltbinder_processor.java.generator.hiltmapbinds
 
+import com.google.auto.service.AutoService
 import com.smparkworld.hiltbinder.HiltMapBinds
 import com.smparkworld.hiltbinder_processor.core.Consts
 import com.smparkworld.hiltbinder_processor.core.Logger
-import com.smparkworld.hiltbinder_processor.core.base.ParameterMapper
+import com.smparkworld.hiltbinder_processor.core.base.JavaParameterMapper
 import com.smparkworld.hiltbinder_processor.core.manager.AnnotationManager
 import com.smparkworld.hiltbinder_processor.java.extension.asClassName
 import com.smparkworld.hiltbinder_processor.java.extension.findSuperTypeMirror
 import com.smparkworld.hiltbinder_processor.java.extension.getGenericTypeNames
+import com.smparkworld.hiltbinder_processor.java.extension.getPackageName
 import com.smparkworld.hiltbinder_processor.java.extension.getSuperTypeMirror
-import com.smparkworld.hiltbinder_processor.java.model.HiltMapBindsParamsModel
+import com.smparkworld.hiltbinder_processor.java.model.HiltMapBindsJavaParamsModel
 import dagger.MapKey
 import javax.annotation.processing.ProcessingEnvironment
 import javax.inject.Named
 import javax.inject.Qualifier
 import javax.inject.Scope
 import javax.lang.model.element.Element
+import kotlin.reflect.KClass
 
-internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsModel> {
+@AutoService(JavaParameterMapper::class)
+internal class HiltMapBindsJavaParameterMapper : JavaParameterMapper<HiltMapBindsJavaParamsModel> {
 
-    override fun toParamsModel(env: ProcessingEnvironment, element: Element, logger: Logger): HiltMapBindsParamsModel {
+    override fun getSupportedAnnotationType(): KClass<out Annotation> = HiltMapBinds::class
+
+    override fun toParamsModel(env: ProcessingEnvironment, element: Element, logger: Logger): HiltMapBindsJavaParamsModel {
+        val moduleFileName = "${element.simpleName}${Consts.MODULE_SUFFIX}"
+        val elementName = element.simpleName.toString()
+        val elementPackageName = env.getPackageName(element)
+
         val paramTo = AnnotationManager.getElementFromAnnotation<HiltMapBinds>(env, element, Consts.PARAM_TO)
         val paramFrom = AnnotationManager.getElementFromAnnotation<HiltMapBinds>(env, element, Consts.PARAM_FROM)
         val paramComponent = AnnotationManager.getElementFromAnnotation<HiltMapBinds>(env, element, Consts.PARAM_COMPONENT)
@@ -42,15 +52,18 @@ internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsM
 
         return when {
             (paramFrom != null && paramTo == null) -> {
-                HiltMapBindsParamsModel(
-                    element.asClassName(env),
-                    paramFrom.asClassName(env),
-                    paramComponent,
-                    qualifier,
-                    scope,
-                    namedValue,
-                    mapKey,
-                    mapKeyParams
+                HiltMapBindsJavaParamsModel(
+                    moduleFileName = moduleFileName,
+                    elementName = elementName,
+                    elementPackageName = elementPackageName,
+                    to = element.asClassName(env),
+                    from = paramFrom.asClassName(env),
+                    component = paramComponent,
+                    qualifier = qualifier,
+                    scope = scope,
+                    namedValue = namedValue,
+                    mapKey = mapKey,
+                    mapKeyParams = mapKeyParams
                 )
             }
             (paramFrom == null && paramTo != null) -> {
@@ -60,15 +73,18 @@ internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsM
                     throw IllegalStateException(Consts.ERROR_MSG_NOT_FOUND_SUPER)
                 }
 
-                HiltMapBindsParamsModel(
-                    to.getGenericTypeNames(env, paramCombined),
-                    element.asClassName(env),
-                    paramComponent,
-                    qualifier,
-                    scope,
-                    namedValue,
-                    mapKey,
-                    mapKeyParams
+                HiltMapBindsJavaParamsModel(
+                    moduleFileName = moduleFileName,
+                    elementName = elementName,
+                    elementPackageName = elementPackageName,
+                    to = to.getGenericTypeNames(env, paramCombined),
+                    from = element.asClassName(env),
+                    component = paramComponent,
+                    qualifier = qualifier,
+                    scope = scope,
+                    namedValue = namedValue,
+                    mapKey = mapKey,
+                    mapKeyParams = mapKeyParams
                 )
             }
             (paramFrom == null && paramTo == null) -> {
@@ -78,15 +94,18 @@ internal class HiltMapBindsParameterMapper : ParameterMapper<HiltMapBindsParamsM
                     throw IllegalStateException(Consts.ERROR_MSG_NOT_FOUND_SUPER)
                 }
 
-                HiltMapBindsParamsModel(
-                    to.getGenericTypeNames(env, paramCombined),
-                    element.asClassName(env),
-                    paramComponent,
-                    qualifier,
-                    scope,
-                    namedValue,
-                    mapKey,
-                    mapKeyParams
+                HiltMapBindsJavaParamsModel(
+                    moduleFileName = moduleFileName,
+                    elementName = elementName,
+                    elementPackageName = elementPackageName,
+                    to = to.getGenericTypeNames(env, paramCombined),
+                    from = element.asClassName(env),
+                    component = paramComponent,
+                    qualifier = qualifier,
+                    scope = scope,
+                    namedValue = namedValue,
+                    mapKey = mapKey,
+                    mapKeyParams = mapKeyParams
                 )
             }
             else -> {

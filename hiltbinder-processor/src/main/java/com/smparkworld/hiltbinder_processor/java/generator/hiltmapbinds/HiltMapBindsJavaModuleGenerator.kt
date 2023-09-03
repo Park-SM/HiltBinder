@@ -5,11 +5,10 @@ import com.smparkworld.hiltbinder.HiltMapBinds
 import com.smparkworld.hiltbinder_processor.core.Consts
 import com.smparkworld.hiltbinder_processor.core.Logger
 import com.smparkworld.hiltbinder_processor.core.base.JavaModuleGenerator
-import com.smparkworld.hiltbinder_processor.core.base.ParameterMapper
 import com.smparkworld.hiltbinder_processor.java.extension.addAnnotationIfNotNull
 import com.smparkworld.hiltbinder_processor.java.extension.asClassName
 import com.smparkworld.hiltbinder_processor.java.extension.getPackageName
-import com.smparkworld.hiltbinder_processor.java.model.HiltMapBindsParamsModel
+import com.smparkworld.hiltbinder_processor.java.model.HiltMapBindsJavaParamsModel
 import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
@@ -27,9 +26,7 @@ import javax.lang.model.element.Modifier
 import kotlin.reflect.KClass
 
 @AutoService(JavaModuleGenerator::class)
-internal class HiltMapBindsJavaModuleGenerator : JavaModuleGenerator {
-
-    private val parameterMapper: ParameterMapper<HiltMapBindsParamsModel> = HiltMapBindsParameterMapper()
+internal class HiltMapBindsJavaModuleGenerator : JavaModuleGenerator<HiltMapBindsJavaParamsModel>() {
 
     override fun getSupportedAnnotationType(): KClass<out Annotation> = HiltMapBinds::class
 
@@ -39,11 +36,7 @@ internal class HiltMapBindsJavaModuleGenerator : JavaModuleGenerator {
             else -> false
         }
 
-    override fun generate(env: ProcessingEnvironment, element: Element, annotation: Annotation, logger: Logger) {
-        val params = parameterMapper.toParamsModel(env, element, logger)
-
-        val moduleFileName = "${element.simpleName}${Consts.MODULE_SUFFIX}"
-
+    override fun generate(env: ProcessingEnvironment, params: HiltMapBindsJavaParamsModel, logger: Logger) {
         val namedAnnotation = params.namedValue?.let { named ->
             AnnotationSpec.builder(Named::class.java)
                 .addMember("value", "\$S", named)
@@ -90,7 +83,7 @@ internal class HiltMapBindsJavaModuleGenerator : JavaModuleGenerator {
             }
             .build()
 
-        val spec = MethodSpec.methodBuilder("${Consts.FUNCTION_PREFIX}${element.simpleName}")
+        val spec = MethodSpec.methodBuilder("${Consts.FUNCTION_PREFIX}${params.elementName}")
             .addAnnotation(Binds::class.java)
             .addAnnotation(IntoMap::class.java)
             .addAnnotation(mapKeyAnnotation)
@@ -108,17 +101,17 @@ internal class HiltMapBindsJavaModuleGenerator : JavaModuleGenerator {
             )
             .build()
 
-        val moduleClazz = TypeSpec.classBuilder(moduleFileName)
+        val moduleClazz = TypeSpec.classBuilder(params.moduleFileName)
             .addAnnotation(Module::class.java)
             .addAnnotation(installInAnnotation)
             .addModifiers(Modifier.ABSTRACT)
             .addMethod(spec)
             .build()
 
-        val javaFile = JavaFile.builder(env.getPackageName(element), moduleClazz)
+        val javaFile = JavaFile.builder(params.elementPackageName, moduleClazz)
             .build()
 
-        env.filer.createSourceFile("${env.getPackageName(element)}.${moduleFileName}")
+        env.filer.createSourceFile("${params.elementPackageName}.${params.moduleFileName}")
             .openWriter()
             .use { writer -> writer.write(javaFile.toString()) }
     }

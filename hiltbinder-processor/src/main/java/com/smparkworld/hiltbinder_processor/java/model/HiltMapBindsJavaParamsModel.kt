@@ -4,7 +4,12 @@ import com.smparkworld.hiltbinder_processor.core.base.ParametersModel
 import com.squareup.javapoet.TypeName
 import javax.lang.model.element.Element
 
-internal data class HiltMapBindsParamsModel(
+internal data class HiltMapBindsJavaParamsModel(
+
+    val moduleFileName: String,
+    val elementName: String,
+    val elementPackageName: String,
+
     val to: TypeName,
     val from: TypeName,
     val component: Element? = null,
@@ -13,4 +18,5 @@ internal data class HiltMapBindsParamsModel(
     val namedValue: String? = null,
     val mapKey: Element,
     val mapKeyParams: Map<String, Any>
+
 ) : ParametersModel

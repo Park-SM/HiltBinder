@@ -5,6 +5,7 @@ import javax.annotation.processing.ProcessingEnvironment
 import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 import javax.tools.Diagnostic
+import kotlin.reflect.KClass
 
 internal fun ProcessingEnvironment.error(message: String) =
     messager.printMessage(Diagnostic.Kind.ERROR, message)
@@ -22,6 +23,9 @@ internal fun ProcessingEnvironment.getClassName(element: Element): ClassName {
         ClassName.get(getPackageName(element), element.simpleName.toString())
     }
 }
+
+internal fun Annotation.isSameType(annotationType: KClass<out Annotation>): Boolean =
+    (this.annotationClass == annotationType)
 
 private fun getNestedClassesInternal(element: Element, result: MutableList<String>? = null): List<String> {
     val resultInternal = result ?: mutableListOf<String>().apply {
