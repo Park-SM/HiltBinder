@@ -1,34 +1,28 @@
 package com.smparkworld.hiltbinder_processor.core
 
-import com.smparkworld.hiltbinder_processor.core.base.ModuleGenerator
-import java.util.*
-import kotlin.reflect.KClass
+import com.smparkworld.hiltbinder_processor.core.base.JavaModuleGenerator
+import com.smparkworld.hiltbinder_processor.core.base.KotlinModuleGenerator
+import java.util.ServiceLoader
 
 internal object ModuleGeneratorFactory {
 
-    private var cachedAnnotationTypes: Set<KClass<out Annotation>>? = null
+    fun createJavaModuleGenerators(): Set<JavaModuleGenerator> =
+        createModuleGeneratorInternal()
 
-    fun createModuleGenerators(): Set<ModuleGenerator> {
-        val generators = mutableSetOf<ModuleGenerator>()
+    fun createKotlinModuleGenerators(): Set<KotlinModuleGenerator> =
+        createModuleGeneratorInternal()
+
+    private inline fun <reified T> createModuleGeneratorInternal(): Set<T> {
+        val generators = mutableSetOf<T>()
 
         val iterator = ServiceLoader.load(
-            ModuleGenerator::class.java,
-            ModuleGenerator::class.java.classLoader
+            T::class.java,
+            T::class.java.classLoader
         ).iterator()
 
         for (generator in iterator) {
             generators.add(generator)
         }
         return generators
-    }
-
-    fun getSupportedAnnotationTypes(): Set<KClass<out Annotation>> {
-        return cachedAnnotationTypes ?: mutableSetOf<KClass<out Annotation>>().also { types ->
-
-            createModuleGenerators().forEach { generator ->
-                types.add(generator.getSupportedAnnotationType())
-            }
-            cachedAnnotationTypes = types
-        }
     }
 }

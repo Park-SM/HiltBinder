@@ -1,4 +1,4 @@
-package com.smparkworld.hiltbinder_processor.extension
+package com.smparkworld.hiltbinder_processor.java.extension
 
 import com.squareup.javapoet.ClassName
 import javax.annotation.processing.ProcessingEnvironment

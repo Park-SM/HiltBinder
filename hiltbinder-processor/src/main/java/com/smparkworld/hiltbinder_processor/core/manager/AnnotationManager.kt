@@ -1,7 +1,7 @@
 package com.smparkworld.hiltbinder_processor.core.manager
 
 import com.smparkworld.hiltbinder_processor.core.config.ProcessorConfig
-import com.smparkworld.hiltbinder_processor.extension.error
+import com.smparkworld.hiltbinder_processor.java.extension.error
 import javax.annotation.processing.ProcessingEnvironment
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.element.AnnotationMirror

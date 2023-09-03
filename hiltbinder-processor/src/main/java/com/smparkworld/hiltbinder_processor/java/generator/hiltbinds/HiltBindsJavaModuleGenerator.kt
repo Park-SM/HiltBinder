@@ -1,13 +1,14 @@
-package com.smparkworld.hiltbinder_processor.generator.hiltbinds
+package com.smparkworld.hiltbinder_processor.java.generator.hiltbinds
 
 import com.google.auto.service.AutoService
 import com.smparkworld.hiltbinder.HiltBinds
+import com.smparkworld.hiltbinder_processor.core.Consts
 import com.smparkworld.hiltbinder_processor.core.Logger
-import com.smparkworld.hiltbinder_processor.core.base.ModuleGenerator
+import com.smparkworld.hiltbinder_processor.core.base.JavaModuleGenerator
 import com.smparkworld.hiltbinder_processor.core.base.ParameterMapper
-import com.smparkworld.hiltbinder_processor.extension.addAnnotationIfNotNull
-import com.smparkworld.hiltbinder_processor.extension.getPackageName
-import com.smparkworld.hiltbinder_processor.model.HiltBindsParamsModel
+import com.smparkworld.hiltbinder_processor.java.extension.addAnnotationIfNotNull
+import com.smparkworld.hiltbinder_processor.java.extension.getPackageName
+import com.smparkworld.hiltbinder_processor.java.model.HiltBindsParamsModel
 import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.JavaFile
 import com.squareup.javapoet.MethodSpec
@@ -23,21 +24,23 @@ import javax.lang.model.element.ElementKind
 import javax.lang.model.element.Modifier
 import kotlin.reflect.KClass
 
-@AutoService(ModuleGenerator::class)
-internal class HiltBindsModuleGenerator : ModuleGenerator {
+@AutoService(JavaModuleGenerator::class)
+internal class HiltBindsJavaModuleGenerator : JavaModuleGenerator {
 
     private val parameterMapper: ParameterMapper<HiltBindsParamsModel> = HiltBindsParameterMapper()
 
     override fun getSupportedAnnotationType(): KClass<out Annotation> = HiltBinds::class
 
-    override fun getSupportedElementTypes(): List<ElementKind> = listOf(
-        ElementKind.CLASS, ElementKind.INTERFACE
-    )
+    override fun checkValidation(element: Element): Boolean =
+        when (element.kind) {
+            ElementKind.CLASS, ElementKind.INTERFACE -> true
+            else -> false
+        }
 
     override fun generate(env: ProcessingEnvironment, element: Element, annotation: Annotation, logger: Logger) {
         val params = parameterMapper.toParamsModel(env, element, logger)
 
-        val moduleFileName = "${element.simpleName}$MODULE_SUFFIX"
+        val moduleFileName = "${element.simpleName}${Consts.MODULE_SUFFIX}"
 
         val namedAnnotation = params.namedValue?.let { named ->
             AnnotationSpec.builder(Named::class.java)
@@ -45,13 +48,13 @@ internal class HiltBindsModuleGenerator : ModuleGenerator {
                 .build()
         }
 
-        val spec = MethodSpec.methodBuilder("$FUN_PREFIX${element.simpleName}")
+        val spec = MethodSpec.methodBuilder("${Consts.FUNCTION_PREFIX}${element.simpleName}")
             .addAnnotation(Binds::class.java)
             .addAnnotationIfNotNull(env, params.scope)
             .addAnnotationIfNotNull(env, params.qualifier)
             .addAnnotationIfNotNull(namedAnnotation)
             .addModifiers(Modifier.ABSTRACT, Modifier.PUBLIC)
-            .addParameter(params.from, PARAMETER_NAME)
+            .addParameter(params.from, Consts.PARAMETER_NAME)
             .returns(params.to)
             .build()
 
@@ -74,12 +77,5 @@ internal class HiltBindsModuleGenerator : ModuleGenerator {
         env.filer.createSourceFile("${env.getPackageName(element)}.${moduleFileName}")
             .openWriter()
             .use { writer -> writer.write(javaFile.toString()) }
-    }
-
-    companion object {
-
-        private const val PARAMETER_NAME = "target"
-        private const val MODULE_SUFFIX = "_BindsModule"
-        private const val FUN_PREFIX = "bind"
     }
 }

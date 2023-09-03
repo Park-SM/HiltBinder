@@ -1,4 +1,4 @@
-package com.smparkworld.hiltbinder_processor.model
+package com.smparkworld.hiltbinder_processor.java.model
 
 import com.smparkworld.hiltbinder_processor.core.base.ParametersModel
 import com.squareup.javapoet.TypeName

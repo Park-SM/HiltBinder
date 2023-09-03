@@ -6,11 +6,11 @@ import javax.lang.model.element.Element
 import javax.lang.model.element.ElementKind
 import kotlin.reflect.KClass
 
-internal interface ModuleGenerator {
+internal interface JavaModuleGenerator {
 
     fun getSupportedAnnotationType(): KClass<out Annotation>
 
-    fun getSupportedElementTypes(): List<ElementKind>
+    fun checkValidation(element: Element): Boolean
 
     fun generate(env: ProcessingEnvironment, element: Element, annotation: Annotation, logger: Logger)
 }

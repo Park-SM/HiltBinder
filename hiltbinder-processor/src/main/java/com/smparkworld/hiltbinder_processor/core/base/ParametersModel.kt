@@ -1,3 +1,3 @@
 package com.smparkworld.hiltbinder_processor.core.base
 
-interface ParametersModel
+internal interface ParametersModel

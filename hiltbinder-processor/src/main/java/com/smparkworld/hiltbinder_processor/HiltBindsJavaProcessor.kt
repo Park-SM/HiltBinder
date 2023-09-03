@@ -11,23 +11,22 @@ import javax.annotation.processing.Messager
 import javax.annotation.processing.Processor
 import javax.annotation.processing.RoundEnvironment
 import javax.lang.model.SourceVersion
+import javax.lang.model.element.Element
 import javax.lang.model.element.TypeElement
 import javax.tools.Diagnostic
 
 @AutoService(Processor::class)
 internal class HiltBindsJavaProcessor : AbstractProcessor() {
 
+    private val dispatcher = ModuleGeneratorDispatcher()
+
     override fun process(ignored: MutableSet<out TypeElement>?, environment: RoundEnvironment): Boolean {
-
-        val logger = JavaLogger(processingEnv.messager)
-
         PerformanceManager.startProcessing()
 
+        val logger = JavaLogger(processingEnv.messager)
         val processedCount = AnnotationManager.getElementsAnnotatedWith(environment) { element, annotation ->
-
-            ModuleGeneratorDispatcher.dispatchGenerator(processingEnv, element, annotation, logger)
+            dispatcher.dispatchGenerator(processingEnv, element, annotation, logger)
         }
-
         if (processedCount > 0) {
             PerformanceManager.stopProcessing()
             PerformanceManager.reportPerformance(logger, processedCount)
@@ -46,8 +45,7 @@ private class JavaLogger(
     private val messenger: Messager
 ) : Logger {
 
-    override fun log(message: String) =
-        messenger.printMessage(Diagnostic.Kind.NOTE, message)
-    override fun error(message: String) =
-        messenger.printMessage(Diagnostic.Kind.ERROR, message)
+    override fun log(message: String) = messenger.printMessage(Diagnostic.Kind.NOTE, message)
+    override fun warn(message: String) = messenger.printMessage(Diagnostic.Kind.WARNING, message)
+    override fun error(message: String) = messenger.printMessage(Diagnostic.Kind.ERROR, message)
 }
