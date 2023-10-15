@@ -6,7 +6,6 @@ import com.smparkworld.hiltbinder_processor.core.Consts
 import com.smparkworld.hiltbinder_processor.core.Logger
 import com.smparkworld.hiltbinder_processor.core.base.JavaModuleGenerator
 import com.smparkworld.hiltbinder_processor.java.extension.addAnnotationIfNotNull
-import com.smparkworld.hiltbinder_processor.java.extension.getPackageName
 import com.smparkworld.hiltbinder_processor.java.model.HiltBindsJavaParamsModel
 import com.squareup.javapoet.AnnotationSpec
 import com.squareup.javapoet.JavaFile

@@ -25,21 +25,21 @@ internal class HiltMapBindsJavaParameterMapper : JavaParameterMapper<HiltMapBind
 
     override fun getSupportedAnnotationType(): KClass<out Annotation> = HiltMapBinds::class
 
-    override fun toParamsModel(env: ProcessingEnvironment, element: Element, logger: Logger): HiltMapBindsJavaParamsModel {
-        val moduleFileName = "${element.simpleName}${Consts.MODULE_SUFFIX}"
-        val elementName = element.simpleName.toString()
-        val elementPackageName = env.getPackageName(element)
+    override fun toParamsModel(env: ProcessingEnvironment, target: Element, logger: Logger): HiltMapBindsJavaParamsModel {
+        val moduleFileName = "${target.simpleName}${Consts.MODULE_SUFFIX}"
+        val elementName = target.simpleName.toString()
+        val elementPackageName = env.getPackageName(target)
 
-        val paramTo = AnnotationManager.getElementFromAnnotation<HiltMapBinds>(env, element, Consts.PARAM_TO)
-        val paramFrom = AnnotationManager.getElementFromAnnotation<HiltMapBinds>(env, element, Consts.PARAM_FROM)
-        val paramComponent = AnnotationManager.getElementFromAnnotation<HiltMapBinds>(env, element, Consts.PARAM_COMPONENT)
-        val paramCombined = AnnotationManager.getValuesFromAnnotation<HiltMapBinds>(env, element)?.get(Consts.PARAM_COMBINED) as? Boolean
-        val qualifier = AnnotationManager.getAnnotationByParentAnnotation(env, element, Qualifier::class, Named::class)
-        val scope = AnnotationManager.getAnnotationByParentAnnotation(env, element, Scope::class)
-        val namedValue = AnnotationManager.getValuesFromAnnotation<Named>(env, element)?.get(Consts.NAMED_PARAM) as? String
+        val paramTo = AnnotationManager.getElementFromAnnotation<HiltMapBinds>(env, target, Consts.PARAM_TO)
+        val paramFrom = AnnotationManager.getElementFromAnnotation<HiltMapBinds>(env, target, Consts.PARAM_FROM)
+        val paramComponent = AnnotationManager.getElementFromAnnotation<HiltMapBinds>(env, target, Consts.PARAM_COMPONENT)
+        val paramCombined = AnnotationManager.getValuesFromAnnotation<HiltMapBinds>(env, target)?.get(Consts.PARAM_COMBINED) as? Boolean
+        val qualifier = AnnotationManager.getAnnotationByParentAnnotation(env, target, Qualifier::class, Named::class)
+        val scope = AnnotationManager.getAnnotationByParentAnnotation(env, target, Scope::class)
+        val namedValue = AnnotationManager.getValuesFromAnnotation<Named>(env, target)?.get(Consts.NAMED_PARAM) as? String
 
-        val mapKey = AnnotationManager.getAnnotationByParentAnnotation(env, element, MapKey::class)
-        val mapKeyParams = AnnotationManager.getValuesFromParentAnnotation(env, element, MapKey::class)
+        val mapKey = AnnotationManager.getAnnotationByParentAnnotation(env, target, MapKey::class)
+        val mapKeyParams = AnnotationManager.getValuesFromParentAnnotation(env, target, MapKey::class)
 
         if (mapKey == null || mapKeyParams == null) {
             logger.error(ERROR_MSG_NOT_FOUND_KEY)
@@ -56,7 +56,7 @@ internal class HiltMapBindsJavaParameterMapper : JavaParameterMapper<HiltMapBind
                     moduleFileName = moduleFileName,
                     elementName = elementName,
                     elementPackageName = elementPackageName,
-                    to = element.asClassName(env),
+                    to = target.asClassName(env),
                     from = paramFrom.asClassName(env),
                     component = paramComponent,
                     qualifier = qualifier,
@@ -67,7 +67,7 @@ internal class HiltMapBindsJavaParameterMapper : JavaParameterMapper<HiltMapBind
                 )
             }
             (paramFrom == null && paramTo != null) -> {
-                val to = element.findSuperTypeMirror(paramTo)
+                val to = target.findSuperTypeMirror(paramTo)
                 if (to == null) {
                     logger.error(Consts.ERROR_MSG_NOT_FOUND_SUPER)
                     throw IllegalStateException(Consts.ERROR_MSG_NOT_FOUND_SUPER)
@@ -78,7 +78,7 @@ internal class HiltMapBindsJavaParameterMapper : JavaParameterMapper<HiltMapBind
                     elementName = elementName,
                     elementPackageName = elementPackageName,
                     to = to.getGenericTypeNames(env, paramCombined),
-                    from = element.asClassName(env),
+                    from = target.asClassName(env),
                     component = paramComponent,
                     qualifier = qualifier,
                     scope = scope,
@@ -88,7 +88,7 @@ internal class HiltMapBindsJavaParameterMapper : JavaParameterMapper<HiltMapBind
                 )
             }
             (paramFrom == null && paramTo == null) -> {
-                val to = element.getSuperTypeMirror()
+                val to = target.getSuperTypeMirror()
                 if (to == null) {
                     logger.error(Consts.ERROR_MSG_NOT_FOUND_SUPER)
                     throw IllegalStateException(Consts.ERROR_MSG_NOT_FOUND_SUPER)
@@ -99,7 +99,7 @@ internal class HiltMapBindsJavaParameterMapper : JavaParameterMapper<HiltMapBind
                     elementName = elementName,
                     elementPackageName = elementPackageName,
                     to = to.getGenericTypeNames(env, paramCombined),
-                    from = element.asClassName(env),
+                    from = target.asClassName(env),
                     component = paramComponent,
                     qualifier = qualifier,
                     scope = scope,

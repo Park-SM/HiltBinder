@@ -23,7 +23,7 @@ internal fun Element.findSuperTypeMirror(target: Element): TypeMirror? {
     if (superClass != null && !Utils.isObjectClass(superClass) && Utils.isSameClass(superClass, target.asType())) {
         return superClass
     }
-    return (this as? TypeElement)?.interfaces.orEmpty().find { interfaceClass ->
+    return (this as? TypeElement)?.interfaces?.find { interfaceClass ->
         Utils.isSameClass(interfaceClass, target.asType())
     }
 }

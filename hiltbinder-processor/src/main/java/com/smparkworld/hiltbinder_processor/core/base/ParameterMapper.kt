@@ -11,7 +11,7 @@ internal interface ParameterMapper<R : ParametersModel, ENV, TARGET> {
 
     fun getSupportedAnnotationType(): KClass<out Annotation>
 
-    fun toParamsModel(env: ENV, element: TARGET, logger: Logger): R
+    fun toParamsModel(env: ENV, target: TARGET, logger: Logger): R
 }
 
 internal interface JavaParameterMapper<R : ParametersModel> : ParameterMapper<R, ProcessingEnvironment, Element>
